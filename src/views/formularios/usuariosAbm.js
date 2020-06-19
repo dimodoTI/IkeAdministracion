@@ -11,8 +11,8 @@ import { mediaConMenu01 } from "../css/mediaConMenu01"
 import { modoPantalla } from "../../redux/actions/ui";
 import { REGALO, CARRITO, RELOJ, NOVEDADES1, NOVEDADES2, NOVEDADES3, HOME, MASCOTA, CONSULTA, VACUNA, FOTO, MAS } from "../../../assets/icons/icons"
 
-const RESERVA_TIMESTAMP = "reserva.timeStamp"
-export class pantallaUsuariosAbm extends connect(store, RESERVA_TIMESTAMP)(LitElement) {
+const MODO_PANTALLA = "ui.timeStampPantalla"
+export class pantallaUsuariosAbm extends connect(store, MODO_PANTALLA)(LitElement) {
     constructor() {
         super();
         this.hidden = true
@@ -24,26 +24,19 @@ export class pantallaUsuariosAbm extends connect(store, RESERVA_TIMESTAMP)(LitEl
         ${label}
         ${button}
         ${cabecera1}
-        ${btnFlotanteRedondo}
-        ${mediaConMenu01}
         :host{
-            position: absolute;
-            top: 0;
-            left: 0;  
-            height:100vh;
-            width:100vw;
+            position: relative;
+            height:100%;
+            width:100%;
             background-color:var(--color-gris-fondo);
             display:grid;
+            grid-template-rows:14% 86%;
         }
         :host([hidden]){
             display: none; 
         } 
-        #gridPie{
-            grid-area: Pie; 
-            display:grid;
-        }
         #detalle{
-            height: 90%;
+            height: 100%;
             width: 2rem;
             background-image: var(--icon-flecha-abajo-sin-bordes);
             background-color: transparent;
@@ -87,51 +80,34 @@ export class pantallaUsuariosAbm extends connect(store, RESERVA_TIMESTAMP)(LitEl
     }
     render() {
         return html`
-            <div id="gridContenedor">
-                <div id="header">
-                    <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
-                        <div id="bar">
-                            <div id="lblTitulo">${idiomas[this.idioma].principal.tituloCabecera}</div>
-                            <div id="detalle" 
-                                @click=${this.clickBotonUsuario}>
-                            </div>
+            <div id="header">
+                <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
+                    <div id="bar">
+                        <div id="lblTitulo">${idiomas[this.idioma].principal.tituloCabecera}</div>
+                        <div id="detalle" 
+                            @click=${this.clickBotonUsuario}>
                         </div>
-                        <div id="campana" @click=${this.clickBotonNotificacion}></div>
-                    </div>    
-                    <div id="lblLeyenda">${idiomas[this.idioma].principal.leyendaCabecera}</div>
-                </div>
-                <div id="cuerpo">
-                    <usuario-abm id="usuarioComp" media-size="${this.mediaSize}">
-                    </usuario-abm>
-                </div>        
+                    </div>
+                    <div id="campana" @click=${this.clickBotonNotificacion}></div>
+                </div>    
+                <div id="lblLeyenda">${idiomas[this.idioma].principal.leyendaCabecera}</div>
             </div>
-            <pie-componente id="gridPie" opcion="uno" media-size="${this.mediaSize}">
-            </pie-componente>
-`
+            <div id="cuerpo">
+                <usuario-abm id="usuarioComp" media-size="${this.mediaSize}">
+                </usuario-abm>
+            </div>        
+        `
     }
     clickBotonUsuario() {
-        store.dispatch(modoPantalla("usuariodetalle", "principal"))
+        store.dispatch(modoPantalla("usuariodetalle", "usuariosabm"))
     }
     clickBotonNotificacion() {
-        store.dispatch(modoPantalla("notificacion", "principal"))
-    }
-    clickConsulta() {
-        store.dispatch(modoPantalla("video", "principal"))
-    }
-    clickAgenda() {
-        store.dispatch(modoPantalla("plancontrata", "principal"))
-    }
-    clickAyuda() {
-        store.dispatch(modoPantalla("vercobertura", "principal"))
-    }
-    clickBoton1() {
-        store.dispatch(modoPantalla("iniciosesion", "principal"))
-    }
-    clickBoton2() {
-        store.dispatch(modoPantalla("iniciosesion", "principal"))
+        store.dispatch(modoPantalla("notificacion", "usuariosabm"))
     }
     stateChanged(state, name) {
-
+        if (name == MODO_PANTALLA) {
+            //this.shadowRoot.querySelector("#gridPie").setAttribute("opcion", "uno")
+        }
     }
 
     firstUpdated() {
@@ -143,10 +119,6 @@ export class pantallaUsuariosAbm extends connect(store, RESERVA_TIMESTAMP)(LitEl
                 type: Boolean,
                 reflect: true
             },
-            label: {
-                type: String,
-                reflect: false
-            },
             mediaSize: {
                 type: String,
                 reflect: true,
@@ -155,5 +127,4 @@ export class pantallaUsuariosAbm extends connect(store, RESERVA_TIMESTAMP)(LitEl
         }
     }
 }
-
 window.customElements.define("pantalla-usuariosabm", pantallaUsuariosAbm);

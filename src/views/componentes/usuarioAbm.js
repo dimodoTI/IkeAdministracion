@@ -19,30 +19,12 @@ const USUARIO_ERROROTROSTIMESTAMP = "usuario.commandErrorTimeStamp"
 export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATETIMESTAMP, USUARIO_ADDTIMESTAMP, USUARIO_ERRORGETTIMESTAMP, USUARIO_ERROROTROSTIMESTAMP)(LitElement) {
     constructor() {
         super();
-        this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI1MDIwMzcsImV4cCI6MTU5MjUwNzQzNywiaWF0IjoxNTkyNTAyMDM3fQ.96lLS2Yd0cVhF89_XKG3JMfoWxUY851OrbClKmwy-_0"
+        this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI1NDIyNDAsImV4cCI6MTU5MjU0NzY0MCwiaWF0IjoxNTkyNTQyMjQwfQ.8E9Ly0xUvj2K8B-KxGwVMm3ZhodcZYDfT3KH5I9Ol9E"
         this.idioma = "ES"
         this.accion = ""
         this.itemOriginal = {}
         this.activo = false;
-        this.usuarios = [{
-            nombre: "Daniel Di Lorenzo", mail: "daniel@gmail.com", activo: true,
-            documento: "12341236", clase: "Cliente"
-        }, {
-            nombre: "Bruno Manfrinotti", mail: "bruno@gmail.com", activo: true,
-            documento: "23423456", clase: "Cliente"
-        }, {
-            nombre: "Manuel Dominguez", mail: "manuel@gmail.com", activo: true,
-            documento: "56756789", clase: "Veterinario"
-        }, {
-            nombre: "Sebastian Real", mail: "manuel@gmail.com", activo: true,
-            documento: "56756789", clase: "Veterinario"
-        }, {
-            nombre: "Sebastian Real", mail: "manuel@gmail.com", activo: true,
-            documento: "56756789", clase: "Veterinario"
-        }, {
-            nombre: "Sebastian Real", mail: "manuel@gmail.com", activo: true,
-            documento: "56756789", clase: "Veterinario"
-        }]
+        this.usuarios = []
     }
 
     static get styles() {

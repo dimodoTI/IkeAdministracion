@@ -62,7 +62,7 @@ export class pantallaSplash extends connect(store, MODO_PANTALLA)(LitElement) {
         }
     }
     pasar(e) {
-        store.dispatch(modoPantalla("razasabm", "splash"))
+        store.dispatch(modoPantalla("principal", "splash"))
     }
     static get properties() {
         return {

@@ -20,10 +20,7 @@ import { pantallaRecuperaClave } from "../views/formularios/recuperaclave";
 import { pantallaRecuperaClaveMesg } from "../views/formularios/recuperaclavemsg";
 import { pantallaCrearClave } from "../views/formularios/crearclave";
 import { pantallaCrearClaveMsg } from "../views/formularios/crearclavemsg";
-import { pantallaPrincipal } from "../views/formularios/principal";
-import { pantallaUsuariosAbm } from "../views/formularios/usuariosAbm";
-import { pantallaPublicacionesAbm } from "./formularios/publicacionesAbm";
-import { pantallaRazasAbm } from "./formularios/razasAbm";
+import { pantallaMenuGral } from "../views/formularios/menuGral";
 
 const MEDIA_CHANGE = "ui.media.timeStamp"
 const QUEPANTALLA = "ui.timeStampPantalla";
@@ -52,16 +49,15 @@ export class viewManager extends connect(store, MEDIA_CHANGE, QUEPANTALLA)(LitEl
     }
     render() {
         return html`
+
         <pantalla-splash id="splash" media-size="${this.mediaSize}"></pantalla-splash>
         <pantalla-iniciosesion id="iniciosesion" media-size="${this.mediaSize}"></pantalla-iniciosesion>
         <pantalla-recuperaclave id="recuperaclave" media-size="${this.mediaSize}"></pantalla-recuperaclave>
         <pantalla-recuperaclavemsg id="recuperaclavemsg" media-size="${this.mediaSize}"></pantalla-recuperaclavemsg>
         <pantalla-crearclave id="crearclave" media-size="${this.mediaSize}"></pantalla-crearclave>
         <pantalla-crearclavemsg id="crearclavemsg" media-size="${this.mediaSize}"></pantalla-crearclavemsg>
-        <pantalla-principal id="principal" media-size="${this.mediaSize}"></pantalla-principal>
-        <pantalla-usuariosabm id="usuariosabm" media-size="${this.mediaSize}"></pantalla-usuariosabm>
-        <pantalla-publicacionesabm id="publicacionesabm" media-size="${this.mediaSize}"></pantalla-publicacionesabm>
-        <pantalla-razasabm id="razasabm" media-size="${this.mediaSize}"></pantalla-razasabm>
+
+        <pantalla-menugral id="menugral" media-size="${this.mediaSize}"></pantalla-menugral>
         `
     }
 
@@ -75,13 +71,16 @@ export class viewManager extends connect(store, MEDIA_CHANGE, QUEPANTALLA)(LitEl
                 this.shadowRoot.querySelector("#recuperaclavemsg").hidden = state.ui.quePantalla != "recuperaclavemsg";
                 this.shadowRoot.querySelector("#crearclave").hidden = state.ui.quePantalla != "crearclave";
                 this.shadowRoot.querySelector("#crearclavemsg").hidden = state.ui.quePantalla != "crearclavemsg";
-                this.shadowRoot.querySelector("#principal").hidden = state.ui.quePantalla != "principal";
-                this.shadowRoot.querySelector("#usuariosabm").hidden = state.ui.quePantalla != "usuariosabm";
-                this.shadowRoot.querySelector("#publicacionesabm").hidden = state.ui.quePantalla != "publicacionesabm";
-                this.shadowRoot.querySelector("#razasabm").hidden = state.ui.quePantalla != "razasabm";
+
+                if ("menugral;usuariosabm;principal;publicacionesabm;razasabm".indexOf(state.ui.quePantalla) > -1) {
+                    this.shadowRoot.querySelector("#menugral").hidden = false
+                }
             }
         }
         this.update();
+    }
+
+    firstUpdated() {
     }
 
     static get properties() {

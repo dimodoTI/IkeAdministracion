@@ -5,14 +5,12 @@ import { idiomas } from "../../redux/datos/idiomas"
 import { label } from "../css/label"
 import { button } from "../css/button"
 import { cabecera1 } from "../css/cabecera1"
-import { btnFlotanteRedondo } from "../css/btnFlotanteRedondo"
 import { publicacionesabm } from "../componentes/publicacionAbm"
-import { mediaConMenu01 } from "../css/mediaConMenu01"
 import { modoPantalla } from "../../redux/actions/ui";
 import { REGALO, CARRITO, RELOJ, NOVEDADES1, NOVEDADES2, NOVEDADES3, HOME, MASCOTA, CONSULTA, VACUNA, FOTO, MAS } from "../../../assets/icons/icons"
 
-const RESERVA_TIMESTAMP = "reserva.timeStamp"
-export class pantallaPublicacionesAbm extends connect(store, RESERVA_TIMESTAMP)(LitElement) {
+const MODO_PANTALLA = "ui.timeStampPantalla"
+export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitElement) {
     constructor() {
         super();
         this.hidden = true
@@ -24,14 +22,10 @@ export class pantallaPublicacionesAbm extends connect(store, RESERVA_TIMESTAMP)(
         ${label}
         ${button}
         ${cabecera1}
-        ${btnFlotanteRedondo}
-        ${mediaConMenu01}
         :host{
-            position: absolute;
-            top: 0;
-            left: 0;  
-            height:100vh;
-            width:100vw;
+            position: relative;
+            height:100%;
+            width:100%;
             background-color:var(--color-gris-fondo);
             display:grid;
         }
@@ -87,26 +81,22 @@ export class pantallaPublicacionesAbm extends connect(store, RESERVA_TIMESTAMP)(
     }
     render() {
         return html`
-            <div id="gridContenedor">
-                <div id="header">
-                    <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
-                        <div id="bar">
-                            <div id="lblTitulo">${idiomas[this.idioma].publicacionesabm.tituloCabecera}</div>
-                            <div id="detalle" 
-                                @click=${this.clickBotonUsuario}>
-                            </div>
+            <div id="header">
+                <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
+                    <div id="bar">
+                        <div id="lblTitulo">${idiomas[this.idioma].publicacionesabm.tituloCabecera}</div>
+                        <div id="detalle" 
+                            @click=${this.clickBotonUsuario}>
                         </div>
-                        <div id="campana" @click=${this.clickBotonNotificacion}></div>
-                    </div>    
-                    <div id="lblLeyenda">${idiomas[this.idioma].publicacionesabm.leyendaCabecera}</div>
-                </div>
-                <div id="cuerpo">
-                    <publicacion-abm id="publicacionComp" media-size="${this.mediaSize}">
-                    </publicacion-abm>
-                </div>        
+                    </div>
+                    <div id="campana" @click=${this.clickBotonNotificacion}></div>
+                </div>    
+                <div id="lblLeyenda">${idiomas[this.idioma].publicacionesabm.leyendaCabecera}</div>
             </div>
-            <pie-componente id="gridPie" opcion="dos" media-size="${this.mediaSize}">
-            </pie-componente>
+            <div id="cuerpo">
+                <publicacion-abm id="publicacionComp" media-size="${this.mediaSize}">
+                </publicacion-abm>
+            </div>        
         `
     }
 
@@ -117,29 +107,9 @@ export class pantallaPublicacionesAbm extends connect(store, RESERVA_TIMESTAMP)(
     clickBotonNotificacion() {
         store.dispatch(modoPantalla("notificacion", "principal"))
     }
-    clickConsulta() {
-        store.dispatch(modoPantalla("video", "principal"))
-    }
-    clickAgenda() {
-        store.dispatch(modoPantalla("plancontrata", "principal"))
-    }
-    clickAyuda() {
-        store.dispatch(modoPantalla("vercobertura", "principal"))
-    }
-    clickBoton1() {
-        store.dispatch(modoPantalla("iniciosesion", "principal"))
-    }
-    clickBoton2() {
-        store.dispatch(modoPantalla("iniciosesion", "principal"))
-    }
+
     stateChanged(state, name) {
-        if (name == RESERVA_TIMESTAMP) {
-            let reserva = state.reserva.entities;
-            if (reserva) {
-                if (reserva[0].tiene == "S") {
-                    this.hayReserva = "S";
-                }
-            }
+        if (name == MODO_PANTALLA) {
             this.update();
         }
     }

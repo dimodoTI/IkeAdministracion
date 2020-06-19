@@ -9,7 +9,6 @@ import { idiomas } from "../../redux/datos/idiomas"
 export class pieComponente extends connect(store)(LitElement) {
     constructor() {
         super();
-        this.opcionAnterior = "";
         this.opcion = "";
         this.idioma = "ES"
     }
@@ -149,19 +148,6 @@ export class pieComponente extends connect(store)(LitElement) {
         :host([media-size="medium"]) #btn-ayudaPie{
             font-size: var(--font-error-size);
         }
-        #divTapaPantalla{
-            position:absolute;
-            z-index:10;
-            display:none;
-            width:100vw;
-            height:100vh;
-            background-color:var(--color-gris);
-            opacity:.4;
-        }
-        :host([media-size="small"]) #divTapaPantalla{
-            right:0;
-            bottom:0;
-        }
         :host(:not([media-size="small"])) #divPopupTablas{
             top:0;
             left:0;
@@ -243,39 +229,31 @@ export class pieComponente extends connect(store)(LitElement) {
                 <div><label class="lblayudaPie">${idiomas[this.idioma].principal.lblAyuda01}</label></div>
                 <button btn3 id="btn-ayudaPie" @click=${this.clickAyudaPie}>${idiomas[this.idioma].principal.btnAyuda}</button>
             </div>
-            <div id="divTapaPantalla"  @click=${this.clickTapaPantalla}></div>
         `
-    }
-    clickTapaPantalla() {
-        this.shadowRoot.querySelector("#divTapaPantalla").style.display = "none"
-        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
-        this.opcion = this.opcionAnterior
-        this.update()
     }
     clickBoton1() {
         store.dispatch(modoPantalla("usuariosabm", "principal"))
+        this.opcion = "uno"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
     }
     clickBoton2() {
         store.dispatch(modoPantalla("publicacionesabm", "principal"))
+        this.opcion = "dos"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
     }
     clickBoton3() {
-        this.opcionAnterior = this.opcion
         this.opcion = "tres"
-        this.shadowRoot.querySelector("#divTapaPantalla").style.display = "grid"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "grid"
         this.shadowRoot.querySelector("#divPopupTablas").style.display = "grid"
         this.update();
     }
-    clickBoton4() {
-        store.dispatch(modoPantalla("calendario", "principal"))
-    }
-    clickBoton5() {
-        store.dispatch(modoPantalla("fotogaleria", "principal"))
-    }
-    clickAyudaPie() {
-        store.dispatch(modoPantalla("vercobertura", "principal"))
-    }
     clickRaza() {
         store.dispatch(modoPantalla("razasabm", "principal"))
+        this.opcion = "cero"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
     }
     static get properties() {
         return {

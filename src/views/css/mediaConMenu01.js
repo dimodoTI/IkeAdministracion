@@ -16,8 +16,8 @@ export const mediaConMenu01 = css`
     }
     #gridContenedor{
         grid-area: Contenedor; 
-        grid-template-rows:18% 82%;
         display:grid;
+        position:relative;
         overflow-y: hidden;
         overflow-x: hidden; 
     } 
