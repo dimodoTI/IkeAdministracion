@@ -68,7 +68,8 @@ export class pantallaPrincipal extends connect(store, MODO_PANTALLA)(LitElement)
             <div id="header">
                 <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
                     <div id="bar">
-                        <div id="lblTitulo">${idiomas[this.idioma].principal.tituloCabecera}</div>
+                        <div id="lblTitulo">${idiomas[this.idioma].principal.tituloCabecera}
+                        ${store.getState().cliente.datos.nombre == "" ? "" : ", " + store.getState().cliente.datos.nombre}</div>
                         <div id="detalle" 
                             @click=${this.clickBotonUsuario}>
                         </div>

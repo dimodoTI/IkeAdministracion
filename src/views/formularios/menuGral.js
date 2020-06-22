@@ -14,6 +14,8 @@ import { pantallaPrincipal } from "./principal";
 import { pantallaUsuariosAbm } from "./usuariosAbm";
 import { pantallaPublicacionesAbm } from "./publicacionesAbm";
 import { pantallaRazasAbm } from "./razasAbm";
+import { pantallaMascotasTiposAbm } from "./mascotasTiposAbm";
+import { pantallaVacunasAbm } from "./vacunasAbm";
 
 const QUEPANTALLA = "ui.timeStampPantalla";
 const MODO_PANTALLA = "ui.timeStampPantalla"
@@ -70,6 +72,8 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
                 <pantalla-usuariosabm id="usuariosabm" media-size="${this.mediaSize}"></pantalla-usuariosabm>
                 <pantalla-publicacionesabm id="publicacionesabm" media-size="${this.mediaSize}"></pantalla-publicacionesabm>
                 <pantalla-razasabm id="razasabm" media-size="${this.mediaSize}"></pantalla-razasabm>      
+                <pantalla-mascotastiposabm id="mascotastiposabm" media-size="${this.mediaSize}"></pantalla-mascotastiposabm>      
+                <pantalla-vacunasabm id="vacunasabm" media-size="${this.mediaSize}"></pantalla-vacunasabm>      
 
                 <div id="divTapaPantalla"  @click=${this.clickTapaPantalla}></div>
             </div>
@@ -86,6 +90,8 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
                 this.shadowRoot.querySelector("#usuariosabm").hidden = state.ui.quePantalla != "usuariosabm";
                 this.shadowRoot.querySelector("#publicacionesabm").hidden = state.ui.quePantalla != "publicacionesabm";
                 this.shadowRoot.querySelector("#razasabm").hidden = state.ui.quePantalla != "razasabm";
+                this.shadowRoot.querySelector("#mascotastiposabm").hidden = state.ui.quePantalla != "mascotastiposabm";
+                this.shadowRoot.querySelector("#vacunasabm").hidden = state.ui.quePantalla != "vacunasabm";
             }
         }
         this.update();
@@ -112,10 +118,6 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
             hidden: {
                 type: Boolean,
                 reflect: true
-            },
-            label: {
-                type: String,
-                reflect: false
             },
             mediaSize: {
                 type: String,

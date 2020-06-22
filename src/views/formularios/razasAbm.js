@@ -8,7 +8,8 @@ import { cabecera1 } from "../css/cabecera1"
 import { razaAbm } from "../componentes/razaAbm"
 import { modoPantalla } from "../../redux/actions/ui";
 import { REGALO, CARRITO, RELOJ, NOVEDADES1, NOVEDADES2, NOVEDADES3, HOME, MASCOTA, CONSULTA, VACUNA, FOTO, MAS } from "../../../assets/icons/icons"
-
+import { get as getRazas } from "../../redux/actions/razas";
+import { get as getMascotasTipo } from "../../redux/actions/mascotastipo";
 const MODO_PANTALLA = "ui.timeStampPantalla"
 export class pantallaRazasAbm extends connect(store, MODO_PANTALLA)(LitElement) {
     constructor() {
@@ -84,7 +85,9 @@ export class pantallaRazasAbm extends connect(store, MODO_PANTALLA)(LitElement) 
             <div id="header">
                 <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
                     <div id="bar">
-                        <div id="lblTitulo">${idiomas[this.idioma].principal.tituloCabecera}</div>
+                        <div id="lblTitulo">${idiomas[this.idioma].principal.tituloCabecera}                  
+                            ${store.getState().cliente.datos.nombre == "" ? "" : ", " + store.getState().cliente.datos.nombre}
+                        </div>
                         <div id="detalle" 
                             @click=${this.clickBotonUsuario}>
                         </div>
@@ -109,7 +112,8 @@ export class pantallaRazasAbm extends connect(store, MODO_PANTALLA)(LitElement) 
     }
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {
-            this.update();
+            store.dispatch(getRazas())
+            store.dispatch(getMascotasTipo())
         }
     }
 

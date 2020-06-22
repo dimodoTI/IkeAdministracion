@@ -6,39 +6,34 @@ import { USUARIO, MASCOTA, VACUNA, CONSULTA, FOTO } from "../../../assets/icons/
 import { modoPantalla } from "../../redux/actions/ui";
 import { idiomas } from "../../redux/datos/idiomas";
 import { select } from "../css/select"
-import { cardRaza } from "../css/cardRaza"
+import { cardMascotaTipo } from "../css/cardMascotaTipo"
 import { MAS, BASURA, MODIFICAR, ARRIBA, ABAJO } from "../../../assets/icons/icons"
 import { ikeInput } from "../css/ikeInput"
-import { get as getRazas, patch as patchRazas, add as addRazas } from "../../redux/actions/razas";
-import { get as getMascotasTipo } from "../../redux/actions/mascotastipo";
+import { get as getMascotasTipo, patch as patchMascotasTipo, add as addMascotasTipo } from "../../redux/actions/mascotastipo";
 
-const RAZAS_TIMESTAMP = "razas.timeStamp"
 const MASCOTASTIPO_TIMESTAMP = "mascotastipo.timeStamp"
-const RAZAS_UPDATETIMESTAMP = "razas.updateTimeStamp"
-const RAZAS_ADDTIMESTAMP = "razas.addTimeStamp"
-const RAZAS_ERRORGETTIMESTAMP = "razas.errorTimeStamp"
-const RAZAS_ERROROTROSTIMESTAMP = "razas.commandErrorTimeStamp"
+const MASCOTASTIPO_UPDATETIMESTAMP = "mascotastipo.updateTimeStamp"
+const MASCOTASTIPO_ADDTIMESTAMP = "mascotastipo.addTimeStamp"
+const MASCOTASTIPO_ERRORGETTIMESTAMP = "mascotastipo.errorTimeStamp"
+const MASCOTASTIPO_ERROROTROSTIMESTAMP = "mascotastipo.commandErrorTimeStamp"
 const MODO_PANTALLA = "ui.timeStampPantalla"
 
-export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMESTAMP, RAZAS_UPDATETIMESTAMP, RAZAS_ADDTIMESTAMP, RAZAS_ERRORGETTIMESTAMP, RAZAS_ERROROTROSTIMESTAMP)(LitElement) {
+export class mascotaTipoAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, MASCOTASTIPO_UPDATETIMESTAMP, MASCOTASTIPO_ADDTIMESTAMP, MASCOTASTIPO_ERRORGETTIMESTAMP, MASCOTASTIPO_ERROROTROSTIMESTAMP)(LitElement) {
     constructor() {
         super();
         this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI0NTg1MTksImV4cCI6MTU5MjQ2MzkxOSwiaWF0IjoxNTkyNDU4NTE5fQ.m6skA3UUdCoiUkkCp1QcuUQs9ipJy570Sr8rnhLdfQo"
         this.idioma = "ES"
         this.accion = ""
-        this.itemOriginal = { id: 0, idMascotasTipo: 0, descripcion: "", activo: true, tipo: { id: 0, descripcion: "", activo: true } }
+        this.itemOriginal = { id: 0, descripcion: "", activo: true }
         this.activo = false;
-        this.mascotasTipo = [];
-        this.razas = [{
-            id: 0, idMascotasTipo: 0, descripcion: "", activo: true, tipo: { id: 0, descripcion: "", activo: true }
-        }]
+        this.mascotatipo = [{ id: 0, descripcion: "", activo: true }]
     }
 
     static get styles() {
         return css`
         ${button}
         ${select}
-        ${cardRaza}
+        ${cardMascotaTipo}
         ${ikeInput}
         :host{
             display: grid;
@@ -90,10 +85,7 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
             grid-gap: .8rem;
             overflow-y:auto;
             align-content: flex-start;
-            height: calc(((100vh * .9) * .82) - 2.5rem);
-        }
-        :host(:not([media-size="small"])) #divRegistros{
-            height: calc(((100vh * .9)) - 2.5rem);
+            height: calc(((100vh * .9) * .82) - 2rem);
         }
         #divRegistros::-webkit-scrollbar {
             display: grid;
@@ -180,24 +172,22 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
         return html`
             <div id="divTitulo">
                 <div id="divSacoFiltro">
-                    <div id="divTituloLbl">${idiomas[this.idioma].razaabm.titulo}</div>
+                    <div id="divTituloLbl">${idiomas[this.idioma].mascotastiposabm.titulo}</div>
                     <div></div>
                 </div>
                 <div id="divBtnMas" @click="${function () { this.clickAlta('alta', null) }}">${MAS}</div>
             </div>
 
             <div id=divRegistros>
-                ${this.razas.map((dato) => {
-            return html`
-                        <div id="crazaDivCuerpo">
-                            <div id="crazaDivActivo">${idiomas[this.idioma].razaabm.datoActivo} ${dato.activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no}</div>
-                            <div id="divSvgUpdate"  valor="2" class="svgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
-                            <div id="crazaDivTipo">${dato.tipo.descripcion}</div>
-                            <div id="crazaDivNombre">${dato.descripcion}</div>
-                        </div>
-                    `
-        })}
-            <div style="height:.5rem;"></div>
+                ${this.mascotatipo.map(dato => html`
+                    <div id="ctmDivCuerpo">
+                        <div id="ctmDivActivo">${idiomas[this.idioma].mascotastiposabm.datoActivo} ${dato.activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no}</div>
+                        <div></div>
+                        <div id="divSvgUpdate"  valor="2" class="svgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
+                        <div id="ctmDivNombre">${dato.descripcion}</div>
+                    </div>
+                `)}
+                <div style="height:.5rem;"></div>
             </div>
             <div id="pantallaOscura"> 
             </div>
@@ -209,30 +199,18 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
                         <label id="lblTituloDatos">titulo</label>
                     </div>
                     <div class="ikeInput">
-                        <label id="lblNombre">${idiomas[this.idioma].razaabm.lblNombre}</label>
-                        <input id="txtNombre"  @input=${this.activar} placeholder=${idiomas[this.idioma].razaabm.lblNombre_ph}>
+                        <label id="lblNombre">${idiomas[this.idioma].mascotastiposabm.lblNombre}</label>
+                        <input id="txtNombre"  @input=${this.activar} placeholder=${idiomas[this.idioma].mascotastiposabm.lblNombre_ph}>
                         <label id="lblErrorNombre" error oculto>Raza Incorrecto</label>
                     </div>
-                    <div id="selectTipo" class="select" > 
-                        <label >${idiomas[this.idioma].razaabm.lblTipo}</label>
-                        <select style="width:100%;height:2rem;" id="tipo"> 
-
-                        ${this.mascotasTipo.map((dato) => {
-            return html`
-                           <option value=${dato.id} .selected=${dato.descripcion == this.itemOriginal.tipo.descripcion} >${dato.descripcion}</option>
-                            `
-        })}
-                            </select>
-                    </div>
-
                     <div id="selectActivo" class="select" > 
-                        <label >${idiomas[this.idioma].razaabm.lblActivo}</label>
+                        <label >${idiomas[this.idioma].mascotastiposabm.lblActivo}</label>
                         <select style="width:100%;height:2rem;" id="activo">          
                             <option value=true .selected="${this.itemOriginal.activo}">${idiomas[this.idioma].SiNo.si}</option>
                             <option value=false .selected="${!this.itemOriginal.activo}">${idiomas[this.idioma].SiNo.no}</option>
                         </select>
                     </div>
-                    <button id="btnAceptar"  @click=${this.clickAccion} btn1 apagado>${idiomas[this.idioma].razaabm.btnGrabar}</button>                 
+                    <button id="btnAceptar"  @click=${this.clickAccion} btn1 apagado>${idiomas[this.idioma].mascotastiposabm.btnGrabar}</button>                 
                 </div>
             </div>
             <hc2-spinner></hc2-spinner>
@@ -242,19 +220,14 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {
         }
-        if (name == RAZAS_TIMESTAMP || name == MASCOTASTIPO_TIMESTAMP) {
-            if (state.mascotastipo.entities && state.razas.entities) {
-                this.razas = state.razas.entities.map(raza => {
-                    let nuevaRaza = raza
-                    nuevaRaza.tipo = state.mascotastipo.entities.filter(tipo => tipo.id == nuevaRaza.idMascotasTipo)[0]
-                    return nuevaRaza
-                })
-                this.mascotasTipo = state.mascotastipo.entities
+        if (name == MASCOTASTIPO_TIMESTAMP) {
+            if (state.mascotastipo.entities) {
+                this.mascotatipo = state.mascotastipo.entities
                 this.update()
             }
         }
-        if (name == RAZAS_ADDTIMESTAMP || name == RAZAS_UPDATETIMESTAMP) {
-            store.dispatch(getRazas())
+        if (name == MASCOTASTIPO_ADDTIMESTAMP || name == MASCOTASTIPO_UPDATETIMESTAMP) {
+            store.dispatch(getMascotasTipo())
         }
     }
     firstUpdated(changedProperties) {
@@ -262,14 +235,11 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
 
     clickAccion() {
         const descripcion = this.shadowRoot.getElementById("txtNombre").value;
-        const tipo = this.shadowRoot.getElementById("tipo").value;
         const activo = this.shadowRoot.getElementById("activo").value;
-
         var datoUpdate = [];
-
         if (this.accion == "alta") {
-            let regNuevo = { idMascotasTipo: tipo, Descripcion: descripcion, Activo: activo }
-            store.dispatch(addRazas(regNuevo))
+            let regNuevo = { Descripcion: descripcion, Activo: activo }
+            store.dispatch(addMascotasTipo(regNuevo))
             this.update()
             this.clickX()
         }
@@ -279,7 +249,7 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
                     var datoUpdate = [];
                     descripcion != this.itemOriginal.descripcion ? datoUpdate.push({
                         "op": "replace",
-                        "path": "/descripcion",
+                        "path": "/Descripcion",
                         "value": descripcion
                     }) : null
                     activo != this.itemOriginal.activo ? datoUpdate.push({
@@ -287,13 +257,8 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
                         "path": "/Activo",
                         "value": activo
                     }) : null
-                    tipo != this.itemOriginal.idMascotasTipo ? datoUpdate.push({
-                        "op": "replace",
-                        "path": "/idMascotasTipo",
-                        "value": tipo
-                    }) : null
                     if (datoUpdate) {
-                        store.dispatch(patchRazas(this.itemOriginal.id, datoUpdate))
+                        store.dispatch(patchMascotasTipo(this.itemOriginal.id, datoUpdate))
                         this.update()
                         this.clickX()
                     }
@@ -309,14 +274,14 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
     clickAlta(accion, dato) {
         this.accion = accion;
         if (accion == "alta") {
-            this.itemOriginal = { id: 0, idMascotasTipo: 0, descripcion: "", activo: true, tipo: { id: 0, descripcion: "", activo: true } }
+            this.itemOriginal = { id: 0, descripcion: "", activo: true };
             this.shadowRoot.querySelector("#txtNombre").value = "";
-            this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].razaabm.lblTituloAltaNew
+            this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].mascotastiposabm.lblTituloAltaNew
         }
         if (accion == "update") {
             this.itemOriginal = dato;
             this.shadowRoot.querySelector("#txtNombre").value = dato.descripcion;
-            this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].razaabm.lblTituloAltaChange
+            this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].mascotastiposabm.lblTituloAltaChange
         }
         this.shadowRoot.querySelector("#verDatos").style.display = "grid";
         this.shadowRoot.querySelector("#x").style.display = "grid";
@@ -352,8 +317,8 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
             element.setAttribute("oculto", "")
         })
         let valido = true
-        const descripcion = this.shadowRoot.getElementById("txtNombre");
-        if (descripcion.value.length < 2 || descripcion.value.length > 50) {
+        const nombre = this.shadowRoot.getElementById("txtNombre");
+        if (nombre.value.length < 2 || nombre.value.length > 50) {
             valido = false
             this.shadowRoot.querySelector("#lblErrorNombre").removeAttribute("oculto");
         }
@@ -371,4 +336,4 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
     }
 }
 
-window.customElements.define("raza-abm", razaAbm);
+window.customElements.define("mascotatipo-abm", mascotaTipoAbm);

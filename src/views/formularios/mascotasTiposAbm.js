@@ -5,12 +5,13 @@ import { idiomas } from "../../redux/datos/idiomas"
 import { label } from "../css/label"
 import { button } from "../css/button"
 import { cabecera1 } from "../css/cabecera1"
-import { publicacionesabm } from "../componentes/publicacionAbm"
+import { mascotaTipoAbm } from "../componentes/mascotaTipoAbm"
 import { modoPantalla } from "../../redux/actions/ui";
 import { REGALO, CARRITO, RELOJ, NOVEDADES1, NOVEDADES2, NOVEDADES3, HOME, MASCOTA, CONSULTA, VACUNA, FOTO, MAS } from "../../../assets/icons/icons"
+import { get as getMascotasTipo } from "../../redux/actions/mascotastipo";
 
 const MODO_PANTALLA = "ui.timeStampPantalla"
-export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitElement) {
+export class pantallaMascotasTiposAbm extends connect(store, MODO_PANTALLA)(LitElement) {
     constructor() {
         super();
         this.hidden = true
@@ -72,7 +73,7 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
             font-size: var(--font-bajada-size);
             font-weight: var(--font-bajada-weight);
         }      
-        #publicacionComp{
+        #usuarioComp{
             position:relative;
             display:grid;
             padding: 0 1rem 0 1rem;
@@ -84,7 +85,7 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
             <div id="header">
                 <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
                     <div id="bar">
-                        <div id="lblTitulo">${idiomas[this.idioma].publicacionesabm.tituloCabecera}                    
+                        <div id="lblTitulo">${idiomas[this.idioma].principal.tituloCabecera}                    
                             ${store.getState().cliente.datos.nombre == "" ? "" : ", " + store.getState().cliente.datos.nombre}
                         </div>
                         <div id="detalle" 
@@ -93,11 +94,11 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
                     </div>
                     <div id="campana" @click=${this.clickBotonNotificacion}></div>
                 </div>    
-                <div id="lblLeyenda">${idiomas[this.idioma].publicacionesabm.leyendaCabecera}</div>
+                <div id="lblLeyenda">${idiomas[this.idioma].principal.leyendaCabecera}</div>
             </div>
             <div id="cuerpo">
-                <publicacion-abm id="publicacionComp" media-size="${this.mediaSize}">
-                </publicacion-abm>
+                <mascotatipo-abm id="usuarioComp" media-size="${this.mediaSize}">
+                </mascotatipo-abm>
             </div>        
         `
     }
@@ -109,9 +110,9 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
     clickBotonNotificacion() {
         store.dispatch(modoPantalla("notificacion", "principal"))
     }
-
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {
+            store.dispatch(getMascotasTipo())
             this.update();
         }
     }
@@ -125,10 +126,6 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
                 type: Boolean,
                 reflect: true
             },
-            label: {
-                type: String,
-                reflect: false
-            },
             mediaSize: {
                 type: String,
                 reflect: true,
@@ -138,4 +135,4 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
     }
 }
 
-window.customElements.define("pantalla-publicacionesabm", pantallaPublicacionesAbm);
+window.customElements.define("pantalla-mascotastiposabm", pantallaMascotasTiposAbm);

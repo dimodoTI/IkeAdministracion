@@ -228,7 +228,7 @@ export class publicacionAbm extends connect(store)(LitElement) {
             </div>
             <div id="divSeleccion">
                 <div id="selectFiltro" class="select" > 
-                    <label >${idiomas[this.idioma].usuarioabm.lblFiltro}</label>
+                    <label >${idiomas[this.idioma].publicacionesabm.lblFiltro}</label>
                     <select style="width:100%;height:2rem;" id="filtro" @change=${this.clickMostrarDatos}>          
                         <option value="D" .selected="${this.item.tipo == "D"}">Onboarding</option>
                         <option value="C" .selected="${this.item.tipo == "C"}">flier</option>

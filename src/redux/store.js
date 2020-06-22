@@ -28,7 +28,12 @@ import {
 import {
   middleware as autorizacion
 } from "./middleware/autorizacion";
-
+import {
+  middleware as mascotastipo
+} from "./middleware/mascotastipo";
+import {
+  middleware as razas
+} from "./middleware/razas";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 let mdw = [
@@ -36,7 +41,9 @@ let mdw = [
   rest,
   ...ui,
   ...usuario,
-  ...autorizacion
+  ...autorizacion,
+  ...mascotastipo,
+  ...razas
 ]
 
 if (process.env.NODE_ENV !== 'production') {

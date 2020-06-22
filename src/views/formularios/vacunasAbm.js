@@ -5,12 +5,12 @@ import { idiomas } from "../../redux/datos/idiomas"
 import { label } from "../css/label"
 import { button } from "../css/button"
 import { cabecera1 } from "../css/cabecera1"
-import { publicacionesabm } from "../componentes/publicacionAbm"
+import { vacunaAbm } from "../componentes/vacunaAbm"
 import { modoPantalla } from "../../redux/actions/ui";
 import { REGALO, CARRITO, RELOJ, NOVEDADES1, NOVEDADES2, NOVEDADES3, HOME, MASCOTA, CONSULTA, VACUNA, FOTO, MAS } from "../../../assets/icons/icons"
 
 const MODO_PANTALLA = "ui.timeStampPantalla"
-export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitElement) {
+export class pantallaVacunasAbm extends connect(store, MODO_PANTALLA)(LitElement) {
     constructor() {
         super();
         this.hidden = true
@@ -84,8 +84,8 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
             <div id="header">
                 <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
                     <div id="bar">
-                        <div id="lblTitulo">${idiomas[this.idioma].publicacionesabm.tituloCabecera}                    
-                            ${store.getState().cliente.datos.nombre == "" ? "" : ", " + store.getState().cliente.datos.nombre}
+                        <div id="lblTitulo">${idiomas[this.idioma].publicacionesabm.tituloCabecera}
+                        ${store.getState().cliente.datos.nombre == "" ? "" : ", " + store.getState().cliente.datos.nombre}
                         </div>
                         <div id="detalle" 
                             @click=${this.clickBotonUsuario}>
@@ -96,8 +96,8 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
                 <div id="lblLeyenda">${idiomas[this.idioma].publicacionesabm.leyendaCabecera}</div>
             </div>
             <div id="cuerpo">
-                <publicacion-abm id="publicacionComp" media-size="${this.mediaSize}">
-                </publicacion-abm>
+                <vacuna-abm id="publicacionComp" media-size="${this.mediaSize}">
+                </vacuna-abm>
             </div>        
         `
     }
@@ -138,4 +138,4 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
     }
 }
 
-window.customElements.define("pantalla-publicacionesabm", pantallaPublicacionesAbm);
+window.customElements.define("pantalla-vacunasabm", pantallaVacunasAbm);

@@ -7,12 +7,17 @@ import {
 } from "../libs/fetchFactory"
 
 const webApiUsuarios = "http://64.227.109.20:8080/api"
+const webApiMascotas = "http://64.227.109.20:8081/api"
+
 export const ikeUsuarioFetch = fetchFactory(webApiUsuarios, "Usuario")
 export const ikeLoginFetch = fetchFactory(webApiUsuarios, "Autorizacion/login")
 export const ikeRenovacionFetch = fetchFactory(webApiUsuarios, "Autorizacion/renovacion")
 export const ikeRecuperoFetch = fetchFactory(webApiUsuarios, "Autorizacion/recupero")
 export const ikeLogonFetch = fetchFactory(webApiUsuarios, "Autorizacion/logon")
 export const ikeUpdateProfileFetch = fetchFactory(webApiUsuarios, "Autorizacion/updateProfile")
+
+export const ikeMascotasTipo = fetchFactory(webApiMascotas, "MascotasTipo")
+export const ikeRazas = fetchFactory(webApiMascotas, "Razas")
 /* let app = "DigitalizacionExpedientes"
 let dominio = "http://localhost/" + app
 if (process.env.NODE_ENV == 'production') {

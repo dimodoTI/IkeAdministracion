@@ -16,6 +16,15 @@ import {
 import {
   reducer as clienteReducer
 } from "./cliente"
+
+import {
+  reducer as mascotasTipoReducer
+} from "./mascotastipo"
+
+import {
+  reducer as razasReducer
+} from "./razas"
+
 export const rootReducer = (state = {}, action) => {
 
   return {
@@ -24,7 +33,9 @@ export const rootReducer = (state = {}, action) => {
     reserva: reservaReducer(state.reserva, action),
     usuario: usuarioReducer(state.usuario, action),
     autorizacion: autorizacionReducer(state.autorizacion, action),
-    cliente: clienteReducer(state.cliente, action)
+    cliente: clienteReducer(state.cliente, action),
+    mascotastipo: mascotasTipoReducer(state.mascotastipo, action),
+    razas: razasReducer(state.razas, action)
     // titular: titularReducer(state.titular, action),
     // mascotas: mascotasReducer(state.mascotas, action),
     // hc: hcReducer(state.hc, action),

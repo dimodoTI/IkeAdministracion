@@ -2,14 +2,14 @@ import {
     css
 } from "lit-element"
 
-export const cardRaza = css`
-    #crazaDivCuerpo{
+export const cardMascotaTipo = css`
+    #ctmDivCuerpo{
         width:100%;
-        height:3.2rem;
+        height:2.5rem;
         display: grid;
         background-color:var(--color-blanco);
         grid-template-columns: 75% 10% 15%;
-        grid-template-rows: 1.3rem .7rem 1.2rem;
+        grid-template-rows: 1.3rem 1.2rem;
         grid-gap:0rem;
         align-items: center;
         border-radius:.5rem;
@@ -25,24 +25,19 @@ export const cardRaza = css`
         height:1rem;          
         cursor:pointer;
     }
-    .crazaSvgHidden{
+    .ctmSvgHidden{
         display:none;
     }
-    #crazaDivNombre{
+    #ctmDivNombre{
         grid-column-start:1;
         grid-column-end:4;
         font-size: var(--font-header-h1-menos-size);
         font-weight: var(--font-header-h1-menos-weight);  
         padding-left: .5rem;            
     }
-    #crazaDivActivo{
+    #ctmDivActivo{
         grid-column-start:1;
-        grid-column-end:3;
-        padding-left: .5rem;            
-    }
-    #crazaDivTipo{
-        grid-column-start:1;
-        grid-column-end:4;
+        grid-column-end:2;
         padding-left: .5rem;            
     }
 `

@@ -9,11 +9,11 @@ import {
     ADD_ERROR,
     REMOVE_SUCCESS,
     REMOVE_ERROR
-} from "../actions/usuario";
+} from "../actions/razas";
 
 
 const initialState = {
-    entities: [],
+    entities: null,
     timeStamp: null,
     removeTimeStamp: null,
     updateTimeStamp: null,

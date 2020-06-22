@@ -19,7 +19,7 @@ const USUARIO_ERROROTROSTIMESTAMP = "usuario.commandErrorTimeStamp"
 export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATETIMESTAMP, USUARIO_ADDTIMESTAMP, USUARIO_ERRORGETTIMESTAMP, USUARIO_ERROROTROSTIMESTAMP)(LitElement) {
     constructor() {
         super();
-        this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI1NDIyNDAsImV4cCI6MTU5MjU0NzY0MCwiaWF0IjoxNTkyNTQyMjQwfQ.8E9Ly0xUvj2K8B-KxGwVMm3ZhodcZYDfT3KH5I9Ol9E"
+        this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI4MzIxMjAsImV4cCI6MTU5MjgzNzUyMCwiaWF0IjoxNTkyODMyMTIwfQ.8oNr7BtRKVbAJKnsRPNL92EIPIYbtEKQNzl5Edir6dY"
         this.idioma = "ES"
         this.accion = ""
         this.itemOriginal = {}
@@ -304,6 +304,7 @@ export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATE
 
     stateChanged(state, name) {
         if (name == USUARIO_TIMESTAMP) {
+            this.TOCK = store.getState().cliente.datos.token
             this.usuarios = state.usuario.entities;
             this.update()
             this.shadowRoot.querySelector("#divRegistros").style.display = "grid";
@@ -414,12 +415,18 @@ export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATE
             this.shadowRoot.querySelector("#selectActivo").style.display = "none";
             this.itemOriginal = { id: 0, email: "", nombre: "", apellido: "", documento: "", telefono: "", perfil: "", activo: "" };
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].usuarioabm.lblTituloAltaNew
+
+            this.shadowRoot.querySelector("#txtMail").removeAttribute("readonly")
+            this.shadowRoot.querySelector("#txtMail").value = "";
+            this.shadowRoot.querySelector("#txtNombre").value = "";
+            this.shadowRoot.querySelector("#txtApellido").value = "";
+            this.shadowRoot.querySelector("#txtDocumento").value = "";
+            this.shadowRoot.querySelector("#txtTelefono").value = "";
         }
         if (accion == "update") {
             this.itemOriginal = dato;
             this.shadowRoot.querySelector("#selectActivo").style.display = "block";
             this.shadowRoot.querySelector("#txtMail").setAttribute("readonly", "")
-            this.shadowRoot.querySelector("#txtMail").value = dato.email;
             this.shadowRoot.querySelector("#txtNombre").value = dato.nombre;
             this.shadowRoot.querySelector("#txtApellido").value = dato.apellido;
             this.shadowRoot.querySelector("#txtDocumento").value = dato.documento;

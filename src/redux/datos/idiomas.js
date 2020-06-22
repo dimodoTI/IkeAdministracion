@@ -29,11 +29,11 @@ export const idiomas = {
         crearclavemsg: { titulo: "¡Genial!", leyenda: "Tu contraseña fue creada con éxito.", btn1: "Ingresar a mi cuenta" },
         pie: { inicio: "Usuarios", mascota: "Publicacion", consulta: "Tablas", vacuna: "Vacunas", foto: "Fotos" },
         principal: {
-            tituloCabecera: "Hola, Lucía", leyendaCabecera: "Administración mascotas",
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas",
             lblAyuda01: "¿Necesitás ayuda?.", btnAyuda: "Solicitar asistencia"
         },
         usuarioabm: {
-            tituloCabecera: "Hola, Lucía", leyendaCabecera: "Administración mascotas",
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas",
             titulo: "Administrar usuarios", lblFiltro: "Filtro por:", phFiltro: "Ingrese datos as buscar",
             btnFiltro: "Filtrar", filtroOpcionMail: "Mail", filtroOpcionDocumento: "Documento", filtroOpcionNombre: "Nombre",
             datoActivo: "Activo: ", datoDocumento: "DNI: ",
@@ -46,18 +46,33 @@ export const idiomas = {
             errorToken: "Error, Vuelve a loguearte", errorOperacion: "Operacion no realizada"
         },
         publicacionesabm: {
-            tituloCabecera: "Hola, Lucía", leyendaCabecera: "Administración mascotas",
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas", lblFiltro: "Filtro por:",
             titulo: "Administrar publicaciones", lblTitulo: "Titulo:  ", lblLeyenda: "Cuerpo:  ",
             lblColor: "Color de Fondo:  ", lblColor_ph: "#999999", lblImagen: "Imagen:  ", lblImagen_ph: "http://www.ikeasistencia.com.ar/imagen/publicacion.gif",
             lblBoton: "Boton caption:  ", lblHttp: "Http: ", lblHttp_ph: "http://www.ikeasistencia.com.ar/pagina/publicacion.html", lblOrden: "Orden:  ",
             btnGrabar: "Aceptar", lblTituloAltaNew: "Nueva Publicacion", lblTituloAltaChange: "Modificar Publicacion"
         },
         razaabm: {
-            tituloCabecera: "Hola, Lucía", leyendaCabecera: "Administración razas",
-            titulo: "Administrar razas", datoRaza: "Raza: ", datoActivo: "Activo: ",
-            lblNombre: "Raza", lblNombre_ph: "Salchicha", lblActivo: "Esta activo?",
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas",
+            titulo: "Administrar razas", datoRaza: "Raza: ", datoTipo: "Tipo de mascota: ", datoActivo: "Activo: ",
+            lblNombre: "Raza", lblTipo: "Tipo de mascota", lblNombre_ph: "Salchicha", lblActivo: "Esta activo?",
             btnGrabar: "Aceptar", lblTituloAltaNew: "Nuevo Raza", lblTituloAltaChange: "Modificar Raza",
             errorToken: "Error, Vuelve a loguearte", errorOperacion: "Operacion no realizada"
+        },
+        mascotastiposabm: {
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas",
+            titulo: "Tipos de mascotas", datoRaza: "Mascotas Tipo: ", datoActivo: "Activo: ",
+            lblNombre: "Tipos de mascotas", lblNombre_ph: "perro", lblActivo: "Esta activo?",
+            btnGrabar: "Aceptar", lblTituloAltaNew: "Nuevo Tipo de mascota", lblTituloAltaChange: "Modificar",
+            errorToken: "Error, Vuelve a loguearte", errorOperacion: "Operacion no realizada"
+        },
+        vacunasabm: {
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas", lblFiltro: "Filtro por:",
+            lblMascota: "Mascota:  ", lblVacuna: "Vacuna:  ", lblVacuna_ph: "Quintuple", lblPara: "Para:  ",
+            lblPara_ph: "Titulo: Tos de las perreras - Hepatitis - Moquillo - Parvovirus",
+            lblEdad: "Edad:  ", lblEdad_ph: "Cachorro", lblObligatoria: "Obligatoria: ",
+            btnGrabar: "Aceptar", lblTituloAltaNew: "Nueva vacuna", lblTituloAltaChange: "Modificar vacuna",
+            lblActivo: "Esta activo?"
         }
     }
 }

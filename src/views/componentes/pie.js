@@ -221,8 +221,8 @@ export class pieComponente extends connect(store)(LitElement) {
             </div>
             <div id="divPopupTablas">
                 <div id="divPopupRazas" class="itemMenuTablas" @click=${this.clickRaza}>Razas</div>
-                <div id="divPopupTipoMascota" class="itemMenuTablas">Tipo de mascotas</div>
-                <div id="divPopupVacunas" class="itemMenuTablas">Vacunas</div>
+                <div id="divPopupTipoMascota" class="itemMenuTablas" @click=${this.clickMascotaTipo}>Tipo de mascotas</div>
+                <div id="divPopupVacunas" class="itemMenuTablas" @click=${this.clickVacunas}>Vacunas</div>
             </div>
             <div id="divAyudaPie">
                 <hr style="width:90%; border-top: 2px solid var(--color-gris-claro)">
@@ -251,6 +251,18 @@ export class pieComponente extends connect(store)(LitElement) {
     }
     clickRaza() {
         store.dispatch(modoPantalla("razasabm", "principal"))
+        this.opcion = "cero"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
+    }
+    clickMascotaTipo() {
+        store.dispatch(modoPantalla("mascotastiposabm", "principal"))
+        this.opcion = "cero"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
+    }
+    clickVacunas() {
+        store.dispatch(modoPantalla("vacunasabm", "principal"))
         this.opcion = "cero"
         this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
         this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
