@@ -50,7 +50,8 @@ export const idiomas = {
             titulo: "Administrar publicaciones", lblTitulo: "Titulo:  ", lblLeyenda: "Cuerpo:  ",
             lblColor: "Color de Fondo:  ", lblColor_ph: "#999999", lblImagen: "Imagen:  ", lblImagen_ph: "http://www.ikeasistencia.com.ar/imagen/publicacion.gif",
             lblBoton: "Boton caption:  ", lblHttp: "Http: ", lblHttp_ph: "http://www.ikeasistencia.com.ar/pagina/publicacion.html", lblOrden: "Orden:  ",
-            btnGrabar: "Aceptar", lblTituloAltaNew: "Nueva Publicacion", lblTituloAltaChange: "Modificar Publicacion"
+            btnGrabar: "Aceptar", lblTituloAltaNew: "Nueva Publicacion", lblTituloAltaChange: "Modificar Publicacion",
+            msjDelete: "Elimina la publicacion?"
         },
         razaabm: {
             tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas",

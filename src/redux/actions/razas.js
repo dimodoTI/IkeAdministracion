@@ -19,34 +19,34 @@ export const REMOVE_ERROR = "[razas] REMOVE error";
 
 
 
-export const get = (id) => ({
+export const get = (options) => ({
     type: GET,
-    id: id,
+    options: options
     //token: token
 });
 
-export const add = (body) => ({
+export const add = (body, token) => ({
     type: ADD,
     body: body,
-    // token: token
+    token: token
 });
 
-export const update = (id, body) => ({
+export const update = (id, body, token) => ({
     type: UPDATE,
     id: id,
-    body: body
-    //token: token
+    body: body,
+    token: token
 });
 
-export const patch = (id, body) => ({
+export const patch = (id, body, token) => ({
     type: PATCH,
     id: id,
     body: body,
-    //token: token
+    token: token
 });
 
-export const remove = (id) => ({
+export const remove = (id, token) => ({
     type: REMOVE,
     id: id,
-    //token: token
+    token: token
 });

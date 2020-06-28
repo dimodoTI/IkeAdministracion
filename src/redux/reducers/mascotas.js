@@ -8,8 +8,9 @@ import {
     ADD_SUCCESS,
     ADD_ERROR,
     REMOVE_SUCCESS,
-    REMOVE_ERROR
-} from "../actions/mascotastipo";
+    REMOVE_ERROR,
+    EDIT
+} from "../actions/mascotas";
 
 
 const initialState = {
@@ -19,7 +20,8 @@ const initialState = {
     updateTimeStamp: null,
     addTimeStamp: null,
     errorTimeStamp: null,
-    commandErrorTimeStamp: null
+    commandErrorTimeStamp: null,
+    editTimeStamp: null,
 };
 
 export const reducer = (state = initialState, action) => {
@@ -31,12 +33,11 @@ export const reducer = (state = initialState, action) => {
         case GET_SUCCESS:
             newState.entities = action.payload.receive
             newState.timeStamp = (new Date()).getTime();
-            // if (action.payload.send) {
-            //     newState.entities = [action.payload.receive]
-            // } else {
-            //     newState.entities = action.payload.receive
-            // }
-            // newState.timeStamp = (new Date()).getTime();
+            break;
+        case EDIT:
+            newState.editTimeStamp = (new Date()).getTime();
+            newState.entities.currentItem = action.item
+            newState.modo = action.modo;
             break;
         case UPDATE_SUCCESS:
             newState.updateTimeStamp = (new Date()).getTime();
@@ -56,6 +57,7 @@ export const reducer = (state = initialState, action) => {
         case UPDATE_ERROR || REMOVE_ERROR || PATCH_ERROR || ADD_ERROR:
             newState.commandErrorTimeStamp = (new Date()).getTime();
             break;
+
     }
     return newState;
 };

@@ -180,6 +180,7 @@ export class pantallaInicioSesion extends connect(store, MODO_PANTALLA, LOGIN_OK
 
     stateChanged(state, name) {
         if (name == MODO_PANTALLA && state.ui.quePantalla == "iniciosesion") {
+            this.activar()
             store.dispatch(cancelarTimer())
         }
         if (name == LOGIN_OK_ERROR) {

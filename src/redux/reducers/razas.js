@@ -29,11 +29,7 @@ export const reducer = (state = initialState, action) => {
 
     switch (action.type) {
         case GET_SUCCESS:
-            if (action.payload.send) {
-                newState.entities = [action.payload.receive]
-            } else {
-                newState.entities = action.payload.receive
-            }
+            newState.entities = action.payload.receive
             newState.timeStamp = (new Date()).getTime();
             break;
         case UPDATE_SUCCESS:

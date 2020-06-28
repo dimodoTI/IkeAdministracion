@@ -102,7 +102,6 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
         `
     }
 
-
     clickBotonUsuario() {
         store.dispatch(modoPantalla("usuariodetalle", "principal"))
     }

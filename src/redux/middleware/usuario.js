@@ -14,12 +14,11 @@ import {
     REMOVE,
     REMOVE_SUCCESS,
     REMOVE_ERROR
-
 } from "../actions/usuario";
-
+///////////////
 import {
-    ikeUsuarioFetch
-} from "../../redux/fetchs"
+    ikeUsuarioFetch, ikeOdataUsuarioFetch
+} from "../fetchs"
 
 import {
     RESTRequest,
@@ -28,13 +27,16 @@ import {
     RESTUpdate,
     RESTPatch
 } from "../actions/REST"
+///////////////
+import { apiRequest } from "../actions/api"
 
 export const get = ({
     dispatch
 }) => next => action => {
     next(action);
     if (action.type === GET) {
-        dispatch(RESTRequest(ikeUsuarioFetch, action.id, GET_SUCCESS, GET_ERROR, action.token))
+        //dispatch(RESTRequest(ikeUsuarioFetch, action.id, GET_SUCCESS, GET_ERROR, action.token))
+        dispatch(apiRequest(ikeOdataUsuarioFetch, action.options, GET_SUCCESS, GET_ERROR, action.token))
     }
 };
 

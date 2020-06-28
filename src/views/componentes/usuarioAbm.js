@@ -312,14 +312,14 @@ export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATE
         if (name == USUARIO_UPDATETIMESTAMP) {
             this.clickX();
             let mId = this.itemOriginal.id > 0 ? this.itemOriginal.id : null;
-            store.dispatch(getUsuario(mId, this.TOCK))
+            store.dispatch(getUsuario(mId, store.getState().cliente.datos.token))
             //store.dispatch(getUsuario(mId, this.TOCK))
             //store.dispatch(getUsuario(null, store.getState().cliente.datos.token))
         }
         if (name == USUARIO_ADDTIMESTAMP) {
             this.clickX();
-            store.dispatch(getUsuario(null, this.TOCK))
-            //store.dispatch(getUsuario(null, store.getState().cliente.datos.token))
+            //store.dispatch(getUsuario(null, this.TOCK))
+            store.dispatch(getUsuario({}, store.getState().cliente.datos.token))
         }
         if (name == USUARIO_ERRORGETTIMESTAMP) {
             alert(idiomas[this.idioma].usuarioabm.errorToken)
@@ -343,7 +343,7 @@ export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATE
 
         if (this.accion == "alta") {
             let regNuevo = { "nombre": nombre, "apellido": apellido, "email": email, "perfil": perfil, "documento": documento }
-            store.dispatch(addUsuario(regNuevo, this.TOCK))
+            store.dispatch(addUsuario(regNuevo, store.getState().cliente.datos.token))
         }
         if (this.accion == "update") {
             if (this.activo) {
@@ -385,7 +385,7 @@ export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATE
                         "value": activo
                     }) : null
                     if (datoUpdate) {
-                        store.dispatch(patchUsuario(this.itemOriginal.id, datoUpdate, this.TOCK))
+                        store.dispatch(patchUsuario(this.itemOriginal.id, datoUpdate, store.getState().cliente.datos.token))
                     }
                 }
             }
@@ -393,8 +393,8 @@ export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATE
     }
 
     clickMostrarDatos() {
-        store.dispatch(getUsuario(null, this.TOCK))
-        //store.dispatch(getUsuario(null, store.getState().cliente.datos.token))
+        //store.dispatch(getUsuario(null, this.TOCK))
+        store.dispatch(getUsuario({}, store.getState().cliente.datos.token))
     }
     clickMostrarFiltro(e) {
         if (this.shadowRoot.querySelector("#divSeleccion").style.display == "none") {

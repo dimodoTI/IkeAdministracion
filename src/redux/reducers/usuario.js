@@ -13,7 +13,7 @@ import {
 
 
 const initialState = {
-    entities: [],
+    entities: null,
     timeStamp: null,
     removeTimeStamp: null,
     updateTimeStamp: null,
@@ -29,12 +29,14 @@ export const reducer = (state = initialState, action) => {
 
     switch (action.type) {
         case GET_SUCCESS:
-            if (action.payload.send) {
-                newState.entities = [action.payload.receive]
-            } else {
-                newState.entities = action.payload.receive
-            }
+            newState.entities = action.payload.receive
             newState.timeStamp = (new Date()).getTime();
+            // if (action.payload.send) {
+            //     newState.entities = [action.payload.receive]
+            // } else {
+            //     newState.entities = action.payload.receive
+            // }
+            // newState.timeStamp = (new Date()).getTime();
             break;
         case UPDATE_SUCCESS:
             newState.updateTimeStamp = (new Date()).getTime();

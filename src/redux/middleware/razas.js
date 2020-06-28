@@ -14,12 +14,10 @@ import {
     REMOVE,
     REMOVE_SUCCESS,
     REMOVE_ERROR
-
 } from "../actions/razas";
-
+/////////////// 
 import {
-
-    ikeRazas
+    ikeRazas, ikeOdataRazas
 } from "../fetchs"
 
 import {
@@ -29,13 +27,16 @@ import {
     RESTUpdate,
     RESTPatch
 } from "../actions/REST"
+///////////////
+import { apiRequest } from "../actions/api"
 
 export const get = ({
     dispatch
 }) => next => action => {
     next(action);
     if (action.type === GET) {
-        dispatch(RESTRequest(ikeRazas, action.id, GET_SUCCESS, GET_ERROR))
+        //dispatch(RESTRequest(ikeRazas, action.id, GET_SUCCESS, GET_ERROR))
+        dispatch(apiRequest(ikeOdataRazas, action.options, GET_SUCCESS, GET_ERROR))
     }
 };
 
@@ -44,7 +45,7 @@ export const add = ({
 }) => next => action => {
     next(action);
     if (action.type === ADD) {
-        dispatch(RESTAdd(ikeRazas, action.body, ADD_SUCCESS, ADD_ERROR))
+        dispatch(RESTAdd(ikeRazas, action.body, ADD_SUCCESS, ADD_ERROR, action.token))
     }
 };
 
@@ -53,7 +54,7 @@ export const update = ({
 }) => next => action => {
     next(action);
     if (action.type === UPDATE) {
-        dispatch(RESTUpdate(ikeRazas, action.id, action.body, UPDATE_SUCCESS, UPDATE_ERROR))
+        dispatch(RESTUpdate(ikeRazas, action.id, action.body, UPDATE_SUCCESS, UPDATE_ERROR, action.token))
     }
 };
 
@@ -62,7 +63,7 @@ export const patch = ({
 }) => next => action => {
     next(action);
     if (action.type === PATCH) {
-        dispatch(RESTPatch(ikeRazas, action.id, action.body, PATCH_SUCCESS, PATCH_ERROR))
+        dispatch(RESTPatch(ikeRazas, action.id, action.body, PATCH_SUCCESS, PATCH_ERROR, action.token))
     }
 };
 
@@ -71,7 +72,7 @@ export const remove = ({
 }) => next => action => {
     next(action);
     if (action.type === REMOVE) {
-        dispatch(RESTDelete(ikeRazas, action.id, REMOVE_SUCCESS, REMOVE_ERROR))
+        dispatch(RESTDelete(ikeRazas, action.id, REMOVE_SUCCESS, REMOVE_ERROR, action.token))
     }
 };
 

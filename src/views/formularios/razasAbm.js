@@ -112,8 +112,8 @@ export class pantallaRazasAbm extends connect(store, MODO_PANTALLA)(LitElement) 
     }
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {
-            store.dispatch(getRazas())
-            store.dispatch(getMascotasTipo())
+            store.dispatch(getRazas({}))
+            store.dispatch(getMascotasTipo({}))
         }
     }
 

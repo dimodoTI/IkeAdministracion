@@ -181,10 +181,10 @@ export class mascotaTipoAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, MASCO
             <div id=divRegistros>
                 ${this.mascotatipo.map(dato => html`
                     <div id="ctmDivCuerpo">
-                        <div id="ctmDivActivo">${idiomas[this.idioma].mascotastiposabm.datoActivo} ${dato.activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no}</div>
+                        <div id="ctmDivActivo">${idiomas[this.idioma].mascotastiposabm.datoActivo} ${dato.Activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no}</div>
                         <div></div>
                         <div id="divSvgUpdate"  valor="2" class="svgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
-                        <div id="ctmDivNombre">${dato.descripcion}</div>
+                        <div id="ctmDivNombre">${dato.Descripcion}</div>
                     </div>
                 `)}
                 <div style="height:.5rem;"></div>
@@ -206,8 +206,8 @@ export class mascotaTipoAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, MASCO
                     <div id="selectActivo" class="select" > 
                         <label >${idiomas[this.idioma].mascotastiposabm.lblActivo}</label>
                         <select style="width:100%;height:2rem;" id="activo">          
-                            <option value=true .selected="${this.itemOriginal.activo}">${idiomas[this.idioma].SiNo.si}</option>
-                            <option value=false .selected="${!this.itemOriginal.activo}">${idiomas[this.idioma].SiNo.no}</option>
+                            <option value=true .selected="${this.itemOriginal.Activo}">${idiomas[this.idioma].SiNo.si}</option>
+                            <option value=false .selected="${!this.itemOriginal.Activo}">${idiomas[this.idioma].SiNo.no}</option>
                         </select>
                     </div>
                     <button id="btnAceptar"  @click=${this.clickAccion} btn1 apagado>${idiomas[this.idioma].mascotastiposabm.btnGrabar}</button>                 
@@ -220,32 +220,33 @@ export class mascotaTipoAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, MASCO
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {
         }
-        if (name == MASCOTASTIPO_TIMESTAMP) {
+        if (name == MASCOTASTIPO_TIMESTAMP && state.ui.quePantalla == "mascotastiposabm") {
             if (state.mascotastipo.entities) {
                 this.mascotatipo = state.mascotastipo.entities
                 this.update()
             }
         }
         if (name == MASCOTASTIPO_ADDTIMESTAMP || name == MASCOTASTIPO_UPDATETIMESTAMP) {
-            store.dispatch(getMascotasTipo())
+            store.dispatch(getMascotasTipo({}))
         }
     }
     firstUpdated(changedProperties) {
     }
 
     clickAccion() {
-        const descripcion = this.shadowRoot.getElementById("txtNombre").value;
-        const activo = this.shadowRoot.getElementById("activo").value;
-        var datoUpdate = [];
-        if (this.accion == "alta") {
-            let regNuevo = { Descripcion: descripcion, Activo: activo }
-            store.dispatch(addMascotasTipo(regNuevo))
-            this.update()
-            this.clickX()
-        }
-        if (this.accion == "update") {
-            if (this.activo) {
-                if (this.valido()) {
+        if (this.activo) {
+            if (this.valido()) {
+                const descripcion = this.shadowRoot.getElementById("txtNombre").value;
+                const activo = this.shadowRoot.getElementById("activo").value;
+                var datoUpdate = [];
+                if (this.accion == "alta") {
+                    let regNuevo = { Descripcion: descripcion, Activo: activo }
+                    let miToken = store.getState().cliente.datos.token
+                    store.dispatch(addMascotasTipo(regNuevo, miToken))
+                    this.update()
+                    this.clickX()
+                }
+                if (this.accion == "update") {
                     var datoUpdate = [];
                     descripcion != this.itemOriginal.descripcion ? datoUpdate.push({
                         "op": "replace",
@@ -258,7 +259,8 @@ export class mascotaTipoAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, MASCO
                         "value": activo
                     }) : null
                     if (datoUpdate) {
-                        store.dispatch(patchMascotasTipo(this.itemOriginal.id, datoUpdate))
+                        let miToken = store.getState().cliente.datos.token
+                        store.dispatch(patchMascotasTipo(this.itemOriginal.Id, datoUpdate, miToken))
                         this.update()
                         this.clickX()
                     }
@@ -266,7 +268,6 @@ export class mascotaTipoAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, MASCO
             }
         }
     }
-
     clickMostrarDatos() {
         //store.dispatch(getUsuario(null, this.TOCK))
         //store.dispatch(getUsuario(null, store.getState().cliente.datos.token))
@@ -280,7 +281,7 @@ export class mascotaTipoAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, MASCO
         }
         if (accion == "update") {
             this.itemOriginal = dato;
-            this.shadowRoot.querySelector("#txtNombre").value = dato.descripcion;
+            this.shadowRoot.querySelector("#txtNombre").value = dato.Descripcion;
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].mascotastiposabm.lblTituloAltaChange
         }
         this.shadowRoot.querySelector("#verDatos").style.display = "grid";

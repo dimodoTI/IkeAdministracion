@@ -14,10 +14,11 @@ import {
     REMOVE,
     REMOVE_SUCCESS,
     REMOVE_ERROR
-} from "../actions/mascotastipo";
-///////////////
+
+} from "../actions/publicacion";
+/////////////////////
 import {
-    ikeMascotasTipo, ikeOdataMascotasTipo
+    ikePublicaciones, ikeOdataPublicaciones
 } from "../fetchs"
 
 import {
@@ -35,8 +36,8 @@ export const get = ({
 }) => next => action => {
     next(action);
     if (action.type === GET) {
-        //dispatch(RESTRequest(ikeMascotasTipo, action.id, GET_SUCCESS, GET_ERROR))
-        dispatch(apiRequest(ikeOdataMascotasTipo, action.options, GET_SUCCESS, GET_ERROR))
+        //dispatch(RESTRequest(ikePublicaciones, action.id, GET_SUCCESS, GET_ERROR))
+        dispatch(apiRequest(ikeOdataPublicaciones, action.options, GET_SUCCESS, GET_ERROR))
     }
 };
 
@@ -45,7 +46,7 @@ export const add = ({
 }) => next => action => {
     next(action);
     if (action.type === ADD) {
-        dispatch(RESTAdd(ikeMascotasTipo, action.body, ADD_SUCCESS, ADD_ERROR, action.token))
+        dispatch(RESTAdd(ikePublicaciones, action.body, ADD_SUCCESS, ADD_ERROR, action.token))
     }
 };
 
@@ -54,7 +55,7 @@ export const update = ({
 }) => next => action => {
     next(action);
     if (action.type === UPDATE) {
-        dispatch(RESTUpdate(ikeMascotasTipo, action.id, action.body, UPDATE_SUCCESS, UPDATE_ERROR, action.token))
+        dispatch(RESTUpdate(ikePublicaciones, action.id, action.body, UPDATE_SUCCESS, UPDATE_ERROR, action.token))
     }
 };
 
@@ -63,7 +64,7 @@ export const patch = ({
 }) => next => action => {
     next(action);
     if (action.type === PATCH) {
-        dispatch(RESTPatch(ikeMascotasTipo, action.id, action.body, PATCH_SUCCESS, PATCH_ERROR, action.token))
+        dispatch(RESTPatch(ikePublicaciones, action.id, action.body, PATCH_SUCCESS, PATCH_ERROR, action.token))
     }
 };
 
@@ -72,7 +73,7 @@ export const remove = ({
 }) => next => action => {
     next(action);
     if (action.type === REMOVE) {
-        dispatch(RESTDelete(ikeMascotasTipo, action.id, REMOVE_SUCCESS, REMOVE_ERROR, action.token))
+        dispatch(RESTDelete(ikePublicaciones, action.id, REMOVE_SUCCESS, REMOVE_ERROR, action.token))
     }
 };
 

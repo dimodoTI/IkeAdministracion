@@ -112,7 +112,7 @@ export class pantallaMascotasTiposAbm extends connect(store, MODO_PANTALLA)(LitE
     }
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {
-            store.dispatch(getMascotasTipo())
+            store.dispatch(getMascotasTipo({}))
             this.update();
         }
     }

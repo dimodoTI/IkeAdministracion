@@ -14,11 +14,14 @@ import {
 import {
     modoPantalla, captureMedia
 } from "./redux/actions/ui";
-import { get as getPublicidad } from "./redux/actions/publicidad";
+import { get as getPublicacion } from "./redux/actions/publicacion";
 import { get as getReserva } from "./redux/actions/reserva";
+import { get as getRazas } from "./redux/actions/razas";
 
 store.dispatch(captureMedia())
 store.dispatch(modoPantalla("splash"))
-store.dispatch(getPublicidad())
-store.dispatch(getReserva())
+store.dispatch(getPublicacion({}))
+//store.dispatch(getReserva())
+store.dispatch(getRazas({}))
+
 

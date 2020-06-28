@@ -190,10 +190,10 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
                 ${this.razas.map((dato) => {
             return html`
                         <div id="crazaDivCuerpo">
-                            <div id="crazaDivActivo">${idiomas[this.idioma].razaabm.datoActivo} ${dato.activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no}</div>
+                            <div id="crazaDivActivo">${idiomas[this.idioma].razaabm.datoActivo} ${dato.Activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no}</div>
                             <div id="divSvgUpdate"  valor="2" class="svgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
-                            <div id="crazaDivTipo">${dato.tipo.descripcion}</div>
-                            <div id="crazaDivNombre">${dato.descripcion}</div>
+                            <div id="crazaDivTipo">${dato.tipo.Descripcion}</div>
+                            <div id="crazaDivNombre">${dato.Descripcion}</div>
                         </div>
                     `
         })}
@@ -219,7 +219,7 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
 
                         ${this.mascotasTipo.map((dato) => {
             return html`
-                           <option value=${dato.id} .selected=${dato.descripcion == this.itemOriginal.tipo.descripcion} >${dato.descripcion}</option>
+                           <option value=${dato.Id} .selected=${dato.Descripcion == this.itemOriginal.tipo.Descripcion} >${dato.Descripcion}</option>
                             `
         })}
                             </select>
@@ -228,8 +228,8 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
                     <div id="selectActivo" class="select" > 
                         <label >${idiomas[this.idioma].razaabm.lblActivo}</label>
                         <select style="width:100%;height:2rem;" id="activo">          
-                            <option value=true .selected="${this.itemOriginal.activo}">${idiomas[this.idioma].SiNo.si}</option>
-                            <option value=false .selected="${!this.itemOriginal.activo}">${idiomas[this.idioma].SiNo.no}</option>
+                            <option value=true .selected="${this.itemOriginal.Activo}">${idiomas[this.idioma].SiNo.si}</option>
+                            <option value=false .selected="${!this.itemOriginal.Activo}">${idiomas[this.idioma].SiNo.no}</option>
                         </select>
                     </div>
                     <button id="btnAceptar"  @click=${this.clickAccion} btn1 apagado>${idiomas[this.idioma].razaabm.btnGrabar}</button>                 
@@ -242,11 +242,11 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {
         }
-        if (name == RAZAS_TIMESTAMP || name == MASCOTASTIPO_TIMESTAMP) {
+        if ((name == RAZAS_TIMESTAMP || name == MASCOTASTIPO_TIMESTAMP) && state.ui.quePantalla == "razasabm") {
             if (state.mascotastipo.entities && state.razas.entities) {
                 this.razas = state.razas.entities.map(raza => {
                     let nuevaRaza = raza
-                    nuevaRaza.tipo = state.mascotastipo.entities.filter(tipo => tipo.id == nuevaRaza.idMascotasTipo)[0]
+                    nuevaRaza.tipo = state.mascotastipo.entities.filter(tipo => tipo.Id == nuevaRaza.idMascotasTipo)[0]
                     return nuevaRaza
                 })
                 this.mascotasTipo = state.mascotastipo.entities
@@ -254,7 +254,7 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
             }
         }
         if (name == RAZAS_ADDTIMESTAMP || name == RAZAS_UPDATETIMESTAMP) {
-            store.dispatch(getRazas())
+            store.dispatch(getRazas({}))
         }
     }
     firstUpdated(changedProperties) {
@@ -269,7 +269,8 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
 
         if (this.accion == "alta") {
             let regNuevo = { idMascotasTipo: tipo, Descripcion: descripcion, Activo: activo }
-            store.dispatch(addRazas(regNuevo))
+            let miToken = store.getState().cliente.datos.token
+            store.dispatch(addRazas(regNuevo, miToken))
             this.update()
             this.clickX()
         }
@@ -277,12 +278,12 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
             if (this.activo) {
                 if (this.valido()) {
                     var datoUpdate = [];
-                    descripcion != this.itemOriginal.descripcion ? datoUpdate.push({
+                    descripcion != this.itemOriginal.Descripcion ? datoUpdate.push({
                         "op": "replace",
                         "path": "/descripcion",
                         "value": descripcion
                     }) : null
-                    activo != this.itemOriginal.activo ? datoUpdate.push({
+                    activo != this.itemOriginal.Activo ? datoUpdate.push({
                         "op": "replace",
                         "path": "/Activo",
                         "value": activo
@@ -293,7 +294,8 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
                         "value": tipo
                     }) : null
                     if (datoUpdate) {
-                        store.dispatch(patchRazas(this.itemOriginal.id, datoUpdate))
+                        let miToken = store.getState().cliente.datos.token
+                        store.dispatch(patchRazas(this.itemOriginal.Id, datoUpdate, miToken))
                         this.update()
                         this.clickX()
                     }
@@ -309,13 +311,13 @@ export class razaAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, RAZAS_TIMEST
     clickAlta(accion, dato) {
         this.accion = accion;
         if (accion == "alta") {
-            this.itemOriginal = { id: 0, idMascotasTipo: 0, descripcion: "", activo: true, tipo: { id: 0, descripcion: "", activo: true } }
+            this.itemOriginal = { id: 0, idMascotasTipo: 0, Descripcion: "", Activo: true, tipo: { id: 0, descripcion: "", activo: true } }
             this.shadowRoot.querySelector("#txtNombre").value = "";
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].razaabm.lblTituloAltaNew
         }
         if (accion == "update") {
             this.itemOriginal = dato;
-            this.shadowRoot.querySelector("#txtNombre").value = dato.descripcion;
+            this.shadowRoot.querySelector("#txtNombre").value = dato.Descripcion;
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].razaabm.lblTituloAltaChange
         }
         this.shadowRoot.querySelector("#verDatos").style.display = "grid";

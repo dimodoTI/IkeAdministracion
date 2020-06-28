@@ -9,7 +9,7 @@ import {
     ADD_ERROR,
     REMOVE_SUCCESS,
     REMOVE_ERROR
-} from "../actions/mascotastipo";
+} from "../actions/publicacion";
 
 
 const initialState = {
@@ -31,12 +31,12 @@ export const reducer = (state = initialState, action) => {
         case GET_SUCCESS:
             newState.entities = action.payload.receive
             newState.timeStamp = (new Date()).getTime();
-            // if (action.payload.send) {
+            //  if (action.payload.send) {
             //     newState.entities = [action.payload.receive]
             // } else {
             //     newState.entities = action.payload.receive
             // }
-            // newState.timeStamp = (new Date()).getTime();
+            // newState.timeStamp = (new Date()).getTime();  
             break;
         case UPDATE_SUCCESS:
             newState.updateTimeStamp = (new Date()).getTime();
@@ -58,4 +58,5 @@ export const reducer = (state = initialState, action) => {
             break;
     }
     return newState;
+
 };

@@ -12,27 +12,26 @@ import { cardCarrusel1 } from "../css/cardCarrusel1"
 import { cardCarrusel2 } from "../css/cardCarrusel2"
 import { MAS, BASURA, MODIFICAR, ARRIBA, ABAJO } from "../../../assets/icons/icons"
 import { ikeInput } from "../css/ikeInput"
+import { get as getPublicacion, patch as patchPublicacion, add as addPublicacion, remove as removePublicacion } from "../../redux/actions/publicacion";
 
-export class publicacionAbm extends connect(store)(LitElement) {
+const PUBLICACION_TIMESTAMP = "publicacion.timeStamp"
+const PUBLICACION_UPDATETIMESTAMP = "publicacion.updateTimeStamp"
+const PUBLICACION_ADDTIMESTAMP = "publicacion.addTimeStamp"
+const PUBLICACION_REMOVETIMESTAMP = "publicacion.removeTimeStamp"
+const PUBLICACION_ERRORGETTIMESTAMP = "publicacion.errorTimeStamp"
+const PUBLICACION_ERROROTROSTIMESTAMP = "publicacion.commandErrorTimeStamp"
+const MODO_PANTALLA = "ui.timeStampPantalla"
+
+export class publicacionAbm extends connect(store, MODO_PANTALLA, PUBLICACION_TIMESTAMP, PUBLICACION_UPDATETIMESTAMP, PUBLICACION_ADDTIMESTAMP, PUBLICACION_REMOVETIMESTAMP, PUBLICACION_ERRORGETTIMESTAMP, PUBLICACION_ERROROTROSTIMESTAMP)(LitElement) {
     constructor() {
         super();
         this.idioma = "ES"
-        this.item = { tipo: "D" }
-        this.publicaciones = [{ tipo: "A", imagen: "--imagen-regalo", titulo: "0", leyenda: "", btnCaption: "", color: "--color-celeste", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "A", imagen: "--imagen-carrito", titulo: "1", leyenda: "", btnCaption: "", color: "--color-amarillo", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "A", imagen: "--imagen-reloj", titulo: "2", leyenda: "", btnCaption: "", color: "--color-rosa", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "A", imagen: "--imagen-regalo", titulo: "3", leyenda: "", btnCaption: "", color: "--color-celeste", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "B", imagen: "--imagen-novedades01", titulo: "", leyenda: "", btnCaption: "", color: "--color-celeste", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "B", imagen: "--imagen-novedades02", titulo: "", leyenda: "", btnCaption: "", color: "--color-celeste", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "B", imagen: "--imagen-novedades03", titulo: "", leyenda: "", btnCaption: "", color: "--color-celeste", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "B", imagen: "--imagen-novedades03", titulo: "", leyenda: "", btnCaption: "", color: "--color-celeste", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "B", imagen: "--imagen-novedades03", titulo: "", leyenda: "", btnCaption: "", color: "--color-celeste", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "B", imagen: "--imagen-novedades03", titulo: "", leyenda: "", btnCaption: "", color: "--color-celeste", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "C", imagen: "--imagen-fondo-agenda", titulo: "Visitá al veterinario, sin moverte del sillón.", leyenda: "", btnCaption: "Agenda una consulta.", color: "#FFF2D9", http: "http://www.ikeargentina.com.ar/", orden: "0" },
-        { tipo: "D", imagen: "", titulo: "Cuidalos. Sin salir de tu casa", leyenda: "Accedé a consultas online y chat personalizado con nuestros profesionales.", btnCaption: "", color: "", http: "", orden: "0" },
-        { tipo: "D", imagen: "", titulo: "Lo que necesitas, al alcance de tu mano.", leyenda: "Consultá la historia clínica de tus mascotas en cualquier momento y lugar.", btnCaption: "", color: "", http: "", orden: "0" },
-        { tipo: "D", imagen: "", titulo: "Te ayudamos a darles lo mejor", leyenda: "Chequeá el calendario de vacunación para estar siempre al día.", btnCaption: "", color: "", http: "", orden: "0" }
-        ]
+        this.accion = ""
+        this.itemVacio = { id: 0, tipo: "D", imagen: "", titulo: "", leyenda: "", btnCaption: "", color: "", http: "", orden: 0 }
+        this.itemOriginal = { id: 0, tipo: "D", imagen: "", titulo: "", leyenda: "", btnCaption: "", color: "", http: "", orden: 0 }
+        this.activo = false;
+        this.publicaciones = [{ id: 0, tipo: "D", imagen: "", titulo: "", leyenda: "", btnCaption: "", color: "", http: "", orden: 0 }]
+
     }
 
     static get styles() {
@@ -120,7 +119,7 @@ export class publicacionAbm extends connect(store)(LitElement) {
             display: none;
         }
         :host([media-size="small"]) .classRegistros[alto="chico"]{
-            height: calc(((100vh * .9) * .82) - 5.5rem);
+            height: calc(((100vh * .9) * .82) - 7rem);
             grid-gap: .6rem;  
         }
         :host([media-size="small"]) .classRegistros[alto="grande"]{
@@ -224,69 +223,75 @@ export class publicacionAbm extends connect(store)(LitElement) {
                         ${ABAJO}
                     </div>
                 </div>
-                <div id="divBtnMas" @click=${this.clickAlta}>${MAS}</div>
+                <div id="divBtnMas" @click="${function () { this.clickAlta('alta', null) }}">${MAS}</div>
             </div>
             <div id="divSeleccion">
                 <div id="selectFiltro" class="select" > 
                     <label >${idiomas[this.idioma].publicacionesabm.lblFiltro}</label>
                     <select style="width:100%;height:2rem;" id="filtro" @change=${this.clickMostrarDatos}>          
-                        <option value="D" .selected="${this.item.tipo == "D"}">Onboarding</option>
-                        <option value="C" .selected="${this.item.tipo == "C"}">flier</option>
-                        <option  value="A" .selected="${this.item.tipo == "A"}">Carrusel-1</option>
-                        <option  value="B" .selected="${this.item.tipo == "B"}">Carrusel-2</option>
+                        <option value="D" .selected="${this.itemOriginal.tipo == "D"}">Onboarding</option>
+                        <option value="C" .selected="${this.itemOriginal.tipo == "C"}">flier</option>
+                        <option  value="A" .selected="${this.itemOriginal.tipo == "A"}">Carrusel-1</option>
+                        <option  value="B" .selected="${this.itemOriginal.tipo == "B"}">Carrusel-2</option>
                     </select>
                 </div>
             </div>
-            <div id=divRegistrosOnboarding class="classRegistros" alto="chico">
-                ${this.publicaciones.filter(dato => { return dato.tipo == this.item.tipo }).map(dato => html`
+            <div id="divRegistrosOnboarding" class="classRegistros" alto="chico">
+                ${this.publicaciones.filter(dato => {
+            return dato.Tipo == "D"
+        }).map(dato => html`
                     <div id="cobDivCuerpo">
                         <div ></div>
-                        <div id="cobDivSvgUpdate" class="cobSvgOpciones" @click=${this.clickAlta}>${MODIFICAR}</div>
-                        <div id="cobDivSvgDelete" class="cobSvgOpciones" @click=${this.clickDelete}>${BASURA}</div>
-                        <div id="cobDivTitulo">${idiomas[this.idioma].publicacionesabm.lblTitulo} ${dato.titulo}</div>
-                        <div id="cobDivLeyenda">${idiomas[this.idioma].publicacionesabm.lblLeyenda} ${dato.leyenda}</div>
-                        <div id="cobDivOrden">${idiomas[this.idioma].publicacionesabm.lblOrden} ${dato.orden}</div>
+                        <div id="cobDivSvgUpdate" class="cobSvgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
+                        <div id="cobDivSvgDelete" class="cobSvgOpciones" @click=${function () { this.clickDelete(dato) }}>${BASURA}</div>
+                        <div id="cobDivTitulo">${idiomas[this.idioma].publicacionesabm.lblTitulo} ${dato.Titulo}</div>
+                        <div id="cobDivLeyenda">${idiomas[this.idioma].publicacionesabm.lblLeyenda} ${dato.Leyenda}</div>
+                        <div id="cobDivOrden">${idiomas[this.idioma].publicacionesabm.lblOrden} ${dato.Orden}</div>
                     </div>
                 `)}
                 <div style="height:.5rem;"></div>
             </div>
-            <div id=divRegistrosFlier class="classRegistros" alto="chico">
-                ${this.publicaciones.filter(dato => { return dato.tipo == this.item.tipo }).map(dato => html`
+            <div id="divRegistrosFlier" class="classRegistros" alto="chico">
+                ${this.publicaciones.filter(dato => { return dato.Tipo == "C" }).map(dato => html`
                     <div id="cflierDivCuerpo">
-                        <div id="cflierDivColor">${idiomas[this.idioma].publicacionesabm.lblColor} ${dato.color}</div>
-                        <div id="cflierDivSvgUpdate" class="cflierSvgOpciones" @click=${this.clickAlta}>${MODIFICAR}</div>
-                        <div id="cflierDivSvgDelete" class="cflierSvgOpciones" @click=${this.clickDelete}>${BASURA}</div>
-                        <div id="cflierDivTitulo">${idiomas[this.idioma].publicacionesabm.lblTitulo} ${dato.titulo}</div>
-                        <div id="cflierDivBoton">${idiomas[this.idioma].publicacionesabm.lblBoton} ${dato.btnCaption}</div>
-                        <div id="cflierDivHttp">${idiomas[this.idioma].publicacionesabm.lblHttp} ${dato.http}</div>
-                        <div id="cflierDivImagen">${idiomas[this.idioma].publicacionesabm.lblImagen} ${dato.imagen}</div>
+                        <div id="cflierDivColor">${idiomas[this.idioma].publicacionesabm.lblColor} ${dato.Color}</div>
+                        <div id="cflierDivSvgUpdate" class="cflierSvgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
+                        <div id="cflierDivSvgDelete" class="cflierSvgOpciones" @click="${function () { this.clickDelete(dato) }}">${BASURA}</div>
+                        <div id="cflierDivTitulo">${idiomas[this.idioma].publicacionesabm.lblTitulo} ${dato.Titulo}</div>
+                        <div id="cflierDivBoton">${idiomas[this.idioma].publicacionesabm.lblBoton} ${dato.BtnCaption}</div>
+                        <div id="cflierDivHttp">${idiomas[this.idioma].publicacionesabm.lblHttp} ${dato.Http}</div>
+                        <div id="cflierDivImagen">${idiomas[this.idioma].publicacionesabm.lblImagen} ${dato.Imagen}</div>
                     </div>
                 `)}
                 <div style="height:.5rem;"></div>
             </div>
-            <div id=divRegistrosCarrusel1 class="classRegistros" alto="chico">
-                ${this.publicaciones.filter(dato => { return dato.tipo == this.item.tipo }).map(dato => html`
+            <div id="divRegistrosCarrusel1" class="classRegistros" alto="chico">
+                ${this.publicaciones.filter(dato => {
+            return dato.Tipo == "A"
+        }).map(dato => html`
                     <div id="ccar1DivCuerpo">
-                        <div id="ccar1DivColor">${idiomas[this.idioma].publicacionesabm.lblColor} ${dato.color}</div>
-                        <div id="ccar1DivSvgUpdate" class="ccar1SvgOpciones" @click=${this.clickAlta}>${MODIFICAR}</div>
-                        <div id="ccar1DivSvgDelete" class="ccar1SvgOpciones" @click=${this.clickDelete}>${BASURA}</div>
-                        <div id="ccar1DivTitulo">${idiomas[this.idioma].publicacionesabm.lblTitulo} ${dato.titulo}</div>
-                        <div id="ccar1DivHttp">${idiomas[this.idioma].publicacionesabm.lblHttp} ${dato.http}</div>
-                        <div id="ccar1DivImagen">${idiomas[this.idioma].publicacionesabm.lblImagen} ${dato.imagen}</div>
-                        <div id="ccar1DivOrden">${idiomas[this.idioma].publicacionesabm.lblOrden} ${dato.orden}</div>
+                        <div id="ccar1DivColor">${idiomas[this.idioma].publicacionesabm.lblColor} ${dato.Color}</div>
+                        <div id="ccar1DivSvgUpdate" class="ccar1SvgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
+                        <div id="ccar1DivSvgDelete" class="ccar1SvgOpciones" @click="${function () { this.clickDelete(dato) }}">${BASURA}</div>
+                        <div id="ccar1DivTitulo">${idiomas[this.idioma].publicacionesabm.lblTitulo} ${dato.Titulo}</div>
+                        <div id="ccar1DivHttp">${idiomas[this.idioma].publicacionesabm.lblHttp} ${dato.Http}</div>
+                        <div id="ccar1DivImagen">${idiomas[this.idioma].publicacionesabm.lblImagen} ${dato.Imagen}</div>
+                        <div id="ccar1DivOrden">${idiomas[this.idioma].publicacionesabm.lblOrden} ${dato.Orden}</div>
                     </div>
                 `)}
                 <div style="height:.5rem;"></div>
             </div>
-            <div id=divRegistrosCarrusel2 class="classRegistros" alto="chico">
-                ${this.publicaciones.filter(dato => { return dato.tipo == this.item.tipo }).map(dato => html`
+            <div id="divRegistrosCarrusel2" class="classRegistros" alto="chico">
+                ${this.publicaciones.filter(dato => {
+            return dato.Tipo == "B"
+        }).map(dato => html`
                     <div id="ccar2DivCuerpo">
-                        <div id="ccar2DivColor">${idiomas[this.idioma].publicacionesabm.lblColor} ${dato.color}</div>
-                        <div id="ccar2DivSvgUpdate" class="ccar2SvgOpciones" @click=${this.clickAlta}>${MODIFICAR}</div>
-                        <div id="ccar2DivSvgDelete" class="ccar2SvgOpciones" @click=${this.clickDelete}>${BASURA}</div>
-                        <div id="ccar2DivHttp">${idiomas[this.idioma].publicacionesabm.lblHttp} ${dato.http}</div>
-                        <div id="ccar2DivImagen">${idiomas[this.idioma].publicacionesabm.lblImagen} ${dato.imagen}</div>
-                        <div id="ccar2DivOrden">${idiomas[this.idioma].publicacionesabm.lblOrden} ${dato.orden}</div>
+                        <div id="ccar2DivColor">${idiomas[this.idioma].publicacionesabm.lblColor} ${dato.Color}</div>
+                        <div id="ccar2DivSvgUpdate" class="ccar2SvgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
+                        <div id="ccar2DivSvgDelete" class="ccar2SvgOpciones" @click="${function () { this.clickDelete(dato) }}">${BASURA}</div>
+                        <div id="ccar2DivHttp">${idiomas[this.idioma].publicacionesabm.lblHttp} ${dato.Http}</div>
+                        <div id="ccar2DivImagen">${idiomas[this.idioma].publicacionesabm.lblImagen} ${dato.Imagen}</div>
+                        <div id="ccar2DivOrden">${idiomas[this.idioma].publicacionesabm.lblOrden} ${dato.Orden}</div>
                     </div>
                 `)}
                 <div style="height:.5rem;"></div>
@@ -332,21 +337,34 @@ export class publicacionAbm extends connect(store)(LitElement) {
                     </div>
                     <div id="divOrdenForm" class="ikeInput">
                         <label id="lblOrden">${idiomas[this.idioma].publicacionesabm.lblOrden}</label>
-                        <input id="txtOrden" @input=${this.activar} >
+                        <input id="txtOrden" @input=${this.activar} type="number">
                         <label id="lblErrorOrden" error oculto>Orden Erroneo</label>
                     </div>
-                    <button id="btnAceptar" btn1>${idiomas[this.idioma].publicacionesabm.btnGrabar}</button>                 
+                    <button id="btnAceptar" btn1 @click=${this.clickAccion}>${idiomas[this.idioma].publicacionesabm.btnGrabar}</button>                 
                 </div>
             </div>
         `
     }
+    stateChanged(state, name) {
+        //&& state.ui.quePantalla == "publicacionesabm"
+        if (name == PUBLICACION_TIMESTAMP) {
+            if (state.publicacion.entities) {
+                this.publicaciones = state.publicacion.entities
+                this.update()
+            }
+        }
+        if (name == PUBLICACION_ADDTIMESTAMP || name == PUBLICACION_UPDATETIMESTAMP || name == PUBLICACION_REMOVETIMESTAMP) {
+            store.dispatch(getPublicacion({}))
+        }
+    }
+
     clickMostrarDatos() {
-        this.item.tipo = this.shadowRoot.querySelector("#filtro").value
+        this.itemOriginal.tipo = this.shadowRoot.querySelector("#filtro").value
         this.shadowRoot.querySelector("#divRegistrosOnboarding").style.display = "none"
         this.shadowRoot.querySelector("#divRegistrosFlier").style.display = "none"
         this.shadowRoot.querySelector("#divRegistrosCarrusel1").style.display = "none"
         this.shadowRoot.querySelector("#divRegistrosCarrusel2").style.display = "none"
-        switch (this.item.tipo) {
+        switch (this.itemOriginal.tipo) {
             case "A":
                 this.shadowRoot.querySelector("#divRegistrosCarrusel1").style.display = "grid"
                 break;
@@ -365,22 +383,46 @@ export class publicacionAbm extends connect(store)(LitElement) {
     clickMostrarFiltro(e) {
         if (this.shadowRoot.querySelector("#divSeleccion").style.display == "none") {
             this.shadowRoot.querySelector("#divSeleccion").style.display = "grid";
-            this.shadowRoot.querySelector(".classRegistros").setAttribute("alto", "chico");
+            this.shadowRoot.querySelector("#divRegistrosCarrusel1").setAttribute("alto", "chico")
+            this.shadowRoot.querySelector("#divRegistrosCarrusel2").setAttribute("alto", "chico")
+            this.shadowRoot.querySelector("#divRegistrosFlier").setAttribute("alto", "chico")
+            this.shadowRoot.querySelector("#divRegistrosOnboarding").setAttribute("alto", "chico")
             this.shadowRoot.querySelector("#divTituloImgUp").style.display = "grid";
             this.shadowRoot.querySelector("#divTituloImgDown").style.display = "none";
         } else {
             this.shadowRoot.querySelector("#divSeleccion").style.display = "none";
-            this.shadowRoot.querySelector(".classRegistros").setAttribute("alto", "grande")
+            this.shadowRoot.querySelector("#divRegistrosCarrusel1").setAttribute("alto", "grande")
+            this.shadowRoot.querySelector("#divRegistrosCarrusel2").setAttribute("alto", "grande")
+            this.shadowRoot.querySelector("#divRegistrosFlier").setAttribute("alto", "grande")
+            this.shadowRoot.querySelector("#divRegistrosOnboarding").setAttribute("alto", "grande")
             this.shadowRoot.querySelector("#divTituloImgUp").style.display = "none";
             this.shadowRoot.querySelector("#divTituloImgDown").style.display = "grid";
         }
     }
-    clickAlta(e) {
-        if (e.currentTarget.id == "divBtnMas") {
+    clickAlta(accion, dato) {
+        this.accion = accion
+        if (accion == "alta") {
+            this.itemOriginal = this.itemVacio;
+            this.itemOriginal.Tipo = this.shadowRoot.querySelector("#filtro").value
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].publicacionesabm.lblTituloAltaNew
+            this.shadowRoot.querySelector("#txtTitulo").value = ""
+            this.shadowRoot.querySelector("#txtLeyenda").value = ""
+            this.shadowRoot.querySelector("#txtColor").value = ""
+            this.shadowRoot.querySelector("#txtImagen").value = ""
+            this.shadowRoot.querySelector("#txtBoton").value = ""
+            this.shadowRoot.querySelector("#txtHttp").value = ""
+            this.shadowRoot.querySelector("#txtOrden").value = "0"
         }
-        if (e.currentTarget.id == "cobDivSvgUpdate") {
+        if (accion == "update") {
+            this.itemOriginal = dato;
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].publicacionesabm.lblTituloAltaChange
+            this.shadowRoot.querySelector("#txtTitulo").value = dato.Titulo
+            this.shadowRoot.querySelector("#txtLeyenda").value = dato.Leyenda
+            this.shadowRoot.querySelector("#txtColor").value = dato.Color
+            this.shadowRoot.querySelector("#txtImagen").value = dato.Imagen
+            this.shadowRoot.querySelector("#txtBoton").value = dato.BtnCaption
+            this.shadowRoot.querySelector("#txtHttp").value = dato.Http
+            this.shadowRoot.querySelector("#txtOrden").value = dato.Orden
         }
         this.shadowRoot.querySelector("#divTituloForm").style.display = "none";
         this.shadowRoot.querySelector("#divLeyendaForm").style.display = "none";
@@ -389,7 +431,7 @@ export class publicacionAbm extends connect(store)(LitElement) {
         this.shadowRoot.querySelector("#divBotonForm").style.display = "none";
         this.shadowRoot.querySelector("#divHttpForm").style.display = "none";
         this.shadowRoot.querySelector("#divOrdenForm").style.display = "grid";
-        switch (this.item.tipo) {
+        switch (this.itemOriginal.Tipo) {
             case "A":
                 this.shadowRoot.querySelector("#divTituloForm").style.display = "grid";
                 this.shadowRoot.querySelector("#divColorForm").style.display = "grid";
@@ -414,15 +456,99 @@ export class publicacionAbm extends connect(store)(LitElement) {
                 this.shadowRoot.querySelector("#divLeyendaForm").style.display = "grid";
                 break;
         }
-
         this.shadowRoot.querySelector("#verDatos").style.display = "grid";
         this.shadowRoot.querySelector("#x").style.display = "grid";
         this.shadowRoot.querySelector("#pantallaOscura").style.display = "grid";
+        this.activar();
     }
-    clickDelete(e) {
-        if (confirm('Delete')) {
-
+    clickDelete(dato) {
+        if (confirm(idiomas[this.idioma].publicacionesabm.msjDelete)) {
+            let miToken = store.getState().cliente.datos.token
+            store.dispatch(removePublicacion(dato.Id, miToken))
         }
+    }
+    valido() {
+        let valido = true
+        this.update()
+        return valido
+    }
+    clickAccion() {
+        if (this.activo) {
+            if (this.valido()) {
+                const tipo = this.itemOriginal.Tipo
+                const titulo = this.shadowRoot.querySelector("#txtTitulo").value
+                const leyenda = this.shadowRoot.querySelector("#txtLeyenda").value
+                const color = this.shadowRoot.querySelector("#txtColor").value
+                const imagen = this.shadowRoot.querySelector("#txtImagen").value
+                const boton = this.shadowRoot.querySelector("#txtBoton").value
+                const http = this.shadowRoot.querySelector("#txtHttp").value
+                const orden = this.shadowRoot.querySelector("#txtOrden").value
+
+                var datoUpdate = [];
+                if (this.accion == "alta") {
+                    let regNuevo = { id: 0, tipo: tipo, imagen: imagen, titulo: titulo, leyenda: leyenda, btnCaption: boton, color: color, http: http, orden: orden }
+                    let miToken = store.getState().cliente.datos.token
+                    store.dispatch(addPublicacion(regNuevo, miToken))
+                    this.update()
+                    this.shadowRoot.querySelector("#filtro").value = tipo
+                    this.clickX()
+                }
+                if (this.accion == "update") {
+                    var datoUpdate = [];
+                    titulo != this.itemOriginal.Titulo ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/Titulo",
+                        "value": titulo
+                    }) : null
+                    imagen != this.itemOriginal.Imagen ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/Imagen",
+                        "value": titulo
+                    }) : null
+                    leyenda != this.itemOriginal.Leyenda ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/Leyenda",
+                        "value": leyenda
+                    }) : null
+                    boton != this.itemOriginal.BtnCaption ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/BtnCaption",
+                        "value": boton
+                    }) : null
+                    color != this.itemOriginal.Color ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/Color",
+                        "value": color
+                    }) : null
+                    http != this.itemOriginal.Http ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/Http",
+                        "value": http
+                    }) : null
+                    orden != this.itemOriginal.Orden ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/Orden",
+                        "value": orden
+                    }) : null
+                    if (datoUpdate) {
+                        let miToken = store.getState().cliente.datos.token
+                        store.dispatch(patchPublicacion(this.itemOriginal.Id, datoUpdate, miToken))
+                        this.update()
+                        this.shadowRoot.querySelector("#filtro").value = this.itemOriginal.Tipo
+                        this.clickX()
+                    }
+                }
+            }
+        }
+    }
+    activar() {
+        this.activo = true
+        if (this.activo) {
+            this.shadowRoot.querySelector("#btnAceptar").removeAttribute("apagado")
+        } else {
+            this.shadowRoot.querySelector("#btnAceptar").setAttribute("apagado", "")
+        }
+        this.update()
     }
     clickX() {
         this.shadowRoot.querySelector("#verDatos").style.display = "none";

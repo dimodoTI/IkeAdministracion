@@ -4,7 +4,7 @@ import {
 import {
   reducer as uiReducer
 } from "./ui"
-import { reducer as publicidadReducer } from "./publicidad"
+import { reducer as publicacionReducer } from "./publicacion"
 import { reducer as reservaReducer } from "./reserva"
 import {
   reducer as usuarioReducer
@@ -29,7 +29,7 @@ export const rootReducer = (state = {}, action) => {
 
   return {
     ui: uiReducer(state.ui, action),
-    publicidad: publicidadReducer(state.publicidad, action),
+    publicacion: publicacionReducer(state.publicacion, action),
     reserva: reservaReducer(state.reserva, action),
     usuario: usuarioReducer(state.usuario, action),
     autorizacion: autorizacionReducer(state.autorizacion, action),

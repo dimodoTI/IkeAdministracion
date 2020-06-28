@@ -14,10 +14,13 @@ import {
     REMOVE,
     REMOVE_SUCCESS,
     REMOVE_ERROR
-} from "../actions/mascotastipo";
-///////////////
+
+} from "../actions/mascotas";
+
 import {
-    ikeMascotasTipo, ikeOdataMascotasTipo
+
+    ikeMascotas,
+    ikeOdataMascotas
 } from "../fetchs"
 
 import {
@@ -27,16 +30,17 @@ import {
     RESTUpdate,
     RESTPatch
 } from "../actions/REST"
-///////////////
-import { apiRequest } from "../actions/api"
+
+import {
+    apiRequest
+} from "../actions/api"
 
 export const get = ({
     dispatch
 }) => next => action => {
     next(action);
     if (action.type === GET) {
-        //dispatch(RESTRequest(ikeMascotasTipo, action.id, GET_SUCCESS, GET_ERROR))
-        dispatch(apiRequest(ikeOdataMascotasTipo, action.options, GET_SUCCESS, GET_ERROR))
+        dispatch(apiRequest(ikeMascotasQuery, action.options, GET_SUCCESS, GET_ERROR))
     }
 };
 
@@ -45,7 +49,7 @@ export const add = ({
 }) => next => action => {
     next(action);
     if (action.type === ADD) {
-        dispatch(RESTAdd(ikeMascotasTipo, action.body, ADD_SUCCESS, ADD_ERROR, action.token))
+        dispatch(RESTAdd(ikeMascotas, action.body, ADD_SUCCESS, ADD_ERROR))
     }
 };
 
@@ -54,7 +58,7 @@ export const update = ({
 }) => next => action => {
     next(action);
     if (action.type === UPDATE) {
-        dispatch(RESTUpdate(ikeMascotasTipo, action.id, action.body, UPDATE_SUCCESS, UPDATE_ERROR, action.token))
+        dispatch(RESTUpdate(ikeMascotas, action.id, action.body, UPDATE_SUCCESS, UPDATE_ERROR))
     }
 };
 
@@ -63,7 +67,7 @@ export const patch = ({
 }) => next => action => {
     next(action);
     if (action.type === PATCH) {
-        dispatch(RESTPatch(ikeMascotasTipo, action.id, action.body, PATCH_SUCCESS, PATCH_ERROR, action.token))
+        dispatch(RESTPatch(ikeMascotas, action.id, action.body, PATCH_SUCCESS, PATCH_ERROR))
     }
 };
 
@@ -72,7 +76,7 @@ export const remove = ({
 }) => next => action => {
     next(action);
     if (action.type === REMOVE) {
-        dispatch(RESTDelete(ikeMascotasTipo, action.id, REMOVE_SUCCESS, REMOVE_ERROR, action.token))
+        dispatch(RESTDelete(ikeMascotas, action.id, REMOVE_SUCCESS, REMOVE_ERROR))
     }
 };
 
@@ -94,6 +98,8 @@ export const processComand = ({
 
     }
 };
+
+
 
 export const processError = ({
     dispatch
