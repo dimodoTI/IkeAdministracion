@@ -77,7 +77,14 @@ export const idiomas = {
             lblEdad: "Edad:  ", lblEdad_ph: "Cachorro", lblObligatoria: "Obligatoria: ",
             btnGrabar: "Aceptar", lblTituloAltaNew: "Nueva vacuna", lblTituloAltaChange: "Modificar vacuna",
             lblActivo: "Esta activo?"
-        }
+        },
+        puestosabm: {
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas",
+            titulo: "Puestos", datoPuesto: "Puestos: ", datoActivo: "Activo: ",
+            lblNombre: "Puesto Nro", lblNombre_ph: "1", lblActivo: "Esta activo?",
+            btnGrabar: "Aceptar", lblTituloAltaNew: "Nuevo puesto", lblTituloAltaChange: "Modificar",
+            errorToken: "Error, Vuelve a loguearte", errorOperacion: "Operacion no realizada"
+        },
     }
 }
 

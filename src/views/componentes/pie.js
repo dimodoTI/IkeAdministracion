@@ -240,7 +240,7 @@ export class pieComponente extends connect(store)(LitElement) {
                 <div id="divPopupVacunas" class="itemMenuTablas" @click=${this.clickVacunas}>Vacunas</div>
             </div>
             <div id="divPopupAgendaMenu">
-                <div id="divPopupPuesto" class="itemMenuTablas" @click=${this.clickRaza}>Puesto</div>
+                <div id="divPopupPuesto" class="itemMenuTablas" @click=${this.clickPuesto}>Puesto</div>
                 <div id="divPopupTramos" class="itemMenuTablas" @click=${this.clickMascotaTipo}>Tramos</div>
             </div>
             <div id="divAyudaPie">
@@ -295,6 +295,12 @@ export class pieComponente extends connect(store)(LitElement) {
         this.opcion = "cero"
         this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
         this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
+    }
+    clickPuesto() {
+        store.dispatch(modoPantalla("puestosabm", "principal"))
+        this.opcion = "cero"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "none"
     }
     static get properties() {
         return {

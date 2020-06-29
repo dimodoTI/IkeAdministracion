@@ -37,6 +37,9 @@ import {
 import {
   middleware as publicacion
 } from "./middleware/publicacion";
+import {
+  middleware as puestos
+} from "./middleware/puestos";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 let mdw = [
@@ -47,7 +50,8 @@ let mdw = [
   ...autorizacion,
   ...mascotastipo,
   ...razas,
-  ...publicacion
+  ...publicacion,
+  ...puestos
 ]
 
 if (process.env.NODE_ENV !== 'production') {

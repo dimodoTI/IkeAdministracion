@@ -25,36 +25,16 @@ export const ikeRecuperoFetch = fetchFactory(webApiUsuarios, "Autorizacion/recup
 export const ikeLogonFetch = fetchFactory(webApiUsuarios, "Autorizacion/logon")
 export const ikeUpdateProfileFetch = fetchFactory(webApiUsuarios, "Autorizacion/updateProfile")
 
+
 export const ikeMascotas = fetchFactory(webApiMascotas, "Mascotas")
-export const ikeOdataMascotas = ODataEntity(mascotaOdata, "MascotasQuery")
-export const ikeMascotasTipo = fetchFactory(webApiMascotas, "MascotasTipo")
 export const ikeOdataMascotasTipo = ODataEntity(mascotaOdata, "MascotasTipoQuery")
 export const ikeRazas = fetchFactory(webApiMascotas, "Razas")
-export const ikeOdataRazas = ODataEntity(mascotaOdata, "RazasQuery")
-
 export const ikePublicaciones = fetchFactory(webApiPublicacion, "Publicaciones")
+export const ikePuestos = fetchFactory(webApiMascotas, "Puestos")
+
+export const ikeOdataMascotas = ODataEntity(mascotaOdata, "MascotasQuery")
+export const ikeMascotasTipo = fetchFactory(webApiMascotas, "MascotasTipo")
+export const ikeOdataRazas = ODataEntity(mascotaOdata, "RazasQuery")
 export const ikeOdataPublicaciones = ODataEntity(publicacionOdata, "PublicacionesQuery")
+export const ikePuestosQuery = ODataEntity(mascotaOdata, "PuestosQuery")
 
-/* let app = "DigitalizacionExpedientes"
-let dominio = "http://localhost/" + app
-if (process.env.NODE_ENV == 'production') {
-  dominio = window.location.protocol + "//" + window.location.hostname + "/Intranet/" + app
-} */
-
-/* const DigitalizacionExpedientes = ODataFetchFactory({
-  fetch: fetch,
-  domain: dominio
-});
-
-export const expediente = ODataEntity(DigitalizacionExpedientes, "Traer")
-export const documentacion = ODataEntity(DigitalizacionExpedientes, "DocumentacionxExpte")
-export const documentos = ODataEntity(DigitalizacionExpedientes, "Documentacion")
-export const imagenHistorico = ODataEntity(DigitalizacionExpedientes, "ImagenHistorico")
-export const grabarImagen = ODataEntity(DigitalizacionExpedientes, "GrabarImagen")
-export const expedienteMarcar = ODataEntity(DigitalizacionExpedientes, "Marcar")
-export const estados = ODataEntity(DigitalizacionExpedientes, "DocumentacionxExpte_Estado")
-export const asignarImagen = ODataEntity(DigitalizacionExpedientes, "AsignarImagen")
-export const asignarImagenes = ODataEntity(DigitalizacionExpedientes, "AsignarImagenes")
-export const cerrar = ODataEntity(DigitalizacionExpedientes, "Cerrar")
-export const eventos = ODataEntity(DigitalizacionExpedientes, "EvetoEve_Imagenes")
-export const envio = ODataEntity(DigitalizacionExpedientes, "PasarDP") */
