@@ -319,7 +319,8 @@ export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATE
         if (name == USUARIO_ADDTIMESTAMP) {
             this.clickX();
             //store.dispatch(getUsuario(null, this.TOCK))
-            store.dispatch(getUsuario({}, store.getState().cliente.datos.token))
+            this.TOCK = store.getState().cliente.datos.token
+            store.dispatch(getUsuario({ token: this.TOCK }))
         }
         if (name == USUARIO_ERRORGETTIMESTAMP) {
             alert(idiomas[this.idioma].usuarioabm.errorToken)
@@ -394,7 +395,25 @@ export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATE
 
     clickMostrarDatos() {
         //store.dispatch(getUsuario(null, this.TOCK))
-        store.dispatch(getUsuario({}, store.getState().cliente.datos.token))
+        this.TOCK = store.getState().cliente.datos.token
+        var valorFiltro = this.shadowRoot.querySelector("#txtFiltro").value.toLowerCase()
+        var miFiltro = ""
+        switch (this.shadowRoot.querySelector("#filtro").value) {
+            case idiomas[this.idioma].usuarioabm.filtroOpcionMail:
+                miFiltro = "contains(tolower(Email),'" + valorFiltro + "')"
+                break;
+            case idiomas[this.idioma].usuarioabm.filtroOpcionDocumento:
+                miFiltro = "Documento eq " + valorFiltro
+                break;
+            case idiomas[this.idioma].usuarioabm.filtroOpcionNombre:
+                miFiltro = "contains(tolower(Apellido),'" + valorFiltro + "') or contains(tolower(Nombre),'" + valorFiltro + "')"
+                break;
+        }
+        if (valorFiltro.length > 0) {
+            store.dispatch(getUsuario({ filter: miFiltro, token: this.TOCK }))
+        } else {
+            store.dispatch(getUsuario({ token: this.TOCK }))
+        }
     }
     clickMostrarFiltro(e) {
         if (this.shadowRoot.querySelector("#divSeleccion").style.display == "none") {

@@ -36,7 +36,7 @@ export const get = ({
     next(action);
     if (action.type === GET) {
         //dispatch(RESTRequest(ikeUsuarioFetch, action.id, GET_SUCCESS, GET_ERROR, action.token))
-        dispatch(apiRequest(ikeOdataUsuarioFetch, action.options, GET_SUCCESS, GET_ERROR, action.token))
+        dispatch(apiRequest(ikeOdataUsuarioFetch, action.options, GET_SUCCESS, GET_ERROR))
     }
 };
 

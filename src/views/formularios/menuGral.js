@@ -107,6 +107,7 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
     clickTapaPantalla() {
         this.shadowRoot.querySelector("#divTapaPantalla").style.display = "none"
         this.shadowRoot.children.gridPie.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
+        this.shadowRoot.children.gridPie.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "none"
         this.shadowRoot.children.gridPie.opcion = "cero"
         this.update()
     }

@@ -14,10 +14,11 @@ const webApiPublicacion = "http://64.227.109.20:8082/api"
 const webApiPublicacionOdata = "http://64.227.109.20:8082"
 
 const mascotaOdata = ODataFetchFactory({ fetch: fetch, domain: webApiMascotasOdata })
+const usuarioOdata = ODataFetchFactory({ fetch: fetch, domain: webApiUsuariosOdata })
 const publicacionOdata = ODataFetchFactory({ fetch: fetch, domain: webApiPublicacionOdata })
 
 export const ikeUsuarioFetch = fetchFactory(webApiUsuarios, "Usuario")
-export const ikeOdataUsuarioFetch = fetchFactory(webApiUsuariosOdata, "UsuarioQuery")
+export const ikeOdataUsuarioFetch = ODataEntity(usuarioOdata, "UsuarioQuery")
 export const ikeLoginFetch = fetchFactory(webApiUsuarios, "Autorizacion/login")
 export const ikeRenovacionFetch = fetchFactory(webApiUsuarios, "Autorizacion/renovacion")
 export const ikeRecuperoFetch = fetchFactory(webApiUsuarios, "Autorizacion/recupero")

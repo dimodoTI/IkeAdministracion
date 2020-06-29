@@ -2,7 +2,7 @@ import { html, LitElement, css } from "lit-element";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { button } from "../css/button"
-import { USUARIO, PUBLICACION, VACUNA, CONSULTA, FOTO } from "../../../assets/icons/icons";
+import { CONFIG, HOSPITAL, USUARIO, PUBLICACION, VACUNA, CONSULTA, FOTO } from "../../../assets/icons/icons";
 import { modoPantalla } from "../../redux/actions/ui";
 import { idiomas } from "../../redux/datos/idiomas"
 
@@ -152,7 +152,7 @@ export class pieComponente extends connect(store)(LitElement) {
             top:0;
             left:0;
         }
-        #divPopupTablas{
+        #divPopupTablas,#divPopupAgendaMenu{
             position:absolute;
             display:none;
             z-index:11;
@@ -163,16 +163,30 @@ export class pieComponente extends connect(store)(LitElement) {
             font-weight: var(--font-bajada-weight);
             align-content: normal;
             padding:.2rem .4rem .2rem .4rem;
-            height:3rem;
-            width:6rem;
         }
         :host([media-size="small"]) #divPopupTablas{
             bottom:2.5rem;
             left:9rem;
+            height:4rem;
+            width:6rem;
         }
         :host(:not([media-size="small"])) #divPopupTablas{
             top:14rem;
-            left:6rem;
+            left:16vw;
+            height:4rem;
+            width:6rem;
+        }
+        :host([media-size="small"]) #divPopupAgendaMenu{
+            bottom:2.5rem;
+            left:11rem;
+            height:3rem;
+            width:6rem;
+        }
+        :host(:not([media-size="small"])) #divPopupAgendaMenu{
+            top:18rem;
+            left:16vw;
+            height:3rem;
+            width:6rem;
         }
         .itemMenuTablas{
             cursor:pointer;           
@@ -198,10 +212,10 @@ export class pieComponente extends connect(store)(LitElement) {
                     ${CONSULTA}
                 </div>
                 <div id="img-vacuna" select=${this.opcion == 'cuatro' ? 'SI' : 'NO'} @click="${this.clickBoton4}" class="img">
-                    ${VACUNA}
+                    ${HOSPITAL}
                 </div>  
                 <div id="img-foto" select=${this.opcion == 'cinco' ? 'SI' : 'NO'} @click="${this.clickBoton5}" class="img">
-                    ${FOTO}
+                    ${CONFIG}
                 </div>          
                 <div id="lbl-usuario" select=${this.opcion == 'uno' ? 'SI' : 'NO'} @click="${this.clickBoton1}"  class="lbl">
                     ${idiomas[this.idioma].pie.inicio}
@@ -212,8 +226,8 @@ export class pieComponente extends connect(store)(LitElement) {
                 <div id="lbl-tablas" select=${this.opcion == 'tres' ? 'SI' : 'NO'} @click="${this.clickBoton3}"  class="lbl">
                     ${idiomas[this.idioma].pie.consulta}
                 </div>
-                <div id="lbl-vacuna" select=${this.opcion == 'cuatro' ? 'SI' : 'NO'} @click="${this.clickBoton4}"  class="lbl">
-                    ${idiomas[this.idioma].pie.vacuna}
+                <div id="lbl-Agendas" select=${this.opcion == 'cuatro' ? 'SI' : 'NO'} @click="${this.clickBoton4}"  class="lbl">
+                    ${idiomas[this.idioma].pie.agendaMenu}
                 </div>
                 <div id="lbl-foto" select=${this.opcion == 'cinco' ? 'SI' : 'NO'} @click="${this.clickBoton5}"  class="lbl">
                     ${idiomas[this.idioma].pie.foto}
@@ -222,7 +236,12 @@ export class pieComponente extends connect(store)(LitElement) {
             <div id="divPopupTablas">
                 <div id="divPopupRazas" class="itemMenuTablas" @click=${this.clickRaza}>Razas</div>
                 <div id="divPopupTipoMascota" class="itemMenuTablas" @click=${this.clickMascotaTipo}>Tipo de mascotas</div>
+                <div id="divPopupAgendaVacunas" class="itemMenuTablas" @click=${this.clickVacunas}>Agenda Vacunas</div>
                 <div id="divPopupVacunas" class="itemMenuTablas" @click=${this.clickVacunas}>Vacunas</div>
+            </div>
+            <div id="divPopupAgendaMenu">
+                <div id="divPopupPuesto" class="itemMenuTablas" @click=${this.clickRaza}>Puesto</div>
+                <div id="divPopupTramos" class="itemMenuTablas" @click=${this.clickMascotaTipo}>Tramos</div>
             </div>
             <div id="divAyudaPie">
                 <hr style="width:90%; border-top: 2px solid var(--color-gris-claro)">
@@ -236,17 +255,27 @@ export class pieComponente extends connect(store)(LitElement) {
         this.opcion = "uno"
         this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
         this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
+        this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "none"
     }
     clickBoton2() {
         store.dispatch(modoPantalla("publicacionesabm", "principal"))
         this.opcion = "dos"
         this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
         this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
+        this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "none"
     }
     clickBoton3() {
         this.opcion = "tres"
         this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "grid"
         this.shadowRoot.querySelector("#divPopupTablas").style.display = "grid"
+        this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "none"
+        this.update();
+    }
+    clickBoton4() {
+        this.opcion = "cuatro"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "grid"
+        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
+        this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "grid"
         this.update();
     }
     clickRaza() {

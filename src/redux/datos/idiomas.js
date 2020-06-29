@@ -27,7 +27,10 @@ export const idiomas = {
             errorClave2: { err1: "Clave2 incorrecto", err2: "wer" }
         },
         crearclavemsg: { titulo: "¡Genial!", leyenda: "Tu contraseña fue creada con éxito.", btn1: "Ingresar a mi cuenta" },
-        pie: { inicio: "Usuarios", mascota: "Publicacion", consulta: "Tablas", vacuna: "Vacunas", foto: "Fotos" },
+        pie: {
+            inicio: "Usuarios", mascota: "Publicacion", consulta: "Tablas", agendaMenu: "Agenda", foto: "Config",
+            vacuna: "vacuna"
+        },
         principal: {
             tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas",
             lblAyuda01: "¿Necesitás ayuda?.", btnAyuda: "Solicitar asistencia"

@@ -16,10 +16,9 @@ export const PATCH_ERROR = "[usuario] PATCH error";
 export const UPDATE_ERROR = "[usuario] UPDATE error";
 export const REMOVE_ERROR = "[usuario] REMOVE error";
 
-export const get = (options, token) => ({
+export const get = (options) => ({
     type: GET,
-    options: options,
-    token: token
+    options: options
 });
 
 export const add = (body, token) => ({
