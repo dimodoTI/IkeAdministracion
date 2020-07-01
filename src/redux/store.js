@@ -40,6 +40,9 @@ import {
 import {
   middleware as puestos
 } from "./middleware/puestos";
+import {
+  middleware as vacuna
+} from "./middleware/vacuna";
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 let mdw = [
@@ -51,7 +54,8 @@ let mdw = [
   ...mascotastipo,
   ...razas,
   ...publicacion,
-  ...puestos
+  ...puestos,
+  ...vacuna
 ]
 
 if (process.env.NODE_ENV !== 'production') {

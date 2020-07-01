@@ -70,9 +70,9 @@ export const idiomas = {
             btnGrabar: "Aceptar", lblTituloAltaNew: "Nuevo Tipo de mascota", lblTituloAltaChange: "Modificar",
             errorToken: "Error, Vuelve a loguearte", errorOperacion: "Operacion no realizada"
         },
-        vacunasabm: {
+        calendariosabm: {
             tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas", lblFiltro: "Filtro por:",
-            lblMascota: "Mascota:  ", lblVacuna: "Vacuna:  ", lblVacuna_ph: "Quintuple", lblPara: "Para:  ",
+            titulo: "Agenda vacunación", lblMascota: "Mascota:  ", lblVacuna: "Vacuna:  ", lblVacuna_ph: "Quintuple", lblPara: "Para:  ",
             lblPara_ph: "Titulo: Tos de las perreras - Hepatitis - Moquillo - Parvovirus",
             lblEdad: "Edad:  ", lblEdad_ph: "Cachorro", lblObligatoria: "Obligatoria: ",
             btnGrabar: "Aceptar", lblTituloAltaNew: "Nueva vacuna", lblTituloAltaChange: "Modificar vacuna",
@@ -85,6 +85,13 @@ export const idiomas = {
             btnGrabar: "Aceptar", lblTituloAltaNew: "Nuevo puesto", lblTituloAltaChange: "Modificar",
             errorToken: "Error, Vuelve a loguearte", errorOperacion: "Operacion no realizada"
         },
+        vacunasabm: {
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas",
+            titulo: "Administrar vacunas", datoRaza: "Vacuna: ", datoTipo: "Tipo de mascota: ", datoActivo: "Activo: ",
+            lblNombre: "Vacuna", lblTipo: "Tipo de mascota", lblNombre_ph: "Rabia", lblActivo: "Esta activo?",
+            btnGrabar: "Aceptar", lblTituloAltaNew: "Nueva vacuna", lblTituloAltaChange: "Modificar vacuna",
+            errorToken: "Error, Vuelve a loguearte", errorOperacion: "Operacion no realizada"
+        }
     }
 }
 

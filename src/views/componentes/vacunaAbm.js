@@ -6,34 +6,38 @@ import { USUARIO, MASCOTA, VACUNA, CONSULTA, FOTO } from "../../../assets/icons/
 import { modoPantalla } from "../../redux/actions/ui";
 import { idiomas } from "../../redux/datos/idiomas";
 import { select } from "../css/select"
-import { cardOnboarding } from "../css/cardOnboarding"
 import { cardVacuna } from "../css/cardVacuna"
 import { MAS, BASURA, MODIFICAR, ARRIBA, ABAJO } from "../../../assets/icons/icons"
 import { ikeInput } from "../css/ikeInput"
+import { get as getVacuna, patch as patchVacuna, add as addVacuna } from "../../redux/actions/vacuna";
+import { get as getMascotasTipo } from "../../redux/actions/mascotastipo";
 
-export class vacunaAbm extends connect(store)(LitElement) {
+const VACUNA_TIMESTAMP = "vacuna.timeStamp"
+const MASCOTASTIPO_TIMESTAMP = "mascotastipo.timeStamp"
+const VACUNA_UPDATETIMESTAMP = "vacuna.updateTimeStamp"
+const VACUNA_ADDTIMESTAMP = "vacuna.addTimeStamp"
+const VACUNA_ERRORGETTIMESTAMP = "vacuna.errorTimeStamp"
+const VACUNA_ERROROTROSTIMESTAMP = "vacuna.commandErrorTimeStamp"
+const MODO_PANTALLA = "ui.timeStampPantalla"
+
+export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMESTAMP, VACUNA_TIMESTAMP, VACUNA_UPDATETIMESTAMP, VACUNA_ADDTIMESTAMP, VACUNA_ERRORGETTIMESTAMP, VACUNA_ERROROTROSTIMESTAMP)(LitElement) {
     constructor() {
         super();
+        this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI0NTg1MTksImV4cCI6MTU5MjQ2MzkxOSwiaWF0IjoxNTkyNDU4NTE5fQ.m6skA3UUdCoiUkkCp1QcuUQs9ipJy570Sr8rnhLdfQo"
         this.idioma = "ES"
-        this.item = { id: 1 }
-        this.vacunaOriginal = { idMascota: 1, mascota: "Perro", vacuna: "", para: "", edad: "", obligatoria: "", activo: true };
-        this.vacunas = [{ idMascota: 1, mascota: "Perro", vacuna: "Perro Quíntuple Refuerzo", para: "Tos de las perreras - Hepatitis - Moquillo - Parvovirus", edad: "Cachorros", obligatoria: "Obligatoria", activo: true },
-        { idMascota: 1, mascota: "Perro", vacuna: "Quíntuple", para: "Tos de las perreras - Hepatitis - Moquillo - Parvovirus", edad: "Cachorros", obligatoria: "Obligatoria", activo: true },
-        { idMascota: 1, mascota: "Perro", vacuna: "Tetano", para: "Tetano", edad: "Cachorros", obligatoria: "Obligatoria", activo: true },
-        { idMascota: 2, mascota: "Gato", vacuna: " Gato Quíntuple Refuerzo", para: "Tos de las perreras - Hepatitis - Moquillo - Parvovirus", edad: "Cachorros", obligatoria: "Obligatoria", activo: true },
-        { idMascota: 2, vacuna: "Rabia", para: "Rabia", edad: "Cachorros", obligatoria: "Obligatoria", activo: true },
-        { idMascota: 2, vacuna: "Quíntuple", para: "Tos de las perreras - Hepatitis - Moquillo - Parvovirus", edad: "Cachorros", obligatoria: "Obligatoria", activo: true },
-        { idMascota: 2, vacuna: "Tetano", para: "Tetano", edad: "Cachorros", obligatoria: "Obligatoria", activo: true }
-        ]
-
-
+        this.accion = ""
+        this.itemOriginal = { id: 0, MascotaTipoId: 0, descripcion: "", activo: true, tipo: { id: 0, descripcion: "", activo: true } }
+        this.activo = false;
+        this.mascotasTipo = [];
+        this.vacunas = [{
+            id: 0, MascotaTipoId: 0, descripcion: "", activo: true, tipo: { id: 0, descripcion: "", activo: true }
+        }]
     }
 
     static get styles() {
         return css`
         ${button}
         ${select}
-        ${cardOnboarding}
         ${cardVacuna}
         ${ikeInput}
         :host{
@@ -43,7 +47,7 @@ export class vacunaAbm extends connect(store)(LitElement) {
             justify-content:left;
             background-color: var(--color-blanco);
             grid-gap:0rem;
-            grid-template-rows: 2.5rem 3.5rem auto ;
+            grid-template-rows: 2.5rem 8rem auto ;
             grid-template-columns: 100% ;
             height:100vh;
             overflow-x:none;
@@ -65,28 +69,8 @@ export class vacunaAbm extends connect(store)(LitElement) {
             stroke:var(--color-blanco);
             cursor:pointer;
         }
-        #divSacoFiltro{
-            display:grid;
-            grid-template-columns: auto 1fr 1fr;            
-        }
         #divTituloImgUp {
             margin-left:.8rem;
-        }
-        #divTituloImgUp svg {
-            fill:var(--color-blanco);
-            align-self: center;
-            width:1.2rem;
-            height:1.2rem;           
-        }
-        #divTituloImgDown {
-            display:none;
-            margin-left:.8rem;
-        }
-        #divTituloImgDown svg {
-            fill:var(--color-blanco);
-            align-self: center;
-            width:1.2rem;
-            height:1.2rem;           
         }
         #divBtnMas{
             justify-self: end;
@@ -101,31 +85,18 @@ export class vacunaAbm extends connect(store)(LitElement) {
             font-size: var(--font-header-h1-menos-size);
             font-weight: var(--font-label-weight);  
         }
-        .classRegistros{
+        #divRegistros{
             display:grid;
-            grid-gap: .3rem;
+            grid-gap: .8rem;
             overflow-y:auto;
             align-content: flex-start;
-            height: calc(((100vh * .9) * .82) - 10.5rem);
+            height: calc(((100vh * .9) * .82) - 2.5rem);
         }
-        .classRegistros::-webkit-scrollbar {
-            display: none;
+        :host(:not([media-size="small"])) #divRegistros{
+            height: calc(((100vh * .9)) - 2.5rem);
         }
-        :host([media-size="small"]) .classRegistros[alto="chico"]{
-            height: calc(((100vh * .9) * .82) - 5.5rem);
-            grid-gap: .6rem;  
-        }
-        :host([media-size="small"]) .classRegistros[alto="grande"]{
-            height: calc(((100vh * .9) * .82) - 2rem);
-            grid-gap: .7rem;  
-        }
-        :host(:not([media-size="small"])) .classRegistros[alto="chico"]{
-            height: calc((100vh * .82) - 5.5rem);
-            grid-gap: .8rem;  
-        }
-        :host(:not([media-size="small"])) .classRegistros[alto="grande"]{
-            height: calc((100vh * .82) - 2rem);
-            grid-gap: .8rem;  
+        #divRegistros::-webkit-scrollbar {
+            display: grid;
         }
         #pantallaOscura{
             display:none;
@@ -173,7 +144,7 @@ export class vacunaAbm extends connect(store)(LitElement) {
             display:none;
             position: fixed;
             top: .3rem;
-            right: .3rem;
+            right: 0.3rem;
             width: 1.5rem;
             height: 1.5rem;
             background-color: var(--color-gris-claro);
@@ -195,47 +166,39 @@ export class vacunaAbm extends connect(store)(LitElement) {
         .select{
             height:3rem;
         }
-        #divRegistrosVacuna{
-            display:none;
+        #txtMail[readonly]{
+            cursor: not-allowed;
+            background-color:var(--color-nude);
         }
         `
+    }
+    attributeChangedCallback(name, oldVal, newVal) {
+        console.log('attribute change: ', name, newVal);
+        super.attributeChangedCallback(name, oldVal, newVal);
     }
     render() {
         return html`
             <div id="divTitulo">
                 <div id="divSacoFiltro">
                     <div id="divTituloLbl">${idiomas[this.idioma].vacunasabm.titulo}</div>
-                    <div id="divTituloImgUp" @click=${this.clickMostrarFiltro}>
-                        ${ARRIBA}
-                    </div>
-                    <div id="divTituloImgDown" @click=${this.clickMostrarFiltro}>
-                        ${ABAJO}
-                    </div>
+                    <div></div>
                 </div>
                 <div id="divBtnMas" @click="${function () { this.clickAlta('alta', null) }}">${MAS}</div>
             </div>
-            <div id="divSeleccion">
-                <div id="selectFiltro" class="select" > 
-                    <label >${idiomas[this.idioma].usuarioabm.lblFiltro}</label>
-                    <select style="width:100%;height:2rem;" id="filtro" @change=${this.clickMostrarDatos}>          
-                        <option value="1" .selected="${this.item.id == "1"}">Perro</option>
-                        <option value="2" .selected="${this.item.id == "2"}">Gato</option>
-                    </select>
-                </div>
+
+            <div id=divRegistros>
+                ${this.vacunas.map((dato) => {
+            return html`
+                        <div id="cvacDivCuerpo">
+                            <div id="cvacDivActivo">${idiomas[this.idioma].vacunasabm.datoActivo} ${dato.Activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no}</div>
+                            <div id="divSvgUpdate"  valor="2" class="svgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
+                            <div id="cvacDivTipo">${dato.tipo.Descripcion}</div>
+                            <div id="cvacDivNombre">${dato.Descripcion}</div>
+                        </div>
+                    `
+        })}
+            <div style="height:.5rem;"></div>
             </div>
-            <div id=divRegistrosPerro class="classRegistros" alto="chico">
-                ${this.vacunas.filter(dato => { return dato.idMascota == this.item.id }).map(dato => html`
-                    <div id="ccDivEtiqueta">
-                        <div id ="ccDivVacuna">${dato.vacuna}</div>
-                        <div id="cobDivSvgUpdate" class="cobSvgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
-                        <div id="ccDivPara">${idiomas[this.idioma].vacunasabm.lblTitulo} ${dato.para}</div>
-                        <div id="ccDivCachorro">${dato.edad}</div>
-                        <div id="ccDivObligatorio">${dato.obligatoria}</div>
-                    </div>
-                `)}
-                <div style="height:.5rem;"></div>
-            </div>
- 
             <div id="pantallaOscura"> 
             </div>
             <div id="x" @click=${this.clickX}>
@@ -245,80 +208,123 @@ export class vacunaAbm extends connect(store)(LitElement) {
                     <div class="divTituloDatos">
                         <label id="lblTituloDatos">titulo</label>
                     </div>
-                    <div id="divMascotaSelect" class="select" > 
-                        <label >${idiomas[this.idioma].vacunasabm.lblMascota}</label>
-                        <select style="width:100%;height:2rem;" id="selectMascota">          
-                            <option value="1" .selected="${this.item.id == "1"}">Perro</option>
-                            <option value="2" .selected="${this.item.id == "2"}">Gato</option>
-                        </select>
+                    <div class="ikeInput">
+                        <label id="lblNombre">${idiomas[this.idioma].vacunasabm.lblNombre}</label>
+                        <input id="txtNombre"  @input=${this.activar} placeholder=${idiomas[this.idioma].vacunasabm.lblNombre_ph}>
+                        <label id="lblErrorNombre" error oculto>Vacuna Incorrecta</label>
+                    </div>
+                    <div id="selectTipo" class="select" > 
+                        <label >${idiomas[this.idioma].vacunasabm.lblTipo}</label>
+                        <select style="width:100%;height:2rem;" id="tipo"> 
+
+                        ${this.mascotasTipo.map((dato) => {
+            return html`
+                           <option value=${dato.Id} .selected=${dato.Descripcion == this.itemOriginal.tipo.Descripcion} >${dato.Descripcion}</option>
+                            `
+        })}
+                            </select>
                     </div>
 
-                    <div id="divVacunaForm" class="ikeInput">
-                        <label id="lblVacuna">${idiomas[this.idioma].vacunasabm.lblVacuna}</label>
-                        <input id="txtVacuna" @input=${this.activar} placeholder=${idiomas[this.idioma].vacunasabm.lblVacuna_ph}>
-                        <label id="lblErrorVacuna" error oculto>Vacuna Erronea</label>
-                    </div>
-                    <div id="divParaForm" class="ikeInput">
-                        <label id="lblPara">${idiomas[this.idioma].vacunasabm.lblPara}</label>
-                        <input id="txtPara" @input=${this.activar} placeholder=${idiomas[this.idioma].vacunasabm.lblPara_ph}>
-                        <label id="lblErrorPara" error oculto>Para Erroneo</label>
-                    </div>
-                    <div id="divEdadForm" class="ikeInput">
-                        <label id="lblEdad">${idiomas[this.idioma].vacunasabm.lblEdad}</label>
-                        <input id="txtEdad" @input=${this.activar} placeholder=${idiomas[this.idioma].vacunasabm.lblEdad_ph}>
-                        <label id="lblErrorEdad" error oculto>Edad Erronea</label>
-                    </div>
-                    <div id="divObligatoriaForm" class="ikeInput">
-                        <label id="lblObligatoria">${idiomas[this.idioma].vacunasabm.lblObligatoria}</label>
-                        <select style="width:100%;height:2rem;" id="selectObligatoria">          
-                            <option value="${idiomas[this.idioma].SiNo.si}" .selected="${this.vacunaOriginal.activo}">${idiomas[this.idioma].SiNo.si}</option>
-                            <option value="${idiomas[this.idioma].SiNo.no}" .selected="${!this.vacunaOriginal.activo}">${idiomas[this.idioma].SiNo.no}</option>
-                        </select>
-                    </div>
                     <div id="selectActivo" class="select" > 
-                        <label id="lblActivo">${idiomas[this.idioma].vacunasabm.lblActivo}</label>
+                        <label >${idiomas[this.idioma].vacunasabm.lblActivo}</label>
                         <select style="width:100%;height:2rem;" id="activo">          
-                            <option value="${idiomas[this.idioma].SiNo.si}" .selected="${this.vacunaOriginal.activo}">${idiomas[this.idioma].SiNo.si}</option>
-                            <option value="${idiomas[this.idioma].SiNo.no}" .selected="${!this.vacunaOriginal.activo}">${idiomas[this.idioma].SiNo.no}</option>
+                            <option value=true .selected="${this.itemOriginal.Activo}">${idiomas[this.idioma].SiNo.si}</option>
+                            <option value=false .selected="${!this.itemOriginal.Activo}">${idiomas[this.idioma].SiNo.no}</option>
                         </select>
                     </div>
-                    <button id="btnAceptar"  @click=${this.clickAccion} btn1 apagado>${idiomas[this.idioma].usuarioabm.btnGrabar}</button>                 
+                    <button id="btnAceptar"  @click=${this.clickAccion} btn1 apagado>${idiomas[this.idioma].vacunasabm.btnGrabar}</button>                 
                 </div>
             </div>
+            <hc2-spinner></hc2-spinner>
         `
     }
-    clickMostrarDatos() {
-        this.item.id = this.shadowRoot.querySelector("#filtro").value
-        this.update();
-    }
-    clickMostrarFiltro(e) {
-        if (this.shadowRoot.querySelector("#divSeleccion").style.display == "none") {
-            this.shadowRoot.querySelector("#divSeleccion").style.display = "grid";
-            this.shadowRoot.querySelector(".classRegistros").setAttribute("alto", "chico");
-            this.shadowRoot.querySelector("#divTituloImgUp").style.display = "grid";
-            this.shadowRoot.querySelector("#divTituloImgDown").style.display = "none";
-        } else {
-            this.shadowRoot.querySelector("#divSeleccion").style.display = "none";
-            this.shadowRoot.querySelector(".classRegistros").setAttribute("alto", "grande")
-            this.shadowRoot.querySelector("#divTituloImgUp").style.display = "none";
-            this.shadowRoot.querySelector("#divTituloImgDown").style.display = "grid";
+
+    stateChanged(state, name) {
+        if (name == MODO_PANTALLA) {
         }
+        if ((name == VACUNA_TIMESTAMP || name == MASCOTASTIPO_TIMESTAMP) && state.ui.quePantalla == "vacunasabm") {
+            if (state.mascotastipo.entities && state.vacuna.entities) {
+                this.vacunas = state.vacuna.entities.map(vac => {
+                    let nuevaVacuna = vac
+                    nuevaVacuna.tipo = state.mascotastipo.entities.filter(tipo => tipo.Id == nuevaVacuna.MascotaTipoId)[0]
+                    return nuevaVacuna
+                })
+                this.mascotasTipo = state.mascotastipo.entities
+                this.update()
+            }
+        }
+        if (name == VACUNA_ADDTIMESTAMP || name == VACUNA_UPDATETIMESTAMP) {
+            store.dispatch(getVacuna({}))
+        }
+    }
+    firstUpdated(changedProperties) {
+    }
+
+    clickAccion() {
+        const descripcion = this.shadowRoot.getElementById("txtNombre").value;
+        const tipo = this.shadowRoot.getElementById("tipo").value;
+        const activo = this.shadowRoot.getElementById("activo").value;
+
+        var datoUpdate = [];
+
+        if (this.accion == "alta") {
+            let regNuevo = { MascotaTipoId: tipo, Descripcion: descripcion, Activo: activo }
+            let miToken = store.getState().cliente.datos.token
+            store.dispatch(addVacuna(regNuevo, miToken))
+            this.update()
+            this.clickX()
+        }
+        if (this.accion == "update") {
+            if (this.activo) {
+                if (this.valido()) {
+                    var datoUpdate = [];
+                    descripcion != this.itemOriginal.Descripcion ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/descripcion",
+                        "value": descripcion
+                    }) : null
+                    activo != this.itemOriginal.Activo ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/Activo",
+                        "value": activo
+                    }) : null
+                    tipo != this.itemOriginal.MascotaTipoId ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/MascotaTipoId",
+                        "value": tipo
+                    }) : null
+                    if (datoUpdate) {
+                        let miToken = store.getState().cliente.datos.token
+                        store.dispatch(patchVacuna(this.itemOriginal.Id, datoUpdate, miToken))
+                        this.update()
+                        this.clickX()
+                    }
+                }
+            }
+        }
+    }
+
+    clickMostrarDatos() {
+        //store.dispatch(getUsuario(null, this.TOCK))
+        //store.dispatch(getUsuario(null, store.getState().cliente.datos.token))
     }
     clickAlta(accion, dato) {
+        this.accion = accion;
         if (accion == "alta") {
+            this.itemOriginal = { id: 0, idMascotasTipo: 0, Descripcion: "", Activo: true, tipo: { id: 0, descripcion: "", activo: true } }
+            this.shadowRoot.querySelector("#txtNombre").value = "";
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].vacunasabm.lblTituloAltaNew
-            this.vacunaOriginal = { idMascota: 0, vacuna: "", para: "", edad: "", obligatoria: true, activo: true }
         }
         if (accion == "update") {
+            this.itemOriginal = dato;
+            this.shadowRoot.querySelector("#txtNombre").value = dato.Descripcion;
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].vacunasabm.lblTituloAltaChange
-            this.vacunaOriginal = dato;
-            this.shadowRoot.querySelector("#txtVacuna").value = dato.vacuna
-            this.shadowRoot.querySelector("#txtPara").value = dato.para
-            this.shadowRoot.querySelector("#txtEdad").value = dato.edad
         }
         this.shadowRoot.querySelector("#verDatos").style.display = "grid";
         this.shadowRoot.querySelector("#x").style.display = "grid";
         this.shadowRoot.querySelector("#pantallaOscura").style.display = "grid";
+        this.activar();
+
     }
     clickDelete(e) {
         if (confirm('Delete')) {
@@ -329,6 +335,32 @@ export class vacunaAbm extends connect(store)(LitElement) {
         this.shadowRoot.querySelector("#verDatos").style.display = "none";
         this.shadowRoot.querySelector("#x").style.display = "none";
         this.shadowRoot.querySelector("#pantallaOscura").style.display = "none";
+    }
+    activar() {
+        this.activo = true
+        const descripcion = this.shadowRoot.getElementById("txtNombre");
+        if (descripcion.value.length < 2) {
+            this.activo = false
+        }
+        if (this.activo) {
+            this.shadowRoot.querySelector("#btnAceptar").removeAttribute("apagado")
+        } else {
+            this.shadowRoot.querySelector("#btnAceptar").setAttribute("apagado", "")
+        }
+        this.update()
+    }
+    valido() {
+        [].forEach.call(this.shadowRoot.querySelectorAll("[error]"), element => {
+            element.setAttribute("oculto", "")
+        })
+        let valido = true
+        const descripcion = this.shadowRoot.getElementById("txtNombre");
+        if (descripcion.value.length < 2 || descripcion.value.length > 50) {
+            valido = false
+            this.shadowRoot.querySelector("#lblErrorNombre").removeAttribute("oculto");
+        }
+        this.update()
+        return valido
     }
     static get properties() {
         return {

@@ -18,7 +18,7 @@ const MASCOTASTIPO_ERRORGETTIMESTAMP = "mascotastipo.errorTimeStamp"
 const MASCOTASTIPO_ERROROTROSTIMESTAMP = "mascotastipo.commandErrorTimeStamp"
 const MODO_PANTALLA = "ui.timeStampPantalla"
 
-export class mascotaTipoAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, MASCOTASTIPO_UPDATETIMESTAMP, MASCOTASTIPO_ADDTIMESTAMP, MASCOTASTIPO_ERRORGETTIMESTAMP, MASCOTASTIPO_ERROROTROSTIMESTAMP)(LitElement) {
+export class mascotaTipoAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMESTAMP, MASCOTASTIPO_UPDATETIMESTAMP, MASCOTASTIPO_ADDTIMESTAMP, MASCOTASTIPO_ERRORGETTIMESTAMP, MASCOTASTIPO_ERROROTROSTIMESTAMP)(LitElement) {
     constructor() {
         super();
         this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI0NTg1MTksImV4cCI6MTU5MjQ2MzkxOSwiaWF0IjoxNTkyNDU4NTE5fQ.m6skA3UUdCoiUkkCp1QcuUQs9ipJy570Sr8rnhLdfQo"
@@ -177,7 +177,7 @@ export class mascotaTipoAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, MASCO
                 </div>
                 <div id="divBtnMas" @click="${function () { this.clickAlta('alta', null) }}">${MAS}</div>
             </div>
-
+ 
             <div id=divRegistros>
                 ${this.mascotatipo.map(dato => html`
                     <div id="ctmDivCuerpo">

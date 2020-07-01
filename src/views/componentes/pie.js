@@ -168,13 +168,13 @@ export class pieComponente extends connect(store)(LitElement) {
             bottom:2.5rem;
             left:9rem;
             height:4rem;
-            width:6rem;
+            width:8rem;
         }
         :host(:not([media-size="small"])) #divPopupTablas{
             top:14rem;
             left:16vw;
             height:4rem;
-            width:6rem;
+            width:8rem;
         }
         :host([media-size="small"]) #divPopupAgendaMenu{
             bottom:2.5rem;
@@ -236,7 +236,7 @@ export class pieComponente extends connect(store)(LitElement) {
             <div id="divPopupTablas">
                 <div id="divPopupRazas" class="itemMenuTablas" @click=${this.clickRaza}>Razas</div>
                 <div id="divPopupTipoMascota" class="itemMenuTablas" @click=${this.clickMascotaTipo}>Tipo de mascotas</div>
-                <div id="divPopupAgendaVacunas" class="itemMenuTablas" @click=${this.clickVacunas}>Agenda Vacunas</div>
+                <div id="divPopupAgendaVacunas" class="itemMenuTablas" @click=${this.clickCalendarios}>Calendario Vacunacion</div>
                 <div id="divPopupVacunas" class="itemMenuTablas" @click=${this.clickVacunas}>Vacunas</div>
             </div>
             <div id="divPopupAgendaMenu">
@@ -292,6 +292,12 @@ export class pieComponente extends connect(store)(LitElement) {
     }
     clickVacunas() {
         store.dispatch(modoPantalla("vacunasabm", "principal"))
+        this.opcion = "cero"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
+    }
+    clickCalendarios() {
+        store.dispatch(modoPantalla("calendariosabm", "principal"))
         this.opcion = "cero"
         this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
         this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"

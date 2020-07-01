@@ -28,6 +28,9 @@ import {
 import {
   reducer as puestosReducer
 } from "./puestos"
+import {
+  reducer as vacunaReducer
+} from "./vacuna"
 
 export const rootReducer = (state = {}, action) => {
 
@@ -40,7 +43,8 @@ export const rootReducer = (state = {}, action) => {
     cliente: clienteReducer(state.cliente, action),
     mascotastipo: mascotasTipoReducer(state.mascotastipo, action),
     razas: razasReducer(state.razas, action),
-    puestos: puestosReducer(state.puestos, action)
+    puestos: puestosReducer(state.puestos, action),
+    vacuna: vacunaReducer(state.vacuna, action)
     // titular: titularReducer(state.titular, action),
     // mascotas: mascotasReducer(state.mascotas, action),
     // hc: hcReducer(state.hc, action),

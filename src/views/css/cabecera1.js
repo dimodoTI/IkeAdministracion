@@ -2,14 +2,15 @@ import {
     css
 } from "lit-element"
 
-export const cabecera1 = css `
+export const cabecera1 = css`
 #header{
     display:grid;
     align-content: center;
     justify-items: left;
-    padding:1.5rem;
+    padding: 0 1.5rem 0 1.5rem;
     border-radius:0 0 20px 20px;
     background-color: var(--color-blanco);
+    height: calc(100vh * .18)
  }
  #header div{
      display:grid
