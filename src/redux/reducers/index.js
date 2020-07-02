@@ -31,6 +31,9 @@ import {
 import {
   reducer as vacunaReducer
 } from "./vacuna"
+import {
+  reducer as calendarioReducer
+} from "./calendario"
 
 export const rootReducer = (state = {}, action) => {
 
@@ -44,7 +47,8 @@ export const rootReducer = (state = {}, action) => {
     mascotastipo: mascotasTipoReducer(state.mascotastipo, action),
     razas: razasReducer(state.razas, action),
     puestos: puestosReducer(state.puestos, action),
-    vacuna: vacunaReducer(state.vacuna, action)
+    vacuna: vacunaReducer(state.vacuna, action),
+    calendario: calendarioReducer(state.calendario, action)
     // titular: titularReducer(state.titular, action),
     // mascotas: mascotasReducer(state.mascotas, action),
     // hc: hcReducer(state.hc, action),

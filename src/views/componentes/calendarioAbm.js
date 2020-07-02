@@ -10,7 +10,11 @@ import { cardCalendario } from "../css/cardCalendario"
 import { MAS, BASURA, MODIFICAR, ARRIBA, ABAJO } from "../../../assets/icons/icons"
 import { ikeInput } from "../css/ikeInput"
 import { get as getCalendario, patch as patchCalendario, add as addCalendario } from "../../redux/actions/calendario";
+import { get as getMascotasTipo } from "../../redux/actions/mascotastipo";
+import { get as getVacuna } from "../../redux/actions/vacuna";
 
+const MASCOTASTIPO_TIMESTAMP = "mascotastipo.timeStamp"
+const VACUNA_TIMESTAMP = "vacuna.timeStamp"
 const CALENDARIO_TIMESTAMP = "calendario.timeStamp"
 const CALENDARIO_UPDATETIMESTAMP = "calendario.updateTimeStamp"
 const CALENDARIO_ADDTIMESTAMP = "calendario.addTimeStamp"
@@ -18,17 +22,19 @@ const CALENDARIO_ERRORGETTIMESTAMP = "calendario.errorTimeStamp"
 const CALENDARIO_ERROROTROSTIMESTAMP = "calendario.commandErrorTimeStamp"
 const MODO_PANTALLA = "ui.timeStampPantalla"
 
-export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIMESTAMP, CALENDARIO_UPDATETIMESTAMP, CALENDARIO_ADDTIMESTAMP, CALENDARIO_ERRORGETTIMESTAMP, CALENDARIO_ERROROTROSTIMESTAMP)(LitElement) {
+export class calendarioAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, VACUNA_TIMESTAMP, MODO_PANTALLA, CALENDARIO_TIMESTAMP, CALENDARIO_UPDATETIMESTAMP, CALENDARIO_ADDTIMESTAMP, CALENDARIO_ERRORGETTIMESTAMP, CALENDARIO_ERROROTROSTIMESTAMP)(LitElement) {
     constructor() {
         super();
         this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI0NTg1MTksImV4cCI6MTU5MjQ2MzkxOSwiaWF0IjoxNTkyNDU4NTE5fQ.m6skA3UUdCoiUkkCp1QcuUQs9ipJy570Sr8rnhLdfQo"
         this.idioma = "ES"
         this.accion = ""
-        this.mascotaTipoSeleccionada = 0
-        this.calendarioOriginal = { id: 0, MascotasTipoId: 1, Descripcion: "", Enfermadades: "", Optativa: true, Cachorro: true, Activo: true };
+        this.mascotaTipoSeleccionada = -1
+        this.combos = { mascota: 0, vacuna: 0, optativa: true, activo: true }
+        this.calendarioOriginal = {};
         this.activo = false;
-        this.calendarios = [{ id: 0, MascotasTipoId: 1, Descripcion: "", Enfermadades: "", Optativa: true, Cachorro: true, Activo: true }];
-        this.mascotasTipo = [];
+        this.calendarios = null;
+        this.mascotasTipo = null;
+        this.vacunas = null;
     }
 
     static get styles() {
@@ -219,20 +225,20 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
                 <div id="selectFiltro" class="select" > 
                     <label >${idiomas[this.idioma].usuarioabm.lblFiltro}</label>
                     <select style="width:100%;height:2rem;" id="filtro" @change=${this.clickMostrarDatos}>          
-                        ${this.mascotasTipo.map(dato => html`
-                            <option value="${dato.Id}" .selected="${this.calendarioOriginal.MascotasTipoId == dato.Id}">${dato.Descripcion}</option>                               
+                        ${!this.mascotasTipo ? "" : this.mascotasTipo.map(dato => html`
+                            <option value="${dato.Id}" .selected="${this.mascotaTipoSeleccionada == dato.Id}">${dato.Descripcion}</option>                               
                         `)}
                     </select>
                 </div>
             </div>
             <div id=divRegistrosPerro class="classRegistros" alto="chico">
-                ${this.calendarios.filter(dato => { return dato.MascotasTipoId == this.calendarioOriginal.MascotasTipoId }).map(dato => html`
+                ${!this.calendarios ? "" : this.calendarios.filter(dato => { return dato.MascotasTipoId == this.mascotaTipoSeleccionada }).map(dato => html`
                     <div id="ccDivEtiqueta">
-                        <div id ="ccDivVacuna">${dato.vacuna}</div>
+                        <div id ="ccDivVacuna">${dato.Vacuna.Descripcion}</div>
                         <div id="DivSvgUpdate" class="SvgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
-                        <div id="ccDivPara">${idiomas[this.idioma].calendariosabm.lblTitulo} ${dato.para}</div>
-                        <div id="ccDivCachorro">${dato.edad}</div>
-                        <div id="ccDivObligatorio">${dato.obligatoria}</div>
+                        <div id="ccDivPara">${idiomas[this.idioma].calendariosabm.lblTitulo} ${dato.Enfermedades}</div>
+                        <div id="ccDivCachorro">${dato.Edad}</div>
+                        <div id="ccDivObligatorio">${dato.Optativa ? idiomas[this.idioma].optativa.op : idiomas[this.idioma].optativa.ob}</div>
                     </div>
                 `)}
                 <div style="height:.5rem;"></div>
@@ -247,19 +253,22 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
                     <div class="divTituloDatos">
                         <label id="lblTituloDatos">titulo</label>
                     </div>
-                    <div id="divMascotaSelect" class="select" > 
+                    <div id="divMascotaSelect" class="select"> 
                         <label >${idiomas[this.idioma].calendariosabm.lblMascota}</label>
-                        <select style="width:100%;height:2rem;" id="selectMascota">          
-                            ${this.mascotasTipo.map(dato => html`
-                                <option value="${dato.Id}" .selected="${this.calendarioOriginal.MascotasTipoId == dato.Id}">${dato.Descripcion}</option>                               
+                        <select style="width:100%;height:2rem;cursor: default;" id="selectMascota" disabled >          
+                            ${!this.mascotasTipo ? "" : this.mascotasTipo.map(dato => html`
+                                <option value="${dato.Id}" .selected="${this.combos.mascota == dato.Id}">${dato.Descripcion}</option>                               
                             `)}
                         </select>
                     </div>
 
-                    <div id="divVacunaForm" class="ikeInput">
-                        <label id="lblVacuna">${idiomas[this.idioma].calendariosabm.lblVacuna}</label>
-                        <input id="txtVacuna" @input=${this.activar} placeholder=${idiomas[this.idioma].calendariosabm.lblVacuna_ph}>
-                        <label id="lblErrorVacuna" error oculto>Vacuna Erronea</label>
+                    <div id="divVacunaForm" class="select">
+                        <label >${idiomas[this.idioma].calendariosabm.lblVacuna}</label>
+                        <select style="width:100%;height:2rem;" id="selectVacuna">          
+                            ${!this.vacunas ? "" : this.vacunas.filter(dato => { return dato.MascotaTipoId == this.combos.mascota }).map(dato => html`
+                                <option value="${dato.Id}" .selected="${this.combos.vacuna == dato.Id}">${dato.Descripcion}</option>                               
+                            `)}
+                        </select>
                     </div>
                     <div id="divParaForm" class="ikeInput">
                         <label id="lblPara">${idiomas[this.idioma].calendariosabm.lblPara}</label>
@@ -274,15 +283,15 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
                     <div id="divObligatoriaForm" class="select">
                         <label id="lblObligatoria">${idiomas[this.idioma].calendariosabm.lblObligatoria}</label>
                         <select style="width:100%;height:2rem;" id="selectObligatoria">          
-                            <option value=true .selected="${this.calendarioOriginal.activo}">${idiomas[this.idioma].SiNo.si}</option>
-                            <option value=false .selected="${!this.calendarioOriginal.activo}">${idiomas[this.idioma].SiNo.no}</option>
+                            <option value=true .selected=${this.combos.optativa}>${idiomas[this.idioma].optativa.op}</option>
+                            <option value=false .selected=${!this.combos.optativa}>${idiomas[this.idioma].optativa.ob}</option>
                         </select>
                     </div>
                     <div id="divActivoForm" class="select" > 
                         <label id="lblActivo">${idiomas[this.idioma].calendariosabm.lblActivo}</label>
                         <select style="width:100%;height:2rem;" id="selectActivo">          
-                            <option value=true .selected="${this.calendarioOriginal.activo}">${idiomas[this.idioma].SiNo.si}</option>
-                            <option value=false .selected="${!this.calendarioOriginal.activo}">${idiomas[this.idioma].SiNo.no}</option>
+                            <option value=true .selected="${this.combos.activo}">${idiomas[this.idioma].SiNo.si}</option>
+                            <option value=false .selected="${!this.combos.activo}">${idiomas[this.idioma].SiNo.no}</option>
                         </select>
                     </div>
                     <button id="btnAceptar"  @click=${this.clickAccion} btn1 apagado>${idiomas[this.idioma].usuarioabm.btnGrabar}</button>                 
@@ -293,18 +302,46 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
 
     stateChanged(state, name) {
         if (name == MODO_PANTALLA && state.ui.quePantalla == "calendariosabm") {
-            //this.mascotasTipo = state.mascotastipo.entities
-            //this.mascotaTipoSeleccionada = this.mascotasTipo[0].Id
-            //this.update()
+            store.dispatch(getCalendario({ expand: "MascotasTipo,Vacuna" }))
+            if (state.mascotastipo.entities) {
+                this.mascotasTipo = state.mascotastipo.entities
+                this.mascotaTipoSeleccionada = this.mascotasTipo[0].Id
+            } else {
+                store.dispatch(getMascotasTipo({}))
+            }
+            if (state.vacuna.entities) {
+                this.vacunas = state.vacuna.entities
+            } else {
+                store.dispatch(getVacuna({}))
+            }
         }
         if (name == CALENDARIO_TIMESTAMP && state.ui.quePantalla == "calendariosabm") {
             if (state.calendario.entities) {
                 this.calendarios = state.calendario.entities
-                this.update()
+                if (this.mascotasTipo && this.vacunas) {
+                    this.update()
+                }
+            }
+        }
+        if (name == MASCOTASTIPO_TIMESTAMP && state.ui.quePantalla == "calendariosabm") {
+            if (state.mascotastipo.entities) {
+                this.mascotasTipo = state.mascotastipo.entities
+                if (this.mascotaTipoSeleccionada == -1) { this.mascotaTipoSeleccionada = this.mascotasTipo[0].Id }
+                if (this.calendarios && this.vacunas) {
+                    this.update()
+                }
+            }
+        }
+        if (name == VACUNA_TIMESTAMP && state.ui.quePantalla == "calendariosabm") {
+            if (state.vacuna.entities) {
+                this.vacunas = state.vacuna.entities
+                if (this.mascotasTipo && this.calendarios) {
+                    this.update()
+                }
             }
         }
         if (name == CALENDARIO_ADDTIMESTAMP || name == CALENDARIO_UPDATETIMESTAMP) {
-            //store.dispatch(getCalendario({ expand: "MascotasTipo, Vacuna" }))
+            store.dispatch(getCalendario({ expand: "MascotasTipo,Vacuna" }))
         }
     }
     firstUpdated(changedProperties) {
@@ -313,11 +350,15 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
     clickAccion() {
         if (this.activo) {
             if (this.valido()) {
-                const descripcion = this.shadowRoot.getElementById("txtNombre").value;
-                const activo = this.shadowRoot.getElementById("activo").value;
+                this.combos.mascota = this.shadowRoot.getElementById("selectMascota").value
+                this.combos.vacuna = this.shadowRoot.getElementById("selectVacuna").value
+                this.combos.optativa = this.shadowRoot.getElementById("selectObligatoria").value
+                this.combos.activo = this.shadowRoot.getElementById("selectActivo").value
+                const enfermedades = this.shadowRoot.getElementById("txtPara").value;
+                const edad = this.shadowRoot.getElementById("txtEdad").value;
                 var datoUpdate = [];
                 if (this.accion == "alta") {
-                    let regNuevo = { Descripcion: descripcion, Activo: activo }
+                    let regNuevo = { MascotasTipoId: this.combos.mascota, VacunaId: this.combos.vacuna, Enfermedades: enfermedades, Edad: edad, Optativa: this.combos.optativa, Activo: this.combos.activo }
                     let miToken = store.getState().cliente.datos.token
                     store.dispatch(addCalendario(regNuevo, miToken))
                     this.update()
@@ -325,19 +366,39 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
                 }
                 if (this.accion == "update") {
                     var datoUpdate = [];
-                    descripcion != this.itemOriginal.descripcion ? datoUpdate.push({
+                    enfermedades != this.calendarioOriginal.Enfermedades ? datoUpdate.push({
                         "op": "replace",
-                        "path": "/Descripcion",
-                        "value": descripcion
+                        "path": "/Enfermedades",
+                        "value": enfermedades
                     }) : null
-                    activo != this.itemOriginal.activo ? datoUpdate.push({
+                    edad != this.calendarioOriginal.Edad ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/Edad",
+                        "value": edad
+                    }) : null
+                    this.combos.mascota != this.calendarioOriginal.MascotasTipoId ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/MascotasTipoId",
+                        "value": this.combos.mascota
+                    }) : null
+                    this.combos.vacuna != this.calendarioOriginal.VacunaId ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/VacunaId",
+                        "value": this.combos.vacuna
+                    }) : null
+                    this.combos.optativa != this.calendarioOriginal.Optativa ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/Optativa",
+                        "value": this.combos.optativa
+                    }) : null
+                    this.combos.activo != this.calendarioOriginal.Activo ? datoUpdate.push({
                         "op": "replace",
                         "path": "/Activo",
-                        "value": activo
+                        "value": this.combos.activo
                     }) : null
                     if (datoUpdate) {
                         let miToken = store.getState().cliente.datos.token
-                        store.dispatch(patchCalendario(this.itemOriginal.Id, datoUpdate, miToken))
+                        store.dispatch(patchCalendario(this.calendarioOriginal.Id, datoUpdate, miToken))
                         this.update()
                         this.clickX()
                     }
@@ -346,9 +407,8 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
         }
     }
     clickMostrarDatos() {
-        //this.mascotaTipoSeleccionada = this.shadowRoot.querySelector("#filtro").value
-        //this.update();
-        store.dispatch(getCalendario({ filter: "MascotaTipoId eq " & "", expand: "MascotaTipo, Vacuna" }))
+        this.mascotaTipoSeleccionada = this.shadowRoot.querySelector("#filtro").value
+        this.update();
     }
     clickMostrarFiltro(e) {
         if (this.shadowRoot.querySelector("#divSeleccion").style.display == "none") {
@@ -364,19 +424,20 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
         }
     }
     clickAlta(accion, dato) {
+        this.accion = accion;
         if (accion == "alta") {
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].calendariosabm.lblTituloAltaNew
             this.calendarioOriginal = { idMascota: 0, vacuna: "", para: "", edad: "", obligatoria: true, activo: true }
-            this.shadowRoot.querySelector("#txtVacuna").value = ""
             this.shadowRoot.querySelector("#txtPara").value = ""
             this.shadowRoot.querySelector("#txtEdad").value = ""
+            this.combos = { mascota: this.mascotasTipo[0].Id, vacuna: 0, optativa: true, activo: true }
         }
         if (accion == "update") {
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].calendariosabm.lblTituloAltaChange
             this.calendarioOriginal = dato;
-            this.shadowRoot.querySelector("#txtVacuna").value = dato.vacuna
-            this.shadowRoot.querySelector("#txtPara").value = dato.para
-            this.shadowRoot.querySelector("#txtEdad").value = dato.edad
+            this.combos = { mascota: dato.MascotasTipoId, vacuna: dato.VacunaId, optativa: dato.Optativa, activo: dato.Activo }
+            this.shadowRoot.querySelector("#txtPara").value = dato.Enfermedades
+            this.shadowRoot.querySelector("#txtEdad").value = dato.Edad
         }
         this.shadowRoot.querySelector("#verDatos").style.display = "grid";
         this.shadowRoot.querySelector("#x").style.display = "grid";
@@ -395,10 +456,9 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
     }
     activar() {
         this.activo = true
-        const vacuna = this.shadowRoot.querySelector("#txtVacuna")
         const para = this.shadowRoot.querySelector("#txtPara")
         const edad = this.shadowRoot.querySelector("#txtEdad")
-        if (vacuna.value.length < 2 || para.value.length < 2 || edad.value.length < 2) {
+        if (para.value.length < 2 || edad.value.length < 2) {
             this.activo = false
         }
         if (this.activo) {
@@ -413,13 +473,8 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
             element.setAttribute("oculto", "")
         })
         let valido = true
-        const vacuna = this.shadowRoot.querySelector("#txtVacuna")
         const para = this.shadowRoot.querySelector("#txtPara")
         const edad = this.shadowRoot.querySelector("#txtEdad")
-        if (vacuna.value.length < 3 || vacuna.value.length > 150) {
-            valido = false
-            this.shadowRoot.querySelector("#lblErrorVacuna").removeAttribute("oculto");
-        }
         if (para.value.length < 3 || para.value.length > 150) {
             valido = false
             this.shadowRoot.querySelector("#lblErrorPara").removeAttribute("oculto");

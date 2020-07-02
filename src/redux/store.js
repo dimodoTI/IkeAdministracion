@@ -43,6 +43,10 @@ import {
 import {
   middleware as vacuna
 } from "./middleware/vacuna";
+import {
+  middleware as calendario
+} from "./middleware/calendario";
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 let mdw = [
@@ -55,7 +59,8 @@ let mdw = [
   ...razas,
   ...publicacion,
   ...puestos,
-  ...vacuna
+  ...vacuna,
+  ...calendario
 ]
 
 if (process.env.NODE_ENV !== 'production') {

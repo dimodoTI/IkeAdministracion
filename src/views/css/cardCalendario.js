@@ -5,18 +5,18 @@ import {
 export const cardCalendario = css`
 #ccDivEtiqueta{
     display: grid; 
-    height:22vw;
+    height:16vh;
     width:100%;
     background-color:var(--color-blanco);
     grid-template-columns: 30% 60% auto;
-    grid-template-rows: 30% auto 30%;
+    grid-template-rows: 25% auto 30%;
     grid-gap:0rem;
     border-radius:.4rem ;           
     align-items: center;
     box-shadow: var(--shadow-elevation-4-box);
 } 
 :host(:not([media-size="small"])) #ccDivEtiqueta{
-    height:12vw;   
+    height:12vh;   
     border-radius:.1rem ;           
     box-shadow: var(--shadow-elevation-2-box);
 }

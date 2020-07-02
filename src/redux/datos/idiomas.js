@@ -1,6 +1,7 @@
 export const idiomas = {
     ES: {
         SiNo: { si: "Si", no: "No" },
+        optativa: { op: "Optativa", ob: "Obligatoria" },
         diasCortos: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
         mesCortos: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
         perfiles: {
@@ -72,10 +73,10 @@ export const idiomas = {
         },
         calendariosabm: {
             tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas", lblFiltro: "Filtro por:",
-            titulo: "Agenda vacunación", lblMascota: "Mascota:  ", lblVacuna: "Vacuna:  ", lblVacuna_ph: "Quintuple", lblPara: "Para:  ",
-            lblPara_ph: "Titulo: Tos de las perreras - Hepatitis - Moquillo - Parvovirus",
-            lblEdad: "Edad:  ", lblEdad_ph: "Cachorro", lblObligatoria: "Obligatoria: ",
-            btnGrabar: "Aceptar", lblTituloAltaNew: "Nueva vacuna", lblTituloAltaChange: "Modificar vacuna",
+            titulo: "Calendario vacunación", lblMascota: "Mascota:  ", lblVacuna: "Vacuna:  ", lblVacuna_ph: "Quintuple", lblPara: "Enfermedades:  ",
+            lblPara_ph: "Titulo: Tos de las perreras - Hepatitis",
+            lblEdad: "Edad:  ", lblEdad_ph: "Cachorro", lblObligatoria: "Obligatoria/Optativa: ",
+            btnGrabar: "Aceptar", lblTituloAltaNew: "Nuevo calendario", lblTituloAltaChange: "Modificar calendrio",
             lblActivo: "Esta activo?"
         },
         puestosabm: {
