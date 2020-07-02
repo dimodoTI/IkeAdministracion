@@ -92,6 +92,14 @@ export const idiomas = {
             lblNombre: "Vacuna", lblTipo: "Tipo de mascota", lblNombre_ph: "Rabia", lblActivo: "Esta activo?",
             btnGrabar: "Aceptar", lblTituloAltaNew: "Nueva vacuna", lblTituloAltaChange: "Modificar vacuna",
             errorToken: "Error, Vuelve a loguearte", errorOperacion: "Operacion no realizada"
+        },
+        configuracionesabm: {
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas",
+            titulo: "Configuración",
+            lblDiaRes: "Días de reserva:", lblDiaRes_ph: "30",
+            lblTurXHora: "Turnos por hora: ", lblTurXHora_ph: "2",
+            btnGrabar: "Aceptar", lblTituloAltaChange: "Modificar Configuracion",
+            errorToken: "Error, Vuelve a loguearte", errorOperacion: "Operacion no realizada"
         }
     }
 }

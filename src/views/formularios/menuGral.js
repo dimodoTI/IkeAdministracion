@@ -18,6 +18,7 @@ import { pantallaMascotasTiposAbm } from "./mascotasTiposAbm";
 import { pantallaCalendariosAbm } from "./calendariosAbm";
 import { pantallaPuestosAbm } from "./puestosAbm";
 import { pantallaVacunasAbm } from "./vacunasAbm";
+import { pantallaConfiguracionesAbm } from "./configuracionesAbm";
 
 const QUEPANTALLA = "ui.timeStampPantalla";
 const MODO_PANTALLA = "ui.timeStampPantalla"
@@ -78,6 +79,7 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
                 <pantalla-calendariosabm id="calendariosabm" media-size="${this.mediaSize}"></pantalla-calendariosabm>      
                 <pantalla-puestosabm id="puestosabm" media-size="${this.mediaSize}"></pantalla-puestosabm>      
                 <pantalla-vacunasabm id="vacunasabm" media-size="${this.mediaSize}"></pantalla-vacunasabm>      
+                <pantalla-configuracionesabm id="configuracionesabm" media-size="${this.mediaSize}"></pantalla-configuracionesabm>      
 
                 <div id="divTapaPantalla"  @click=${this.clickTapaPantalla}></div>
             </div>
@@ -98,6 +100,8 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
                 this.shadowRoot.querySelector("#calendariosabm").hidden = state.ui.quePantalla != "calendariosabm";
                 this.shadowRoot.querySelector("#puestosabm").hidden = state.ui.quePantalla != "puestosabm";
                 this.shadowRoot.querySelector("#vacunasabm").hidden = state.ui.quePantalla != "vacunasabm";
+                this.shadowRoot.querySelector("#configuracionesabm").hidden = state.ui.quePantalla != "configuracionesabm";
+
             }
         }
         this.update();

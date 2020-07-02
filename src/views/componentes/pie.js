@@ -278,6 +278,13 @@ export class pieComponente extends connect(store)(LitElement) {
         this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "grid"
         this.update();
     }
+    clickBoton5() {
+        store.dispatch(modoPantalla("configuracionesabm", "principal"))
+        this.opcion = "cinco"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
+        this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "none"
+    }
     clickRaza() {
         store.dispatch(modoPantalla("razasabm", "principal"))
         this.opcion = "cero"

@@ -33,6 +33,7 @@ export const ikePublicaciones = fetchFactory(webApiPublicacion, "Publicaciones")
 export const ikePuestos = fetchFactory(webApiMascotas, "Puestos")
 export const ikeCalendario = fetchFactory(webApiMascotas, "Calendario")
 export const ikeVacuna = fetchFactory(webApiMascotas, "Vacunas")
+export const ikeConfiguracion = fetchFactory(webApiMascotas, "Configuracion")
 
 export const ikeOdataMascotas = ODataEntity(mascotaOdata, "MascotasQuery")
 export const ikeMascotasTipo = fetchFactory(webApiMascotas, "MascotasTipo")
@@ -41,4 +42,5 @@ export const ikeOdataPublicaciones = ODataEntity(publicacionOdata, "Publicacione
 export const ikePuestosQuery = ODataEntity(mascotaOdata, "PuestosQuery")
 export const ikeOdataCalendario = ODataEntity(mascotaOdata, "CalendarioQuery")
 export const ikeOdataVacuna = ODataEntity(mascotaOdata, "VacunasQuery")
+export const ikeOdataConfiguracion = ODataEntity(mascotaOdata, "ConfiguracionQuery")
 
