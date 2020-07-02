@@ -8,6 +8,7 @@ import { cabecera1 } from "../css/cabecera1"
 import { calendarioAbm } from "../componentes/calendarioAbm"
 import { modoPantalla } from "../../redux/actions/ui";
 import { REGALO, CARRITO, RELOJ, NOVEDADES1, NOVEDADES2, NOVEDADES3, HOME, MASCOTA, CONSULTA, VACUNA, FOTO, MAS } from "../../../assets/icons/icons"
+import { get as getCalendario } from "../../redux/actions/calendario";
 
 const MODO_PANTALLA = "ui.timeStampPantalla"
 export class pantallaCalendariosAbm extends connect(store, MODO_PANTALLA)(LitElement) {
@@ -112,6 +113,7 @@ export class pantallaCalendariosAbm extends connect(store, MODO_PANTALLA)(LitEle
 
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {
+            store.dispatch(getCalendario({ expand: "MascotasTipo, Vacuna" }))
             this.update();
         }
     }

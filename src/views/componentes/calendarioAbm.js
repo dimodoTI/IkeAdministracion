@@ -293,10 +293,9 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
 
     stateChanged(state, name) {
         if (name == MODO_PANTALLA && state.ui.quePantalla == "calendariosabm") {
-            this.mascotasTipo = state.mascotastipo.entities
-            this.mascotaTipoSeleccionada = this.mascotasTipo[0].Id
-            this.update()
-
+            //this.mascotasTipo = state.mascotastipo.entities
+            //this.mascotaTipoSeleccionada = this.mascotasTipo[0].Id
+            //this.update()
         }
         if (name == CALENDARIO_TIMESTAMP && state.ui.quePantalla == "calendariosabm") {
             if (state.calendario.entities) {
@@ -305,7 +304,7 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
             }
         }
         if (name == CALENDARIO_ADDTIMESTAMP || name == CALENDARIO_UPDATETIMESTAMP) {
-            store.dispatch(getCalendario({}))
+            //store.dispatch(getCalendario({ expand: "MascotasTipo, Vacuna" }))
         }
     }
     firstUpdated(changedProperties) {
@@ -347,8 +346,9 @@ export class calendarioAbm extends connect(store, MODO_PANTALLA, CALENDARIO_TIME
         }
     }
     clickMostrarDatos() {
-        this.mascotaTipoSeleccionada = this.shadowRoot.querySelector("#filtro").value
-        this.update();
+        //this.mascotaTipoSeleccionada = this.shadowRoot.querySelector("#filtro").value
+        //this.update();
+        store.dispatch(getCalendario({ filter: "MascotaTipoId eq " & "", expand: "MascotaTipo, Vacuna" }))
     }
     clickMostrarFiltro(e) {
         if (this.shadowRoot.querySelector("#divSeleccion").style.display == "none") {

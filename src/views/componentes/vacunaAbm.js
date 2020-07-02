@@ -2,12 +2,11 @@ import { html, LitElement, css } from "lit-element";
 import { store } from "../../redux/store";
 import { connect } from "@brunomon/helpers";
 import { button } from "../css/button"
-import { USUARIO, MASCOTA, VACUNA, CONSULTA, FOTO } from "../../../assets/icons/icons";
 import { modoPantalla } from "../../redux/actions/ui";
 import { idiomas } from "../../redux/datos/idiomas";
 import { select } from "../css/select"
 import { cardVacuna } from "../css/cardVacuna"
-import { MAS, BASURA, MODIFICAR, ARRIBA, ABAJO } from "../../../assets/icons/icons"
+import { MAS, MODIFICAR, ARRIBA, ABAJO } from "../../../assets/icons/icons"
 import { ikeInput } from "../css/ikeInput"
 import { get as getVacuna, patch as patchVacuna, add as addVacuna } from "../../redux/actions/vacuna";
 import { get as getMascotasTipo } from "../../redux/actions/mascotastipo";
@@ -26,12 +25,11 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
         this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI0NTg1MTksImV4cCI6MTU5MjQ2MzkxOSwiaWF0IjoxNTkyNDU4NTE5fQ.m6skA3UUdCoiUkkCp1QcuUQs9ipJy570Sr8rnhLdfQo"
         this.idioma = "ES"
         this.accion = ""
-        this.itemOriginal = { id: 0, MascotaTipoId: 0, descripcion: "", activo: true, tipo: { id: 0, descripcion: "", activo: true } }
+        this.mascotaTipoSeleccionada = 0
+        this.itemOriginal = { id: 0, MascotaTipoId: 0, descripcion: "", activo: true, MascotaTipo: { Id: 0, Descripcion: "", Activo: true } }
         this.activo = false;
         this.mascotasTipo = [];
-        this.vacunas = [{
-            id: 0, MascotaTipoId: 0, descripcion: "", activo: true, tipo: { id: 0, descripcion: "", activo: true }
-        }]
+        this.vacunas = []
     }
 
     static get styles() {
@@ -47,7 +45,7 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
             justify-content:left;
             background-color: var(--color-blanco);
             grid-gap:0rem;
-            grid-template-rows: 2.5rem 8rem auto ;
+            grid-template-rows: 2.5rem 3.5rem auto ;
             grid-template-columns: 100% ;
             height:100vh;
             overflow-x:none;
@@ -69,8 +67,28 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
             stroke:var(--color-blanco);
             cursor:pointer;
         }
+        #divSacoFiltro{
+            display:grid;
+            grid-template-columns: auto 1fr 1fr;            
+        }
         #divTituloImgUp {
             margin-left:.8rem;
+        }
+        #divTituloImgUp svg {
+            fill:var(--color-blanco);
+            align-self: center;
+            width:1.2rem;
+            height:1.2rem;           
+        }
+        #divTituloImgDown {
+            display:none;
+            margin-left:.8rem;
+        }
+        #divTituloImgDown svg {
+            fill:var(--color-blanco);
+            align-self: center;
+            width:1.2rem;
+            height:1.2rem;           
         }
         #divBtnMas{
             justify-self: end;
@@ -85,18 +103,31 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
             font-size: var(--font-header-h1-menos-size);
             font-weight: var(--font-label-weight);  
         }
-        #divRegistros{
+        .classRegistros{
             display:grid;
-            grid-gap: .8rem;
+            grid-gap: .5rem;
             overflow-y:auto;
             align-content: flex-start;
-            height: calc(((100vh * .9) * .82) - 2.5rem);
+            height: calc(((100vh * .9) * .82) - 10.5rem);
         }
-        :host(:not([media-size="small"])) #divRegistros{
-            height: calc(((100vh * .9)) - 2.5rem);
+        .classRegistros::-webkit-scrollbar {
+            display: none;
         }
-        #divRegistros::-webkit-scrollbar {
-            display: grid;
+        :host([media-size="small"]) .classRegistros[alto="chico"]{
+            height: calc(((100vh * .9) * .82) - 6rem);
+            grid-gap: .6rem;  
+        }
+        :host([media-size="small"]) .classRegistros[alto="grande"]{
+            height: calc(((100vh * .9) * .82) - 3rem);
+            grid-gap: .7rem;  
+        }
+        :host(:not([media-size="small"])) .classRegistros[alto="chico"]{
+            height: calc((100vh * .82) - 5.5rem);
+            grid-gap: .8rem;  
+        }
+        :host(:not([media-size="small"])) .classRegistros[alto="grande"]{
+            height: calc((100vh * .82) - 2rem);
+            grid-gap: .8rem;  
         }
         #pantallaOscura{
             display:none;
@@ -181,18 +212,32 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
             <div id="divTitulo">
                 <div id="divSacoFiltro">
                     <div id="divTituloLbl">${idiomas[this.idioma].vacunasabm.titulo}</div>
-                    <div></div>
+                    <div id="divTituloImgUp" @click=${this.clickMostrarFiltro}>
+                        ${ARRIBA}
+                    </div>
+                    <div id="divTituloImgDown" @click=${this.clickMostrarFiltro}>
+                        ${ABAJO}
+                    </div>
                 </div>
                 <div id="divBtnMas" @click="${function () { this.clickAlta('alta', null) }}">${MAS}</div>
             </div>
-
-            <div id=divRegistros>
+            <div id="divSeleccion">
+                <div id="selectFiltro" class="select" > 
+                    <label >${idiomas[this.idioma].usuarioabm.lblFiltro}</label>
+                    <select style="width:100%;height:2rem;" id="filtro" @change=${this.clickMostrarDatos}>          
+                        ${this.mascotasTipo.map(dato => html`
+                            <option value="${dato.Id}" .selected="${this.itemOriginal.MascotasTipoId == dato.Id}">${dato.Descripcion}</option>                               
+                        `)}
+                    </select>
+                </div>
+            </div>
+            <div id=divRegistros class="classRegistros" alto="chico">
                 ${this.vacunas.map((dato) => {
             return html`
                         <div id="cvacDivCuerpo">
                             <div id="cvacDivActivo">${idiomas[this.idioma].vacunasabm.datoActivo} ${dato.Activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no}</div>
                             <div id="divSvgUpdate"  valor="2" class="svgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
-                            <div id="cvacDivTipo">${dato.tipo.Descripcion}</div>
+                            <div id="cvacDivTipo">${dato.MascotaTipo.Descripcion}</div>
                             <div id="cvacDivNombre">${dato.Descripcion}</div>
                         </div>
                     `
@@ -219,7 +264,7 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
 
                         ${this.mascotasTipo.map((dato) => {
             return html`
-                           <option value=${dato.Id} .selected=${dato.Descripcion == this.itemOriginal.tipo.Descripcion} >${dato.Descripcion}</option>
+                           <option value=${dato.Id} .selected=${this.itemOriginal.MascotasTipoId == dato.Id} >${dato.Descripcion}</option>
                             `
         })}
                             </select>
@@ -240,21 +285,35 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
     }
 
     stateChanged(state, name) {
-        if (name == MODO_PANTALLA) {
-        }
-        if ((name == VACUNA_TIMESTAMP || name == MASCOTASTIPO_TIMESTAMP) && state.ui.quePantalla == "vacunasabm") {
-            if (state.mascotastipo.entities && state.vacuna.entities) {
-                this.vacunas = state.vacuna.entities.map(vac => {
-                    let nuevaVacuna = vac
-                    nuevaVacuna.tipo = state.mascotastipo.entities.filter(tipo => tipo.Id == nuevaVacuna.MascotaTipoId)[0]
-                    return nuevaVacuna
-                })
+        if (name == MODO_PANTALLA && state.ui.quePantalla == "vacunasabm") {
+            if (state.mascotastipo.entities) {
                 this.mascotasTipo = state.mascotastipo.entities
-                this.update()
+                let fil = { filter: "MascotaTipoId eq " + this.mascotasTipo[0].Id, expand: "MascotaTipo" }
+                store.dispatch(getVacuna(fil))
+            } else {
+                store.dispatch(getMascotasTipo({}))
             }
         }
+        if (name == MASCOTASTIPO_TIMESTAMP && state.ui.quePantalla == "vacunasabm") {
+            if (state.mascotastipo.entities) {
+                this.mascotasTipo = state.mascotastipo.entities
+                if (state.vacuna.entities[0].MascotaTipo) {
+                    this.update()
+                }
+            }
+        }
+        if (name == VACUNA_TIMESTAMP && state.ui.quePantalla == "vacunasabm") {
+            if (state.vacuna.entities[0].MascotaTipo) {
+                this.vacunas = state.vacuna.entities
+                if (state.mascotastipo.entities) {
+                    this.update()
+                }
+            }
+
+        }
         if (name == VACUNA_ADDTIMESTAMP || name == VACUNA_UPDATETIMESTAMP) {
-            store.dispatch(getVacuna({}))
+            let fil = { filter: "MascotaTipoId eq " + this.shadowRoot.querySelector("#filtro").value, expand: "MascotaTipo" }
+            store.dispatch(getVacuna(fil))
         }
     }
     firstUpdated(changedProperties) {
@@ -268,10 +327,12 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
         var datoUpdate = [];
 
         if (this.accion == "alta") {
-            let regNuevo = { MascotaTipoId: tipo, Descripcion: descripcion, Activo: activo }
+            let mySel = this.shadowRoot.querySelector("#tipo")
+            let opt = mySel.options[mySel.selectedIndex].text
+            this.itemOriginal = { MascotaTipoId: tipo, Descripcion: descripcion, Activo: activo, MascotaTipo: { Id: mySel.value, Descripcion: opt, Activo: true } }
+            let nuevo = { MascotaTipoId: tipo, Descripcion: descripcion, Activo: activo }
             let miToken = store.getState().cliente.datos.token
-            store.dispatch(addVacuna(regNuevo, miToken))
-            this.update()
+            store.dispatch(addVacuna(nuevo, miToken))
             this.clickX()
         }
         if (this.accion == "update") {
@@ -296,7 +357,9 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
                     if (datoUpdate) {
                         let miToken = store.getState().cliente.datos.token
                         store.dispatch(patchVacuna(this.itemOriginal.Id, datoUpdate, miToken))
-                        this.update()
+                        this.itemOriginal.Descripcion = descripcion
+                        this.itemOriginal.MascotaTipoId = tipo
+                        this.itemOriginal.Activo = activo
                         this.clickX()
                     }
                 }
@@ -305,13 +368,30 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
     }
 
     clickMostrarDatos() {
-        //store.dispatch(getUsuario(null, this.TOCK))
-        //store.dispatch(getUsuario(null, store.getState().cliente.datos.token))
+        //this.mascotaTipoSeleccionada = this.shadowRoot.querySelector("#filtro").value
+        //this.update();
+        let fil = { filter: "MascotaTipoId eq " + this.shadowRoot.querySelector("#filtro").value, expand: "MascotaTipo" }
+        store.dispatch(getVacuna(fil))
+    }
+    clickMostrarFiltro(e) {
+        if (this.shadowRoot.querySelector("#divSeleccion").style.display == "none") {
+            this.shadowRoot.querySelector("#divSeleccion").style.display = "grid";
+            this.shadowRoot.querySelector(".classRegistros").setAttribute("alto", "chico");
+            this.shadowRoot.querySelector("#divTituloImgUp").style.display = "grid";
+            this.shadowRoot.querySelector("#divTituloImgDown").style.display = "none";
+        } else {
+            this.shadowRoot.querySelector("#divSeleccion").style.display = "none";
+            this.shadowRoot.querySelector(".classRegistros").setAttribute("alto", "grande")
+            this.shadowRoot.querySelector("#divTituloImgUp").style.display = "none";
+            this.shadowRoot.querySelector("#divTituloImgDown").style.display = "grid";
+        }
     }
     clickAlta(accion, dato) {
         this.accion = accion;
         if (accion == "alta") {
-            this.itemOriginal = { id: 0, idMascotasTipo: 0, Descripcion: "", Activo: true, tipo: { id: 0, descripcion: "", activo: true } }
+            let mySel = this.shadowRoot.querySelector("#tipo")
+            let opt = mySel.options[mySel.selectedIndex].text
+            this.itemOriginal = { Id: 0, MascotaTipoId: 0, Descripcion: "", Activo: true, MascotaTipo: { Id: mySel.value, Descripcion: opt, Activo: true } }
             this.shadowRoot.querySelector("#txtNombre").value = "";
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].vacunasabm.lblTituloAltaNew
         }

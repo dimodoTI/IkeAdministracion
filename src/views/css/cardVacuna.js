@@ -5,12 +5,12 @@ import {
 export const cardVacuna = css`
     #cvacDivCuerpo{
         width:100%;
-        height:3.2rem;
+        height:4rem;
         display: grid;
         background-color:var(--color-blanco);
         grid-template-columns: 75% 10% 15%;
-        grid-template-rows: 1.3rem .7rem 1.2rem;
-        grid-gap:0rem;
+        grid-template-rows: 1.3rem .8rem 1.6rem;
+        grid-gap:.1rem;
         align-items: center;
         border-radius:.5rem;
         box-shadow: var(--shadow-elevation-3-box);
