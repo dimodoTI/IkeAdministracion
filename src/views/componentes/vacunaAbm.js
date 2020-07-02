@@ -25,11 +25,11 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
         this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI0NTg1MTksImV4cCI6MTU5MjQ2MzkxOSwiaWF0IjoxNTkyNDU4NTE5fQ.m6skA3UUdCoiUkkCp1QcuUQs9ipJy570Sr8rnhLdfQo"
         this.idioma = "ES"
         this.accion = ""
-        this.mascotaTipoSeleccionada = 0
+        this.mascotaTipoSeleccionada = -1
         this.itemOriginal = { id: 0, MascotaTipoId: 0, descripcion: "", activo: true, MascotaTipo: { Id: 0, Descripcion: "", Activo: true } }
         this.activo = false;
-        this.mascotasTipo = [];
-        this.vacunas = []
+        this.mascotasTipo = null;
+        this.vacunas = null
     }
 
     static get styles() {
@@ -225,14 +225,14 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
                 <div id="selectFiltro" class="select" > 
                     <label >${idiomas[this.idioma].usuarioabm.lblFiltro}</label>
                     <select style="width:100%;height:2rem;" id="filtro" @change=${this.clickMostrarDatos}>          
-                        ${this.mascotasTipo.map(dato => html`
+                        ${!this.mascotasTipo ? "" : this.mascotasTipo.map(dato => html`
                             <option value="${dato.Id}" .selected="${this.itemOriginal.MascotasTipoId == dato.Id}">${dato.Descripcion}</option>                               
                         `)}
                     </select>
                 </div>
             </div>
             <div id=divRegistros class="classRegistros" alto="chico">
-                ${this.vacunas.map((dato) => {
+                ${!this.vacunas ? "" : this.vacunas.filter(dato => { return dato.MascotaTipoId == this.mascotaTipoSeleccionada }).map((dato) => {
             return html`
                         <div id="cvacDivCuerpo">
                             <div id="cvacDivActivo">${idiomas[this.idioma].vacunasabm.datoActivo} ${dato.Activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no}</div>
@@ -253,28 +253,28 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
                     <div class="divTituloDatos">
                         <label id="lblTituloDatos">titulo</label>
                     </div>
+                    <div id="selectTipo" class="select" > 
+                        <label >${idiomas[this.idioma].vacunasabm.lblTipo}</label>
+                        <select style="width:100%;height:2rem;cursor:default;" id="tipo" disabled> 
+                        ${!this.mascotasTipo ? "" : this.mascotasTipo.map((dato) => {
+            return html`
+                           <option value=${dato.Id} .selected=${this.mascotaTipoSeleccionada == dato.Id} >${dato.Descripcion}</option>
+                            `
+        })}
+                    </select>
+                    </div>
                     <div class="ikeInput">
                         <label id="lblNombre">${idiomas[this.idioma].vacunasabm.lblNombre}</label>
                         <input id="txtNombre"  @input=${this.activar} placeholder=${idiomas[this.idioma].vacunasabm.lblNombre_ph}>
                         <label id="lblErrorNombre" error oculto>Vacuna Incorrecta</label>
                     </div>
-                    <div id="selectTipo" class="select" > 
-                        <label >${idiomas[this.idioma].vacunasabm.lblTipo}</label>
-                        <select style="width:100%;height:2rem;" id="tipo"> 
 
-                        ${this.mascotasTipo.map((dato) => {
-            return html`
-                           <option value=${dato.Id} .selected=${this.itemOriginal.MascotasTipoId == dato.Id} >${dato.Descripcion}</option>
-                            `
-        })}
-                            </select>
-                    </div>
 
                     <div id="selectActivo" class="select" > 
                         <label >${idiomas[this.idioma].vacunasabm.lblActivo}</label>
                         <select style="width:100%;height:2rem;" id="activo">          
-                            <option value=true .selected="${this.itemOriginal.Activo}">${idiomas[this.idioma].SiNo.si}</option>
-                            <option value=false .selected="${!this.itemOriginal.Activo}">${idiomas[this.idioma].SiNo.no}</option>
+                            <option value=true .selected=${this.itemOriginal.Activo}>${idiomas[this.idioma].SiNo.si}</option>
+                            <option value=false .selected=${!this.itemOriginal.Activo}>${idiomas[this.idioma].SiNo.no}</option>
                         </select>
                     </div>
                     <button id="btnAceptar"  @click=${this.clickAccion} btn1 apagado>${idiomas[this.idioma].vacunasabm.btnGrabar}</button>                 
@@ -286,10 +286,10 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
 
     stateChanged(state, name) {
         if (name == MODO_PANTALLA && state.ui.quePantalla == "vacunasabm") {
+            store.dispatch(getVacuna({ expand: "MascotaTipo" }))
             if (state.mascotastipo.entities) {
                 this.mascotasTipo = state.mascotastipo.entities
-                let fil = { filter: "MascotaTipoId eq " + this.mascotasTipo[0].Id, expand: "MascotaTipo" }
-                store.dispatch(getVacuna(fil))
+                this.mascotaTipoSeleccionada = this.mascotasTipo[0].Id
             } else {
                 store.dispatch(getMascotasTipo({}))
             }
@@ -297,23 +297,22 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
         if (name == MASCOTASTIPO_TIMESTAMP && state.ui.quePantalla == "vacunasabm") {
             if (state.mascotastipo.entities) {
                 this.mascotasTipo = state.mascotastipo.entities
-                if (state.vacuna.entities[0].MascotaTipo) {
+                if (this.mascotaTipoSeleccionada == -1) { this.mascotaTipoSeleccionada = this.mascotasTipo[0].Id }
+                if (this.vacunas) {
                     this.update()
                 }
             }
         }
         if (name == VACUNA_TIMESTAMP && state.ui.quePantalla == "vacunasabm") {
-            if (state.vacuna.entities[0].MascotaTipo) {
+            if (state.vacuna.entities) {
                 this.vacunas = state.vacuna.entities
-                if (state.mascotastipo.entities) {
+                if (this.mascotasTipo) {
                     this.update()
                 }
             }
-
         }
         if (name == VACUNA_ADDTIMESTAMP || name == VACUNA_UPDATETIMESTAMP) {
-            let fil = { filter: "MascotaTipoId eq " + this.shadowRoot.querySelector("#filtro").value, expand: "MascotaTipo" }
-            store.dispatch(getVacuna(fil))
+            store.dispatch(getVacuna({ expand: "MascotaTipo" }))
         }
     }
     firstUpdated(changedProperties) {
@@ -357,9 +356,6 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
                     if (datoUpdate) {
                         let miToken = store.getState().cliente.datos.token
                         store.dispatch(patchVacuna(this.itemOriginal.Id, datoUpdate, miToken))
-                        this.itemOriginal.Descripcion = descripcion
-                        this.itemOriginal.MascotaTipoId = tipo
-                        this.itemOriginal.Activo = activo
                         this.clickX()
                     }
                 }
@@ -370,8 +366,11 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
     clickMostrarDatos() {
         //this.mascotaTipoSeleccionada = this.shadowRoot.querySelector("#filtro").value
         //this.update();
-        let fil = { filter: "MascotaTipoId eq " + this.shadowRoot.querySelector("#filtro").value, expand: "MascotaTipo" }
-        store.dispatch(getVacuna(fil))
+        //this.mascotaTipoSeleccionada = this.shadowRoot.querySelector("#filtro").value
+        //store.dispatch(getVacuna(fil))
+        this.mascotaTipoSeleccionada = this.shadowRoot.querySelector("#filtro").value
+        this.update();
+
     }
     clickMostrarFiltro(e) {
         if (this.shadowRoot.querySelector("#divSeleccion").style.display == "none") {
