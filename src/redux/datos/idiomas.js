@@ -105,8 +105,10 @@ export const idiomas = {
         tramosabm: {
             tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas", lblFiltro: "Puesto:",
             titulo: "Tramos horarios",
-            lblDe: "Desde:  ", lblHasta: " Hasta: ", lblFinal: "Finaliza: ",
-            lblActivo: "Activo: ",
+            datoDe: "Desde:  ", datoHasta: " Hasta: ", datoFinal: "Finaliza: ",
+            datoActivo: "Activo: ",
+            lblDia: "Dia de la semana: ", lblHoraDesde: "Desde: ", lblHoraHasta: "Hasta: ",
+            lblFecha: "Fecha de Finalización: ",
             btnGrabar: "Aceptar", lblTituloAltaNew: "Nuevo calendario", lblTituloAltaChange: "Modificar calendrio"
         }
     }

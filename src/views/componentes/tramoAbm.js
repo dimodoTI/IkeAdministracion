@@ -11,7 +11,9 @@ import { MAS, BASURA, MODIFICAR, ARRIBA, ABAJO } from "../../../assets/icons/ico
 import { ikeInput } from "../css/ikeInput"
 import { get as getTramo, patch as patchTramo, add as addTramo } from "../../redux/actions/tramo";
 import { get as getPuesto } from "../../redux/actions/puestos";
+import { get as getConfiguracion } from "../../redux/actions/configuracion";
 
+const CONFIGURACION_TIMESTAMP = "configuracion.timeStamp"
 const PUESTO_TIMESTAMP = "puesto.timeStamp"
 const TRAMO_TIMESTAMP = "tramo.timeStamp"
 const TRAMO_UPDATETIMESTAMP = "tramo.updateTimeStamp"
@@ -20,7 +22,7 @@ const TRAMO_ERRORGETTIMESTAMP = "tramo.errorTimeStamp"
 const TRAMO_ERROROTROSTIMESTAMP = "tramo.commandErrorTimeStamp"
 const MODO_PANTALLA = "ui.timeStampPantalla"
 
-export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TRAMO_TIMESTAMP, TRAMO_UPDATETIMESTAMP, TRAMO_ADDTIMESTAMP, TRAMO_ERRORGETTIMESTAMP, TRAMO_ERROROTROSTIMESTAMP)(LitElement) {
+export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, CONFIGURACION_TIMESTAMP, MODO_PANTALLA, TRAMO_TIMESTAMP, TRAMO_UPDATETIMESTAMP, TRAMO_ADDTIMESTAMP, TRAMO_ERRORGETTIMESTAMP, TRAMO_ERROROTROSTIMESTAMP)(LitElement) {
     constructor() {
         super();
         this.TOCK = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjIiLCJyb2xlIjoiQWRtaW4iLCJuYmYiOjE1OTI0NTg1MTksImV4cCI6MTU5MjQ2MzkxOSwiaWF0IjoxNTkyNDU4NTE5fQ.m6skA3UUdCoiUkkCp1QcuUQs9ipJy570Sr8rnhLdfQo"
@@ -32,6 +34,7 @@ export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TR
         this.activo = false;
         this.tramos = null;
         this.puestos = null;
+        this.configuracion = null;
     }
 
     static get styles() {
@@ -233,9 +236,9 @@ export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TR
                     <div id="traDivEtiqueta">
                         <div id ="traDivDia">${idiomas[this.idioma].diaSemana[dato.Dia]}</div>
                         <div id="DivSvgUpdate" class="SvgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
-                        <div id="traDivHoraDesde">${idiomas[this.idioma].tramosabm.lblDe + parseInt(dato.HoraInicio / 100).toString() + ":" + dato.HoraInicio.toString().substr(-2) + "hs. " + idiomas[this.idioma].tramosabm.lblHasta + parseInt(dato.HoraFin / 100).toString() + ":" + dato.HoraFin.toString().substr(-2) + "hs. "}</div>
-                        <div id="traDivFecha">${idiomas[this.idioma].tramosabm.lblFinal + dato.FechaFin.substr(8, 2) + "/" + dato.FechaFin.substr(5, 2) + "/" + dato.FechaFin.substr(0, 4)}</div>
-                        <div id="traDivActivo">${idiomas[this.idioma].tramosabm.lblActivo + (dato.Activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no)}</div>
+                        <div id="traDivHoraDesde">${idiomas[this.idioma].tramosabm.datoDe + parseInt(dato.HoraInicio / 100).toString() + ":" + dato.HoraInicio.toString().substr(-2) + "hs. " + idiomas[this.idioma].tramosabm.datoHasta + parseInt(dato.HoraFin / 100).toString() + ":" + dato.HoraFin.toString().substr(-2) + "hs. "}</div>
+                        <div id="traDivFecha">${idiomas[this.idioma].tramosabm.datoFinal + dato.FechaFin.substr(8, 2) + "/" + dato.FechaFin.substr(5, 2) + "/" + dato.FechaFin.substr(0, 4)}</div>
+                        <div id="traDivActivo">${idiomas[this.idioma].tramosabm.datoActivo + (dato.Activo ? idiomas[this.idioma].SiNo.si : idiomas[this.idioma].SiNo.no)}</div>
                     </div>
                 `)}
                 <div style="height:.5rem;"></div>
@@ -250,8 +253,8 @@ export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TR
                     <div class="divTituloDatos">
                         <label id="lblTituloDatos">titulo</label>
                     </div>
-                    <div id="divMascotaSelect" class="select"> 
-                        <label >${idiomas[this.idioma].tramosabm.lblMascota}</label>
+                    <div id="divPuestoSelect" class="select"> 
+                        <label >${idiomas[this.idioma].tramosabm.lblFiltro}</label>
                         <select style="width:100%;height:2rem;cursor: default;" id="selectPuesto" disabled >          
                             ${!this.puestos ? "" : this.puestos.map(dato => html`
                                 <option value="${dato.Id}" .selected="${this.puestoSeleccionado == dato.Id}">${dato.Descripcion}</option>                               
@@ -259,38 +262,65 @@ export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TR
                         </select>
                     </div>
 
-                    <div id="divVacunaForm" class="select">
-                        <label >${idiomas[this.idioma].tramosabm.lblVacuna}</label>
+                    <div id="divDiaForm" class="select">
+                        <label >${idiomas[this.idioma].tramosabm.lblDia}</label>
                         <select style="width:100%;height:2rem;" id="selectDia">          
                             ${this.dias().map((index) => html`
-                                <option value="${index}" .selected="${this.combos.dia == index}">${index}</option>                               
+                                <option value="${index}" .selected="${this.combos.dia == index}"> ${idiomas[this.idioma].diaSemana[index]}</option>                               
                             `)}
                         </select>
                     </div>
-<!--                     <div id="divParaForm" class="ikeInput">
-                        <label id="lblPara">${idiomas[this.idioma].tramosabm.lblPara}</label>
-                        <input id="txtPara" @input=${this.activar} placeholder=${idiomas[this.idioma].tramosabm.lblPara_ph}>
-                        <label id="lblErrorPara" error oculto>Para Erroneo</label>
+                    <div id="divHoraDesdeForm" style="display:grid;grid-template-columns: auto auto 1fr;grid-template-rows:100%;grid-gap:.5rem">
+                        <div id="divHoraDesdeForm" style="position:relative;width:12vw;" class="select">
+                            <label >${idiomas[this.idioma].tramosabm.lblHoraDesde}</label>
+                            <select style="width:100%;height:2rem;" id="selectHorasDesde">          
+                                ${this.horas().map((index) => html`
+                                    <option value="${index}" .selected="${this.combos.horainicio == index}"> ${index}</option>                               
+                                `)}
+                            </select>
+                        </div>
+                        <div style="align-self: center;font-size: var(--font-header-h1-menos-size);font-weight: var(--font-label-weight);">:</div>
+                        <div id="divMinutosDesdeForm" style="position:relative;width:12vw;" class="select">
+                            <label ></label>
+                            <select style="width:100%;height:2rem;" id="selectMinutosDesde">          
+                                ${this.minutos().map((index) => html`
+                                    <option value="${index}" .selected="${this.combos.mininicio == index}"> ${index}</option>                               
+                                `)}
+                            </select>
+                        </div>
                     </div>
-                    <div id="divEdadForm" class="ikeInput">
-                        <label id="lblEdad">${idiomas[this.idioma].tramosabm.lblEdad}</label>
-                        <input id="txtEdad" @input=${this.activar} placeholder=${idiomas[this.idioma].tramosabm.lblEdad_ph}>
-                        <label id="lblErrorEdad" error oculto>Edad Erronea</label>
+                    <div id="divHoraHastaForm" style="display:grid;grid-template-columns: auto auto 1fr;grid-template-rows:100%;grid-gap:.5rem">
+                        <div id="divHoraHastaForm" style="position:relative;width:10vw;min-width:12vw;" class="select">
+                            <label >${idiomas[this.idioma].tramosabm.lblHoraHasta}</label>
+                            <select style="width:100%;height:2rem;" id="selectHorasHasta">          
+                                ${this.horas().map((index) => html`
+                                    <option value="${index}" .selected="${this.combos.horafin == index}"> ${index}</option>                               
+                                `)}
+                            </select>
+                        </div>
+                        <div style="align-self: center;font-size: var(--font-header-h1-menos-size);font-weight: var(--font-label-weight);">:</div>
+                        <div id="divMinutosHastaForm" style="position:relative;width:10vw;min-width:12vw;" class="select">
+                            <label ></label>
+                            <select style="width:100%;height:2rem;" id="selectMinutosHasta">          
+                                ${this.minutos().map((index) => html`
+                                    <option value="${index}" .selected="${this.combos.minfin == index}"> ${index}</option>                               
+                                `)}
+                            </select>
+                        </div>
                     </div>
-                    <div id="divObligatoriaForm" class="select">
-                        <label id="lblObligatoria">${idiomas[this.idioma].tramosabm.lblObligatoria}</label>
-                        <select style="width:100%;height:2rem;" id="selectObligatoria">          
-                            <option value=true .selected=${this.combos.optativa}>${idiomas[this.idioma].optativa.op}</option>
-                            <option value=false .selected=${!this.combos.optativa}>${idiomas[this.idioma].optativa.ob}</option>
-                        </select>
+                    <div class="ikeInput">
+                        <label id="lblFecha">${idiomas[this.idioma].tramosabm.lblFecha}</label>
+                        <input id="txtFecha"  type="date" >
+                        <label id="lblErrorFecha" error oculto>"Fecha Erroneo"</label>
                     </div>
-                    <div id="divActivoForm" class="select" > 
-                        <label id="lblActivo">${idiomas[this.idioma].tramosabm.lblActivo}</label>
-                        <select style="width:100%;height:2rem;" id="selectActivo">          
+                    <div id="selectActivo" class="select" > 
+                        <label >${idiomas[this.idioma].mascotastiposabm.lblActivo}</label>
+                        <select style="width:100%;height:2rem;" id="activo">          
                             <option value=true .selected="${this.combos.activo}">${idiomas[this.idioma].SiNo.si}</option>
                             <option value=false .selected="${!this.combos.activo}">${idiomas[this.idioma].SiNo.no}</option>
                         </select>
-                    </div> -->
+                    </div>
+
                     <button id="btnAceptar"  @click=${this.clickAccion} btn1 apagado>${idiomas[this.idioma].usuarioabm.btnGrabar}</button>                 
                 </div>
             </div>
@@ -298,23 +328,45 @@ export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TR
     }
 
     dias() {
-        let dd = [0, 1, 2, 3, 4, 5, 6]
-        return dd
+        let dias = [0, 1, 2, 3, 4, 5, 6]
+        return dias
+    }
+    horas() {
+        var horas = []
+        for (var i = 0; i < 24; i++) {
+            horas.push(i)
+        }
+        return horas
+    }
+    minutos() {
+        var minutos = []
+        if (this.configuracion) {
+            var cadaMin = parseInt(60 / this.configuracion[0].TurnosxHora)
+            for (var i = 0; i < 60; i = i + cadaMin) {
+                minutos.push(i)
+            }
+        }
+        return minutos
     }
     stateChanged(state, name) {
         if (name == MODO_PANTALLA && state.ui.quePantalla == "tramosabm") {
-            store.dispatch(getTramo({}))
+            store.dispatch(getTramo({ orderby: "Dia,HoraInicio" }))
             if (state.puestos.entities) {
                 this.puestos = state.puestos.entities
                 this.puestoSeleccionado = this.puestos[0].Id
             } else {
                 store.dispatch(getPuesto({}))
             }
+            if (state.configuracion.entities) {
+                this.configuracion = state.configuracion.entities
+            } else {
+                store.dispatch(getConfiguracion({}))
+            }
         }
         if (name == TRAMO_TIMESTAMP && state.ui.quePantalla == "tramosabm") {
             if (state.tramo.entities) {
                 this.tramos = state.tramo.entities
-                if (this.puestos) {
+                if (this.puestos && this.configuracion) {
                     this.update()
                 }
             }
@@ -323,13 +375,21 @@ export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TR
             if (state.puestos.entities) {
                 this.puestos = state.puestos.entities
                 if (this.puestoSeleccionado == -1) { this.puestoSeleccionado = this.puestos[0].Id }
-                if (this.tramos) {
+                if (this.tramos && this.configuracion) {
+                    this.update()
+                }
+            }
+        }
+        if (name == CONFIGURACION_TIMESTAMP && state.ui.quePantalla == "tramosabm") {
+            if (state.configuracion.entities) {
+                this.configuracion = state.configuracion.entities
+                if (this.tramos && this.puestos) {
                     this.update()
                 }
             }
         }
         if (name == TRAMO_ADDTIMESTAMP || name == TRAMO_UPDATETIMESTAMP) {
-            store.dispatch(getTramo({}))
+            store.dispatch(getTramo({ orderby: "Dia,HoraInicio" }))
         }
     }
     firstUpdated(changedProperties) {
@@ -338,46 +398,51 @@ export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TR
     clickAccion() {
         if (this.activo) {
             if (this.valido()) {
-                this.combos.mascota = this.shadowRoot.getElementById("selectMascota").value
-                this.combos.vacuna = this.shadowRoot.getElementById("selectVacuna").value
-                this.combos.optativa = this.shadowRoot.getElementById("selectObligatoria").value
-                this.combos.activo = this.shadowRoot.getElementById("selectActivo").value
-                const enfermedades = this.shadowRoot.getElementById("txtPara").value;
-                const edad = this.shadowRoot.getElementById("txtEdad").value;
+                this.combos = {
+                    dia: this.shadowRoot.querySelector("#selectDia").value,
+                    horainicio: this.shadowRoot.querySelector("#selectHorasDesde").value,
+                    mininicio: this.shadowRoot.querySelector("#selectMinutosDesde").value,
+                    horafin: this.shadowRoot.querySelector("#selectHorasHasta").value,
+                    minfin: this.shadowRoot.querySelector("#selectMinutosHasta").value,
+                    activo: this.shadowRoot.querySelector("#activo").value
+                }
+                const fecha = this.shadowRoot.querySelector("#txtFecha").value
                 var datoUpdate = [];
+
                 if (this.accion == "alta") {
-                    let regNuevo = { MascotasTipoId: this.combos.mascota, VacunaId: this.combos.vacuna, Enfermedades: enfermedades, Edad: edad, Optativa: this.combos.optativa, Activo: this.combos.activo }
+                    let regNuevo = {
+                        Dia: this.combos.dia,
+                        FechaFin: fecha,
+                        HoraFin: parseInt(this.combos.horafin * 100) + parseInt(this.combos.minfin),
+                        HoraInicio: parseInt(this.combos.horainicio * 100) + parseInt(this.combos.mininicio),
+                        PuestoId: this.puestoSeleccionado,
+                        activo: this.combos.activo
+                    }
                     let miToken = store.getState().cliente.datos.token
                     store.dispatch(addTramo(regNuevo, miToken))
-                    this.update()
                     this.clickX()
                 }
                 if (this.accion == "update") {
                     var datoUpdate = [];
-                    enfermedades != this.calendarioOriginal.Enfermedades ? datoUpdate.push({
+                    this.combos.dia != this.calendarioOriginal.Dia ? datoUpdate.push({
                         "op": "replace",
-                        "path": "/Enfermedades",
-                        "value": enfermedades
-                    }) : null
-                    edad != this.calendarioOriginal.Edad ? datoUpdate.push({
+                        "path": "/Dia",
+                        "value": this.combos.dia
+                    }) : null;
+                    (this.combos.horainicio * 100) + this.combos.mininicio != this.calendarioOriginal.HoraInicio ? datoUpdate.push({
                         "op": "replace",
-                        "path": "/Edad",
-                        "value": edad
-                    }) : null
-                    this.combos.mascota != this.calendarioOriginal.MascotasTipoId ? datoUpdate.push({
+                        "path": "/HoraInicio",
+                        "value": parseInt(this.combos.horainicio * 100) + parseInt(this.combos.mininicio)
+                    }) : null;
+                    (this.combos.horafin * 100) + this.combos.minfin != this.calendarioOriginal.HoraFin ? datoUpdate.push({
                         "op": "replace",
-                        "path": "/MascotasTipoId",
-                        "value": this.combos.mascota
-                    }) : null
-                    this.combos.vacuna != this.calendarioOriginal.VacunaId ? datoUpdate.push({
+                        "path": "/HoraFin",
+                        "value": parseInt(this.combos.horafin * 100) + parseInt(this.combos.minfin)
+                    }) : null;
+                    fecha != this.calendarioOriginal.FechaFin ? datoUpdate.push({
                         "op": "replace",
-                        "path": "/VacunaId",
-                        "value": this.combos.vacuna
-                    }) : null
-                    this.combos.optativa != this.calendarioOriginal.Optativa ? datoUpdate.push({
-                        "op": "replace",
-                        "path": "/Optativa",
-                        "value": this.combos.optativa
+                        "path": "/FechaFin",
+                        "value": fecha
                     }) : null
                     this.combos.activo != this.calendarioOriginal.Activo ? datoUpdate.push({
                         "op": "replace",
@@ -387,7 +452,6 @@ export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TR
                     if (datoUpdate) {
                         let miToken = store.getState().cliente.datos.token
                         store.dispatch(patchTramo(this.calendarioOriginal.Id, datoUpdate, miToken))
-                        this.update()
                         this.clickX()
                     }
                 }
@@ -395,7 +459,7 @@ export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TR
         }
     }
     clickMostrarDatos() {
-        this.mascotaTipoSeleccionada = this.shadowRoot.querySelector("#filtro").value
+        this.puestoSeleccionado = this.shadowRoot.querySelector("#filtro").value
         this.update();
     }
     clickMostrarFiltro(e) {
@@ -415,17 +479,32 @@ export class tramoAbm extends connect(store, PUESTO_TIMESTAMP, MODO_PANTALLA, TR
         this.accion = accion;
         if (accion == "alta") {
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].tramosabm.lblTituloAltaNew
-            this.calendarioOriginal = { idMascota: 0, vacuna: "", para: "", edad: "", obligatoria: true, activo: true }
-            this.shadowRoot.querySelector("#txtPara").value = ""
-            this.shadowRoot.querySelector("#txtEdad").value = ""
-            this.combos = { mascota: this.mascotasTipo[0].Id, vacuna: 0, optativa: true, activo: true }
+
+            var d = new Date();
+            var fecFin = d.getFullYear() + "-" + ("0" + d.getMonth()).substring(-2) + "-" + ("0" + d.getDay()).substring(-2)
+            this.calendarioOriginal = { Dia: 0, FechaFin: fecFin, HoraFin: 0, HoraInicio: 0, PuestoId: this.puestoSeleccionado, activo: true }
+            this.shadowRoot.querySelector("#txtFecha").value = fecFin
+            this.combos = {
+                dia: 1,
+                horainicio: 8,
+                mininicio: 0,
+                horafin: 20,
+                minfin: 0,
+                activo: true
+            }
         }
         if (accion == "update") {
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].tramosabm.lblTituloAltaChange
             this.calendarioOriginal = dato;
-            this.combos = { mascota: dato.MascotasTipoId, vacuna: dato.VacunaId, optativa: dato.Optativa, activo: dato.Activo }
-            //this.shadowRoot.querySelector("#txtPara").value = dato.Enfermedades
-            //this.shadowRoot.querySelector("#txtEdad").value = dato.Edad
+            this.shadowRoot.querySelector("#txtFecha").value = dato.FechaFin.substr(0, 4) + "-" + dato.FechaFin.substr(5, 2) + "-" + dato.FechaFin.substr(8, 2)
+            this.combos = {
+                dia: dato.Dia,
+                horainicio: parseInt(dato.HoraInicio / 100),
+                mininicio: dato.HoraInicio % 100,
+                horafin: parseInt(dato.HoraFin / 100),
+                minfin: dato.HoraFin % 100,
+                activo: dato.Activo
+            }
         }
         this.shadowRoot.querySelector("#verDatos").style.display = "grid";
         this.shadowRoot.querySelector("#x").style.display = "grid";
