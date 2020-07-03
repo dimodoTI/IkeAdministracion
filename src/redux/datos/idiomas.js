@@ -1,5 +1,6 @@
 export const idiomas = {
     ES: {
+        diaSemana: ["Domingo", "Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
         SiNo: { si: "Si", no: "No" },
         optativa: { op: "Optativa", ob: "Obligatoria" },
         diasCortos: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sab"],
@@ -100,6 +101,13 @@ export const idiomas = {
             lblTurXHora: "Turnos por hora: ", lblTurXHora_ph: "2",
             btnGrabar: "Aceptar", lblTituloAltaChange: "Modificar Configuracion",
             errorToken: "Error, Vuelve a loguearte", errorOperacion: "Operacion no realizada"
+        },
+        tramosabm: {
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas", lblFiltro: "Puesto:",
+            titulo: "Tramos horarios",
+            lblDe: "Desde:  ", lblHasta: " Hasta: ", lblFinal: "Finaliza: ",
+            lblActivo: "Activo: ",
+            btnGrabar: "Aceptar", lblTituloAltaNew: "Nuevo calendario", lblTituloAltaChange: "Modificar calendrio"
         }
     }
 }

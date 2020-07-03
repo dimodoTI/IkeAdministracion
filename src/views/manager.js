@@ -72,7 +72,7 @@ export class viewManager extends connect(store, MEDIA_CHANGE, QUEPANTALLA)(LitEl
                 this.shadowRoot.querySelector("#crearclave").hidden = state.ui.quePantalla != "crearclave";
                 this.shadowRoot.querySelector("#crearclavemsg").hidden = state.ui.quePantalla != "crearclavemsg";
 
-                if ("menugral;usuariosabm;principal;publicacionesabm;razasabm;tiposmascotasabm;calendariosabm;puestosabm;vacunasabm;configuracionesabm".indexOf(state.ui.quePantalla) > -1) {
+                if ("menugral;usuariosabm;principal;publicacionesabm;razasabm;tiposmascotasabm;calendariosabm;puestosabm;vacunasabm;configuracionesabm,tramosabm".indexOf(state.ui.quePantalla) > -1) {
                     this.shadowRoot.querySelector("#menugral").hidden = false
                 }
             }
