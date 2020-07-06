@@ -37,6 +37,9 @@ export class chatApp extends connect(store, MODO_PANTALLA)(LitElement) {
             grid-template-rows: 8.8fr .6fr .6fr;
             background-color:var(--color-gris-fondo);
         }
+        :host(:not([media-size="small"])) #divRegistros{
+            height: calc((100vh * .82));
+       }
         #divChat{
             display: grid;
             flex-direction: column;
