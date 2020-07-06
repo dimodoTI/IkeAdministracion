@@ -110,6 +110,11 @@ export const idiomas = {
             lblDia: "Dia de la semana: ", lblHoraDesde: "Desde: ", lblHoraHasta: "Hasta: ",
             lblFecha: "Fecha de Finalización: ",
             btnGrabar: "Aceptar", lblTituloAltaNew: "Nuevo calendario", lblTituloAltaChange: "Modificar calendrio"
+        },
+        chatsapp: {
+            tituloCabecera: "Hola", leyendaCabecera: "Administración mascotas",
+            btnEnviar: "Enviar", btnFin: "Finalizar chat",
+            lblTextoEnviar_ph: "Tu mensage"
         }
     }
 }

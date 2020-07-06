@@ -5,13 +5,12 @@ import { idiomas } from "../../redux/datos/idiomas"
 import { label } from "../css/label"
 import { button } from "../css/button"
 import { cabecera1 } from "../css/cabecera1"
-import { vacunaAbm } from "../componentes/vacunaAbm"
+import { chatApp } from "../componentes/chatApp"
 import { modoPantalla } from "../../redux/actions/ui";
 import { REGALO, CARRITO, RELOJ, NOVEDADES1, NOVEDADES2, NOVEDADES3, HOME, MASCOTA, CONSULTA, VACUNA, FOTO, MAS } from "../../../assets/icons/icons"
-import { get as getVacunas } from "../../redux/actions/vacuna";
-import { get as getMascotasTipo } from "../../redux/actions/mascotastipo";
+
 const MODO_PANTALLA = "ui.timeStampPantalla"
-export class pantallaVacunasAbm extends connect(store, MODO_PANTALLA)(LitElement) {
+export class pantallaChatsApp extends connect(store, MODO_PANTALLA)(LitElement) {
     constructor() {
         super();
         this.hidden = true
@@ -60,6 +59,7 @@ export class pantallaVacunasAbm extends connect(store, MODO_PANTALLA)(LitElement
             display: grid;
             background-color: transparent;  
             overflow-x: none; 
+            width:100%;
         }
         #cuerpo::-webkit-scrollbar {
             display: none;
@@ -76,7 +76,8 @@ export class pantallaVacunasAbm extends connect(store, MODO_PANTALLA)(LitElement
         #usuarioComp{
             position:relative;
             display:grid;
-            padding: 0 1rem 0 1rem;
+            width:95%;
+            justify-self:center;
         }
     `
     }
@@ -85,7 +86,7 @@ export class pantallaVacunasAbm extends connect(store, MODO_PANTALLA)(LitElement
             <div id="header">
                 <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
                     <div id="bar">
-                        <div id="lblTitulo">${idiomas[this.idioma].principal.tituloCabecera}                  
+                        <div id="lblTitulo">${idiomas[this.idioma].principal.tituloCabecera}                    
                             ${store.getState().cliente.datos.nombre == "" ? "" : ", " + store.getState().cliente.datos.nombre}
                         </div>
                         <div id="detalle" 
@@ -97,8 +98,8 @@ export class pantallaVacunasAbm extends connect(store, MODO_PANTALLA)(LitElement
                 <div id="lblLeyenda">${idiomas[this.idioma].principal.leyendaCabecera}</div>
             </div>
             <div id="cuerpo">
-                <vacuna-abm id="usuarioComp" media-size="${this.mediaSize}">
-                </vacuna-abm>
+                <chat-app id="usuarioComp" media-size="${this.mediaSize}">
+                </chat-app>>
             </div>        
         `
     }
@@ -112,8 +113,7 @@ export class pantallaVacunasAbm extends connect(store, MODO_PANTALLA)(LitElement
     }
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {
-            //store.dispatch(getVacunas({expand: "MascotaTipo" }))
-            store.dispatch(getMascotasTipo({}))
+            this.update();
         }
     }
 
@@ -135,4 +135,4 @@ export class pantallaVacunasAbm extends connect(store, MODO_PANTALLA)(LitElement
     }
 }
 
-window.customElements.define("pantalla-vacunasabm", pantallaVacunasAbm);
+window.customElements.define("pantalla-chatsapp", pantallaChatsApp);

@@ -1,4 +1,4 @@
-html { 
+html {  
     --color-nude:#FFF2D9;
     --color-crudo:#FFFAFA;
     --color-celeste-muy-claro:#EFF2FF;
@@ -19,7 +19,7 @@ html {
     --color-blanco:#FFFFFF;
     --color-negro:#000000;
     --color-rosa:#FF8888;
-
+    --color-naranja:#EB6A44;
     --primary-color:#7A86E6;
     --onsurface-color-helper: #5a5856;
    

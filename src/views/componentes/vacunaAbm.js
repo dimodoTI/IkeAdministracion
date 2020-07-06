@@ -226,7 +226,7 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
                     <label >${idiomas[this.idioma].usuarioabm.lblFiltro}</label>
                     <select style="width:100%;height:2rem;" id="filtro" @change=${this.clickMostrarDatos}>          
                         ${!this.mascotasTipo ? "" : this.mascotasTipo.map(dato => html`
-                            <option value="${dato.Id}" .selected="${this.itemOriginal.MascotasTipoId == dato.Id}">${dato.Descripcion}</option>                               
+                            <option value="${dato.Id}" .selected="${this.mascotaTipoSeleccionada == dato.Id}">${dato.Descripcion}</option>                               
                         `)}
                     </select>
                 </div>
@@ -286,6 +286,7 @@ export class vacunaAbm extends connect(store, MODO_PANTALLA, MASCOTASTIPO_TIMEST
 
     stateChanged(state, name) {
         if (name == MODO_PANTALLA && state.ui.quePantalla == "vacunasabm") {
+            this.vacunas = null
             store.dispatch(getVacuna({ expand: "MascotaTipo" }))
             if (state.mascotastipo.entities) {
                 this.mascotasTipo = state.mascotastipo.entities

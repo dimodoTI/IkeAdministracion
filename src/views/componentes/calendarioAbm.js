@@ -430,7 +430,7 @@ export class calendarioAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, VACUNA
             this.calendarioOriginal = { idMascota: 0, vacuna: "", para: "", edad: "", obligatoria: true, activo: true }
             this.shadowRoot.querySelector("#txtPara").value = ""
             this.shadowRoot.querySelector("#txtEdad").value = ""
-            this.combos = { mascota: this.mascotasTipo[0].Id, vacuna: 0, optativa: true, activo: true }
+            this.combos = { mascota: this.mascotaTipoSeleccionada, vacuna: 0, optativa: true, activo: true }
         }
         if (accion == "update") {
             this.shadowRoot.querySelector("#lblTituloDatos").innerHTML = idiomas[this.idioma].calendariosabm.lblTituloAltaChange

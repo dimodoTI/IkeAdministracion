@@ -22,6 +22,7 @@ import { pantallaCrearClave } from "../views/formularios/crearclave";
 import { pantallaCrearClaveMsg } from "../views/formularios/crearclavemsg";
 import { pantallaMenuGral } from "../views/formularios/menuGral";
 
+
 const MEDIA_CHANGE = "ui.media.timeStamp"
 const QUEPANTALLA = "ui.timeStampPantalla";
 export class viewManager extends connect(store, MEDIA_CHANGE, QUEPANTALLA)(LitElement) {
@@ -58,6 +59,7 @@ export class viewManager extends connect(store, MEDIA_CHANGE, QUEPANTALLA)(LitEl
         <pantalla-crearclavemsg id="crearclavemsg" media-size="${this.mediaSize}"></pantalla-crearclavemsg>
 
         <pantalla-menugral id="menugral" media-size="${this.mediaSize}"></pantalla-menugral>
+
         `
     }
 
@@ -72,7 +74,7 @@ export class viewManager extends connect(store, MEDIA_CHANGE, QUEPANTALLA)(LitEl
                 this.shadowRoot.querySelector("#crearclave").hidden = state.ui.quePantalla != "crearclave";
                 this.shadowRoot.querySelector("#crearclavemsg").hidden = state.ui.quePantalla != "crearclavemsg";
 
-                if ("menugral;usuariosabm;principal;publicacionesabm;razasabm;tiposmascotasabm;calendariosabm;puestosabm;vacunasabm;configuracionesabm,tramosabm".indexOf(state.ui.quePantalla) > -1) {
+                if ("menugral;usuariosabm;principal;publicacionesabm;razasabm;tiposmascotasabm;calendariosabm;puestosabm;vacunasabm;configuracionesabm,tramosabm;chatsapp".indexOf(state.ui.quePantalla) > -1) {
                     this.shadowRoot.querySelector("#menugral").hidden = false
                 }
             }
