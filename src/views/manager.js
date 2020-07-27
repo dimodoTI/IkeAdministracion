@@ -66,6 +66,10 @@ export class viewManager extends connect(store, MEDIA_CHANGE, QUEPANTALLA)(LitEl
     stateChanged(state, name) {
         if (name == QUEPANTALLA || name == MEDIA_CHANGE) {
             this.mediaSize = state.ui.media.size
+            if (!window.MSStream && /iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                this.style.height = window.innerHeight + "px"
+            }
+
             if (this.shadowRoot.children.length > 0) {
                 this.shadowRoot.querySelector("#splash").hidden = state.ui.quePantalla != "splash";
                 this.shadowRoot.querySelector("#iniciosesion").hidden = state.ui.quePantalla != "iniciosesion";
