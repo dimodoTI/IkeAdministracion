@@ -6,12 +6,12 @@ import {
   fetchFactory
 } from "../libs/fetchFactory"
 
-const webApiUsuarios = "http://64.227.109.20:8080/api"
-const webApiUsuariosOdata = "http://64.227.109.20:8080"
-const webApiMascotas = "http://64.227.109.20:8081/api"
-const webApiMascotasOdata = "http://64.227.109.20:8081"
-const webApiPublicacion = "http://64.227.109.20:8082/api"
-const webApiPublicacionOdata = "http://64.227.109.20:8082"
+const webApiUsuarios = "https://apis.usuarios.dimodo.ga/api"
+const webApiUsuariosOdata = "https://apis.usuarios.dimodo.ga"
+const webApiMascotas = "https://apis.mascotas.dimodo.ga/api"
+const webApiMascotasOdata = "https://apis.mascotas.dimodo.ga"
+const webApiPublicacion = "https://apis.publicaciones.dimodo.ga/api"
+const webApiPublicacionOdata = "https://apis.publicaciones.dimodo.ga"
 
 const mascotaOdata = ODataFetchFactory({ fetch: fetch, domain: webApiMascotasOdata })
 const usuarioOdata = ODataFetchFactory({ fetch: fetch, domain: webApiUsuariosOdata })
