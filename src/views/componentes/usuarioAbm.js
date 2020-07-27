@@ -311,8 +311,12 @@ export class usuarioAbm extends connect(store, USUARIO_TIMESTAMP, USUARIO_UPDATE
         }
         if (name == USUARIO_UPDATETIMESTAMP) {
             this.clickX();
-            let mId = this.itemOriginal.id > 0 ? this.itemOriginal.id : null;
-            store.dispatch(getUsuario(mId, store.getState().cliente.datos.token))
+            var json = { token: store.getState().cliente.datos.token }
+            if (this.itemOriginal.id > 0) {
+                json.filter = "Id eq " + this.itemOriginal.id
+            }
+            store.dispatch(getUsuario(json))
+            //store.dispatch(getUsuario(mId, store.getState().cliente.datos.token))
             //store.dispatch(getUsuario(mId, this.TOCK))
             //store.dispatch(getUsuario(null, store.getState().cliente.datos.token))
         }
