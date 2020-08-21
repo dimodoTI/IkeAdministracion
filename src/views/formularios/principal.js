@@ -85,10 +85,10 @@ export class pantallaPrincipal extends connect(store, MODO_PANTALLA)(LitElement)
 
 
     clickBotonUsuario() {
-        store.dispatch(modoPantalla("usuariosabm", "principal"))
+        //store.dispatch(modoPantalla("usuariosabm", "principal"))
     }
     clickBotonNotificacion() {
-        store.dispatch(modoPantalla("notificacion", "principal"))
+        //store.dispatch(modoPantalla("notificacion", "principal"))
     }
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {

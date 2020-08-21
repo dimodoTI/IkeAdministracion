@@ -101,10 +101,10 @@ export class pantallaUsuariosAbm extends connect(store, MODO_PANTALLA)(LitElemen
         `
     }
     clickBotonUsuario() {
-        store.dispatch(modoPantalla("usuariodetalle", "usuariosabm"))
+        //store.dispatch(modoPantalla("usuariodetalle", "usuariosabm"))
     }
     clickBotonNotificacion() {
-        store.dispatch(modoPantalla("notificacion", "usuariosabm"))
+        //store.dispatch(modoPantalla("notificacion", "usuariosabm"))
     }
     stateChanged(state, name) {
         if (name == MODO_PANTALLA) {

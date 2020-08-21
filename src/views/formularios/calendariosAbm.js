@@ -105,10 +105,10 @@ export class pantallaCalendariosAbm extends connect(store, MODO_PANTALLA)(LitEle
 
 
     clickBotonUsuario() {
-        store.dispatch(modoPantalla("usuariodetalle", "principal"))
+        //store.dispatch(modoPantalla("usuariodetalle", "principal"))
     }
     clickBotonNotificacion() {
-        store.dispatch(modoPantalla("notificacion", "principal"))
+        //store.dispatch(modoPantalla("notificacion", "principal"))
     }
 
     stateChanged(state, name) {

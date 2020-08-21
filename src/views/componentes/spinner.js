@@ -10,11 +10,12 @@ import {
 } from "../../redux/store";
 import {
     connect
-} from "@brunomon/helpers";
-export class hc2Spinner extends connect(store, "ui.loading")(LitElement) {
+} from "@brunomon/helpers/connect";
+export class dimodoSpinner extends connect(store, "api.loading")(LitElement) {
     constructor() {
         super();
         this.oculto = true;
+        this.type = "spinner1"
     }
     render() {
         return html`
@@ -45,8 +46,8 @@ export class hc2Spinner extends connect(store, "ui.loading")(LitElement) {
                 width:100%;
                 height:100%;
                 border: 3px solid transparent;
-                border-top-color: darkorange;
-                border-bottom-color: darkorange;
+                border-top-color: var(--color-naranja);
+                border-bottom-color: var(--color-amarillo);
                 border-radius: 50%;
                 -webkit-animation: rotation .8s ease infinite;
                         animation: rotation .8s ease infinite;
@@ -404,10 +405,10 @@ export class hc2Spinner extends connect(store, "ui.loading")(LitElement) {
             }
 
         </style>
-        <div id="spinner" class="spinner${this.type}"></div>`
+        <div id="spinner" class="spinner ${this.type}"></div>`
     }
-    stateChanged(state, i) {
-        this.oculto = (state.ui.loading == 0);
+    stateChanged(state, name) {
+        this.oculto = (state.api.loading == 0);
     }
     set oculto(value) {
         if (value) {
@@ -426,4 +427,4 @@ export class hc2Spinner extends connect(store, "ui.loading")(LitElement) {
         }
     }
 }
-window.customElements.define("hc2-spinner", hc2Spinner);
+window.customElements.define("dimodo-spinner", dimodoSpinner);

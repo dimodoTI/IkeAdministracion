@@ -38,7 +38,6 @@ select {
     font-weight: var(--font-bajada-weight);
   }
   option{
-      color:var(--color-blanco);
       padding:0rem;
   }
   .select::after {
@@ -52,7 +51,8 @@ select {
     -webkit-transition: .25s all ease;
     -o-transition: .25s all ease;
     transition: .25s all ease;
-    color:var(--color-gris-oscuro)
+    color:var(--color-gris-oscuro);
+
   }
   
   .select:hover::after {

@@ -21,7 +21,9 @@ import { pantallaRecuperaClaveMesg } from "../views/formularios/recuperaclavemsg
 import { pantallaCrearClave } from "../views/formularios/crearclave";
 import { pantallaCrearClaveMsg } from "../views/formularios/crearclavemsg";
 import { pantallaMenuGral } from "../views/formularios/menuGral";
-
+import {
+    dimodoSpinner
+} from "../views/componentes/spinner"
 
 const MEDIA_CHANGE = "ui.media.timeStamp"
 const QUEPANTALLA = "ui.timeStampPantalla";
@@ -40,12 +42,9 @@ export class viewManager extends connect(store, MEDIA_CHANGE, QUEPANTALLA)(LitEl
             width: 100vw;
             padding:0;
             background-color:var(--color-gris-claro);
+            overflow:hidden;
         }
-        #splash{
-            align-self: top;
-            height: 100%;
-            width: 100%;
-        }
+
         `
     }
     render() {

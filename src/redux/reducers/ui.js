@@ -12,7 +12,9 @@ import {
 } from "../actions/ui";
 
 const initialState = {
-    loading: 0,
+    spinner: {
+        loading: 0
+    },
     errorTimestamp: false,
     errorMessages: null,
     opcionSeleccionada: {
@@ -39,10 +41,10 @@ export const reducer = (state = initialState, action) => {
 
     switch (action.type) {
         case SHOW_SPINNER:
-            newState.loading += 1;
+            newState.spinner.loading += 1;
             break;
         case HIDE_SPINNER:
-            newState.loading -= 1;
+            newState.spinner.loading -= 1;
             break;
         case SHOW_ERROR:
             newState.errorTimeStamp = (new Date()).getTime()

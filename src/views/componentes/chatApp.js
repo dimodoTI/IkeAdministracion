@@ -19,23 +19,26 @@ export class chatApp extends connect(store, MODO_PANTALLA)(LitElement) {
         this.activo = false;
         this.chates = [];
     }
-
     static get styles() {
         return css`
         ${button}
         :host{
             display: grid;
             position:relative; 
-            width: 100%;
+            height:100%;
+            width:100%;
             background-color: var(--color-blanco);
             grid-gap:0rem;
         }
         #divRegistros{
             display:grid;
             grid-gap: .2rem;
-            height: calc(((100vh *.85) * .82) );
+            height:100%;
+            width:100%;
             grid-template-rows: 8.8fr .6fr .6fr;
             background-color:var(--color-gris-fondo);
+            overflow-x:none;
+            overflow-y:auto;
         }
         :host(:not([media-size="small"])) #divRegistros{
             height: calc((100vh * .82));

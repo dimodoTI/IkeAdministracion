@@ -92,7 +92,7 @@ export class pieComponente extends connect(store)(LitElement) {
             align-content: center;
             font-size: var(--font-label-size);
             font-weight: var(--font-label-weight);
-            color:var(--color-gris-medio);
+            color:var(--color-celesteç);
             cursor:pointer;
         }
         :host(:not([media-size="small"])) .lbl{
@@ -117,7 +117,7 @@ export class pieComponente extends connect(store)(LitElement) {
             stroke:var(--color-azul-oscuro);
         }
         .img[select="NO"] svg{
-            stroke:var(--color-azul-gris-claro);
+            stroke:var(--color-gris);
             fill:var(--color-gris-claro);
         }
         #divAyudaPie{

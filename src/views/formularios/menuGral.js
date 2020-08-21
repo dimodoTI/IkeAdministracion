@@ -89,6 +89,8 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
             </div>
             <pie-componente id="gridPie" opcion="" media-size="${this.mediaSize}">
             </pie-componente>
+            <dimodo-spinner type="spinner2"></dimodo-spinner>
+
         `
     }
 

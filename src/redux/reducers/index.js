@@ -40,6 +40,9 @@ import {
 import {
   reducer as tramoReducer
 } from "./tramo"
+import {
+  reducer as apiReducer
+} from "./api"
 
 export const rootReducer = (state = {}, action) => {
 
@@ -56,7 +59,8 @@ export const rootReducer = (state = {}, action) => {
     vacuna: vacunaReducer(state.vacuna, action),
     calendario: calendarioReducer(state.calendario, action),
     configuracion: configuracionReducer(state.configuracion, action),
-    tramo: tramoReducer(state.tramo, action)
+    tramo: tramoReducer(state.tramo, action),
+    api: apiReducer(state.api, action)
     // titular: titularReducer(state.titular, action),
     // mascotas: mascotasReducer(state.mascotas, action),
     // hc: hcReducer(state.hc, action),

@@ -4,7 +4,9 @@ import {
   API_DELETE,
   API_ADD,
   API_ACTION,
-  API_FUNCTION
+  API_FUNCTION,
+  showSpinner,
+  hideSpinner
 } from "../actions/api";
 
 export const middleware = ({
@@ -17,10 +19,10 @@ export const middleware = ({
       onSuccess,
       onError
     } = action.meta;
-
+    dispatch(showSpinner(ODataFetch))
     ODataFetch.get(params)
       .then(data => {
-
+        dispatch(hideSpinner(ODataFetch))
         dispatch({
           type: onSuccess,
           payload: {
@@ -30,7 +32,7 @@ export const middleware = ({
         })
       })
       .catch(error => {
-
+        dispatch(hideSpinner(ODataFetch))
         dispatch({
           type: onError,
           payload: error

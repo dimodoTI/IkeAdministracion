@@ -5,6 +5,9 @@ export const API_ADD = "[app] API Add"
 export const API_ACTION = "[app] API Action"
 export const API_FUNCTION = "[app] API Funct"
 
+export const API_SHOW_SPINNER = "[app] API Show spinner"
+export const API_HIDE_SPINNER = "[app] API hide spinner"
+
 export const apiRequest = (ODataFetch, params, onSuccess, onError) => ({
   type: API_REQUEST,
   meta: {
@@ -67,3 +70,12 @@ export const apiFunction = (ODataFetch, funct, onSuccess, onError) => ({
     onError
   }
 });
+
+export const showSpinner = (fetch) => ({
+  type: API_SHOW_SPINNER,
+  fetch: fetch
+})
+export const hideSpinner = (fetch) => ({
+  type: API_HIDE_SPINNER,
+  fetch: fetch
+})
