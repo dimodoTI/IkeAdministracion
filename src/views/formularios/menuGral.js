@@ -1,26 +1,86 @@
-import { html, LitElement, css } from "lit-element";
-import { store } from "../../redux/store";
-import { connect } from "@brunomon/helpers";
-import { idiomas } from "../../redux/datos/idiomas"
-import { label } from "../css/label"
-import { button } from "../css/button"
-import { cabecera1 } from "../css/cabecera1"
-import { btnFlotanteRedondo } from "../css/btnFlotanteRedondo"
-import { mediaConMenu01 } from "../css/mediaConMenu01"
-import { modoPantalla } from "../../redux/actions/ui";
-import { REGALO, CARRITO, RELOJ, NOVEDADES1, NOVEDADES2, NOVEDADES3, HOME, MASCOTA, CONSULTA, VACUNA, FOTO, MAS } from "../../../assets/icons/icons"
+import {
+    html,
+    LitElement,
+    css
+} from "lit-element";
+import {
+    store
+} from "../../redux/store";
+import {
+    connect
+} from "@brunomon/helpers";
+import {
+    idiomas
+} from "../../redux/datos/idiomas"
+import {
+    label
+} from "../css/label"
+import {
+    button
+} from "../css/button"
+import {
+    cabecera1
+} from "../css/cabecera1"
+import {
+    btnFlotanteRedondo
+} from "../css/btnFlotanteRedondo"
+import {
+    mediaConMenu01
+} from "../css/mediaConMenu01"
+import {
+    modoPantalla
+} from "../../redux/actions/ui";
+import {
+    REGALO,
+    CARRITO,
+    RELOJ,
+    NOVEDADES1,
+    NOVEDADES2,
+    NOVEDADES3,
+    HOME,
+    MASCOTA,
+    CONSULTA,
+    VACUNA,
+    FOTO,
+    MAS
+} from "../../../assets/icons/icons"
 
-import { pantallaPrincipal } from "./principal";
-import { pantallaUsuariosAbm } from "./usuariosAbm";
-import { pantallaPublicacionesAbm } from "./publicacionesAbm";
-import { pantallaRazasAbm } from "./razasAbm";
-import { pantallaMascotasTiposAbm } from "./mascotasTiposAbm";
-import { pantallaCalendariosAbm } from "./calendariosAbm";
-import { pantallaPuestosAbm } from "./puestosAbm";
-import { pantallaVacunasAbm } from "./vacunasAbm";
-import { pantallaConfiguracionesAbm } from "./configuracionesAbm";
-import { pantallaTramosAbm } from "./tramosAbm";
-import { pantallaChatsApp } from "./chatsApp";
+import {
+    pantallaPrincipal
+} from "./principal";
+import {
+    pantallaUsuariosAbm
+} from "./usuariosAbm";
+import {
+    pantallaPublicacionesAbm
+} from "./publicacionesAbm";
+import {
+    pantallaRazasAbm
+} from "./razasAbm";
+import {
+    pantallaMascotasTiposAbm
+} from "./mascotasTiposAbm";
+import {
+    pantallaCalendariosAbm
+} from "./calendariosAbm";
+import {
+    pantallaPuestosAbm
+} from "./puestosAbm";
+import {
+    pantallaVacunasAbm
+} from "./vacunasAbm";
+import {
+    pantallaConfiguracionesAbm
+} from "./configuracionesAbm";
+import {
+    pantallaTramosAbm
+} from "./tramosAbm";
+import {
+    pantallaChatsApp
+} from "./chatsApp";
+import {
+    pantallaNotificaciones
+} from "./notificaciones"
 
 const QUEPANTALLA = "ui.timeStampPantalla";
 const MODO_PANTALLA = "ui.timeStampPantalla"
@@ -34,7 +94,7 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
     }
 
     static get styles() {
-        return css`
+        return css `
         ${label}
         ${button}
         ${mediaConMenu01}
@@ -71,7 +131,7 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
     `
     }
     render() {
-        return html`
+        return html `
             <div id="gridContenedor">
                 <pantalla-principal id="principal" media-size="${this.mediaSize}"></pantalla-principal>
                 <pantalla-usuariosabm id="usuariosabm" media-size="${this.mediaSize}"></pantalla-usuariosabm>
@@ -84,6 +144,7 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
                 <pantalla-configuracionesabm id="configuracionesabm" media-size="${this.mediaSize}"></pantalla-configuracionesabm>      
                 <pantalla-tramosabm id="tramosabm" media-size="${this.mediaSize}"></pantalla-tramosabm>      
                 <pantalla-chatsapp id="chatsapp" media-size="${this.mediaSize}"></pantalla-chatsapp>
+                <pantalla-notificaciones id="notificaciones" media-size="${this.mediaSize}"></pantalla-notificaciones>
 
                 <div id="divTapaPantalla"  @click=${this.clickTapaPantalla}></div>
             </div>
@@ -109,6 +170,7 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
                 this.shadowRoot.querySelector("#configuracionesabm").hidden = state.ui.quePantalla != "configuracionesabm";
                 this.shadowRoot.querySelector("#tramosabm").hidden = state.ui.quePantalla != "tramosabm";
                 this.shadowRoot.querySelector("#chatsapp").hidden = state.ui.quePantalla != "chatsapp";
+                this.shadowRoot.querySelector("#notificaciones").hidden = state.ui.quePantalla != "notificaciones";
 
             }
         }
@@ -129,8 +191,7 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
         this.shadowRoot.children.gridPie.opcion = "cero"
         this.update()
     }
-    firstUpdated() {
-    }
+    firstUpdated() {}
 
     static get properties() {
         return {

@@ -2,7 +2,7 @@ import {
   css
 } from "lit-element"
 
-export const select = css`
+export const select = css `
 select {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -30,9 +30,9 @@ select {
     border-radius: 2px;
   }
   select {
+    color: var(--color-azul-oscuro);
     padding-top:.3rem;
     padding-left:.4rem;
-    color:var(--color-negro);
     cursor: pointer;
     font-size: var(--font-bajada-size);
     font-weight: var(--font-bajada-weight);
@@ -61,9 +61,10 @@ select {
   
   .select label{
       position:relative;
-      top:.1rem;
+      top:-.15rem;
       left:0rem;
       font-size: var(--font-label-size);
       font-weight: var(--font-label-weight);
+      color: var(--color-azul-oscuro);
   }
   `

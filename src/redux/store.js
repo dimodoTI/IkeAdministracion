@@ -52,6 +52,12 @@ import {
 import {
   middleware as tramo
 } from "./middleware/tramo";
+import {
+  middleware as mascotasVacunas
+} from "./middleware/mascotasVacunas";
+import {
+  middleware as mascotas
+} from "./middleware/mascotas";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -68,7 +74,9 @@ let mdw = [
   ...vacuna,
   ...calendario,
   ...configuracion,
-  ...tramo
+  ...tramo,
+  ...mascotasVacunas,
+  ...mascotas
 ]
 
 if (process.env.NODE_ENV !== 'production') {

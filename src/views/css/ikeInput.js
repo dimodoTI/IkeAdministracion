@@ -1,4 +1,6 @@
-import {css} from "lit-element"
+import {
+    css
+} from "lit-element"
 
 export const ikeInput = css `
 .ikeInput{
@@ -7,7 +9,7 @@ export const ikeInput = css `
     grid-gap:.1rem
  
 }
-.ikeInput input{
+.ikeInput input,.ikeInput textarea{
     padding:.4rem;
     background-color:var(--color-blanco);
     border:1px solid var(--color-gris-claro);
@@ -15,7 +17,9 @@ export const ikeInput = css `
     font-size: var(--font-bajada-size);
     font-weight: var(--font-bajada-weight);
     outline:none;
-    border-radius:5px
+    border-radius:5px;
+    font-family:Arial
+
 }
 .ikeInput label{
     color: var(--color-azul-oscuro);

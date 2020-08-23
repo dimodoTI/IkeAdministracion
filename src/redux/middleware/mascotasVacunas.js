@@ -3,16 +3,11 @@ import {
     GET_SUCCESS,
     GET_ERROR,
 
-
-} from "../actions/mascotas";
+} from "../actions/mascotasVacunas";
 
 import {
-
-
-    ikeMascotasQuery
-
+    ikeMascotasVacunas
 } from "../fetchs"
-
 
 
 import {
@@ -24,12 +19,9 @@ export const get = ({
 }) => next => action => {
     next(action);
     if (action.type === GET) {
-        dispatch(apiRequest(ikeMascotasQuery, action.options, GET_SUCCESS, GET_ERROR))
+        dispatch(apiRequest(ikeMascotasVacunas, action.options, GET_SUCCESS, GET_ERROR))
     }
 };
-
-
-
 export const processGet = ({
     dispatch
 }) => next => action => {
@@ -38,8 +30,6 @@ export const processGet = ({
 
     }
 };
-
-
 
 
 export const processError = ({

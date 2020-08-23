@@ -1,27 +1,21 @@
 import {
     GET_SUCCESS,
     GET_ERROR,
-    PATCH_SUCCESS,
-    PATCH_ERROR,
-    UPDATE_SUCCESS,
-    UPDATE_ERROR,
-    ADD_SUCCESS,
-    ADD_ERROR,
-    REMOVE_SUCCESS,
-    REMOVE_ERROR,
-    EDIT
+    GET
 } from "../actions/mascotas";
+import {
+    ikeMascotasVacunas
+} from "../fetchs";
 
 
 const initialState = {
     entities: null,
+    porUsuario: null,
     timeStamp: null,
-    removeTimeStamp: null,
-    updateTimeStamp: null,
-    addTimeStamp: null,
     errorTimeStamp: null,
-    commandErrorTimeStamp: null,
-    editTimeStamp: null,
+    vacunado: -1,
+    vacuna: -1
+
 };
 
 export const reducer = (state = initialState, action) => {
@@ -30,32 +24,61 @@ export const reducer = (state = initialState, action) => {
     };
 
     switch (action.type) {
+        case GET:
+            newState.vacunado = action.vacunado
+            newState.vacuna = action.vacuna
+            break;
         case GET_SUCCESS:
-            newState.entities = action.payload.receive
+
+            //filtra por vacunas
+            if (newState.vacunado != "X") {
+                if (newState.vacunado == "S") {
+                    // ver si tiene todas las vacunas
+                    if (newState.vacuna == -1) {
+
+                    } else {
+                        // ver si tiene una vacuna especifica
+                        newState.entities = action.payload.receive.filter(item => {
+                            return item.MascotasVacuna.find(v => v.VacunaId == newState.vacuna)
+                        })
+
+                    }
+                } else {
+                    // ver si no tiene vacunas
+                    if (newState.vacuna == -1) {
+                        newState.entities = action.payload.receive.filter(item => item.MascotasVacuna.length == 0)
+
+                    } else {
+                        newState.entities = action.payload.receive.filter(item => {
+                            return !item.MascotasVacuna.find(v => v.VacunaId == newState.vacuna)
+                        })
+
+                    }
+                }
+            } else {
+                // no hay filtro por vacunas
+                newState.entities = action.payload.receive
+            }
+
+            newState.porUsuario = newState.entities.reduce((acum, item) => {
+                let usuario = acum.find(usu => usu.Id == item.idUsuario)
+                if (!usuario) {
+                    let newItem = {
+                        Id: item.idUsuario,
+                        mascotas: []
+                    }
+                    newItem.mascotas.push(item)
+                    acum.push(newItem)
+                } else {
+                    usuario.mascotas.push(item)
+                }
+                return acum
+            }, [])
             newState.timeStamp = (new Date()).getTime();
             break;
-        case EDIT:
-            newState.editTimeStamp = (new Date()).getTime();
-            newState.entities.currentItem = action.item
-            newState.modo = action.modo;
-            break;
-        case UPDATE_SUCCESS:
-            newState.updateTimeStamp = (new Date()).getTime();
-            break;
-        case PATCH_SUCCESS:
-            newState.updateTimeStamp = (new Date()).getTime();
-            break;
-        case REMOVE_SUCCESS:
-            newState.removeTimeStamp = (new Date()).getTime();
-            break;
-        case ADD_SUCCESS:
-            newState.addTimeStamp = (new Date()).getTime();
-            break;
+
         case GET_ERROR:
             newState.errorTimeStamp = (new Date()).getTime();
-            break;
-        case UPDATE_ERROR || REMOVE_ERROR || PATCH_ERROR || ADD_ERROR:
-            newState.commandErrorTimeStamp = (new Date()).getTime();
             break;
 
     }
