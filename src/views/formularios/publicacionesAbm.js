@@ -1,13 +1,49 @@
-import { html, LitElement, css } from "lit-element";
-import { store } from "../../redux/store";
-import { connect } from "@brunomon/helpers";
-import { idiomas } from "../../redux/datos/idiomas"
-import { label } from "../css/label"
-import { button } from "../css/button"
-import { cabecera1 } from "../css/cabecera1"
-import { publicacionesabm } from "../componentes/publicacionAbm"
-import { modoPantalla } from "../../redux/actions/ui";
-import { REGALO, CARRITO, RELOJ, NOVEDADES1, NOVEDADES2, NOVEDADES3, HOME, MASCOTA, CONSULTA, VACUNA, FOTO, MAS } from "../../../assets/icons/icons"
+import {
+    html,
+    LitElement,
+    css
+} from "lit-element";
+import {
+    store
+} from "../../redux/store";
+import {
+    connect
+} from "@brunomon/helpers";
+import {
+    idiomas
+} from "../../redux/datos/idiomas"
+import {
+    label
+} from "../css/label"
+import {
+    button
+} from "../css/button"
+import {
+    cabecera1
+} from "../css/cabecera1"
+import {
+    publicacionesabm
+} from "../componentes/publicacionAbm"
+import {
+    modoPantalla
+} from "../../redux/actions/ui";
+import {
+    REGALO,
+    CARRITO,
+    RELOJ,
+    NOVEDADES1,
+    NOVEDADES2,
+    NOVEDADES3,
+    HOME,
+    MASCOTA,
+    CONSULTA,
+    VACUNA,
+    FOTO,
+    MAS
+} from "../../../assets/icons/icons"
+import {
+    get as getPublicacion
+} from "../../redux/actions/publicacion";
 
 const MODO_PANTALLA = "ui.timeStampPantalla"
 export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitElement) {
@@ -18,7 +54,7 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
     }
 
     static get styles() {
-        return css`
+        return css `
         ${label}
         ${button}
         ${cabecera1}
@@ -80,7 +116,7 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
     `
     }
     render() {
-        return html`
+        return html `
             <div id="header">
                 <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
                     <div id="bar">
@@ -110,13 +146,14 @@ export class pantallaPublicacionesAbm extends connect(store, MODO_PANTALLA)(LitE
     }
 
     stateChanged(state, name) {
-        if (name == MODO_PANTALLA) {
+
+        if (name == MODO_PANTALLA && state.ui.quePantalla == "publicacionesabm") {
+            store.dispatch(getPublicacion({}))
             this.update();
         }
     }
 
-    firstUpdated() {
-    }
+    firstUpdated() {}
 
     static get properties() {
         return {

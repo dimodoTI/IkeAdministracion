@@ -54,6 +54,9 @@ import {
 import {
   reducer as mascotasReducer
 } from "./mascotas"
+import {
+  reducer as notificacionesReducer
+} from "./notificaciones"
 
 export const rootReducer = (state = {}, action) => {
 
@@ -73,8 +76,8 @@ export const rootReducer = (state = {}, action) => {
     tramo: tramoReducer(state.tramo, action),
     api: apiReducer(state.api, action),
     mascotasVacunas: mascotasVacunasReducer(state.mascotasVacunas, action),
-    mascotas: mascotasReducer(state.mascotas, action)
-    // hc: hcReducer(state.hc, action),
+    mascotas: mascotasReducer(state.mascotas, action),
+    notificaciones: notificacionesReducer(state.notificaciones, action)
     // agenda: agendaReducer(state.agenda, action)
   };
 };

@@ -58,6 +58,9 @@ import {
 import {
   middleware as mascotas
 } from "./middleware/mascotas";
+import {
+  middleware as notificaciones
+} from "./middleware/notificaciones";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -76,7 +79,8 @@ let mdw = [
   ...configuracion,
   ...tramo,
   ...mascotasVacunas,
-  ...mascotas
+  ...mascotas,
+  ...notificaciones
 ]
 
 if (process.env.NODE_ENV !== 'production') {

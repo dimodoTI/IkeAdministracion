@@ -19,7 +19,7 @@ import {
     PUBLICACION,
     DERIVAR,
     CONSULTA,
-    FOTO
+    CAPAS
 } from "../../../assets/icons/icons";
 import {
     modoPantalla
@@ -78,7 +78,7 @@ export class pieComponente extends connect(store)(LitElement) {
         }
         :host(:not([media-size="small"])) #pieMenu{
             grid-template-columns: 40% 60%;
-            grid-template-rows: 3rem 3rem 3rem 3rem 3rem 3rem;
+            grid-template-rows: 3rem 3rem 3rem 3rem 3rem 3rem 3rem;
             grid-auto-flow: column;
             align-self: start;
             grid-gap:0rem;
@@ -236,12 +236,16 @@ export class pieComponente extends connect(store)(LitElement) {
                 <div id="img-vacuna" select=${this.opcion == 'cuatro' ? 'SI' : 'NO'} @click="${this.clickBoton4}" class="img">
                     ${HOSPITAL}
                 </div>  
-                <div id="img-foto" select=${this.opcion == 'cinco' ? 'SI' : 'NO'} @click="${this.clickBoton5}" class="img">
-                    ${CONFIG}
-                </div>          
+                
                 <div id="lbl-notificacion" select=${this.opcion == 'seis' ? 'SI' : 'NO'} @click="${this.clickNotificaciones}"  class="img">
                     ${DERIVAR}
                 </div>
+                <div id="lbl-notificacion-h" select=${this.opcion == 'siete' ? 'SI' : 'NO'} @click="${this.clickNotificacionesH}"  class="img">
+                    ${CAPAS}
+                </div>
+                <div id="img-foto" select=${this.opcion == 'cinco' ? 'SI' : 'NO'} @click="${this.clickBoton5}" class="img">
+                    ${CONFIG}
+                </div>          
                 <div id="lbl-usuario" select=${this.opcion == 'uno' ? 'SI' : 'NO'} @click="${this.clickBoton1}"  class="lbl">
                     ${idiomas[this.idioma].pie.inicio}
                 </div>
@@ -254,11 +258,15 @@ export class pieComponente extends connect(store)(LitElement) {
                 <div id="lbl-Agendas" select=${this.opcion == 'cuatro' ? 'SI' : 'NO'} @click="${this.clickBoton4}"  class="lbl">
                     ${idiomas[this.idioma].pie.agendaMenu}
                 </div>
-                <div id="lbl-foto" select=${this.opcion == 'cinco' ? 'SI' : 'NO'} @click="${this.clickBoton5}"  class="lbl">
-                    ${idiomas[this.idioma].pie.foto}
-                </div>
+                
                 <div id="lbl-notif" select=${this.opcion == 'seis' ? 'SI' : 'NO'} @click="${this.clickNotificaciones}"  class="lbl">
                     ${idiomas[this.idioma].pie.notificaciones}
+                </div>
+                <div id="lbl-notif-h" select=${this.opcion == 'siete' ? 'SI' : 'NO'} @click="${this.clickNotificacionesH}"  class="lbl">
+                    ${idiomas[this.idioma].pie.notificacionesHistorico}
+                </div>
+                <div id="lbl-foto" select=${this.opcion == 'cinco' ? 'SI' : 'NO'} @click="${this.clickBoton5}"  class="lbl">
+                    ${idiomas[this.idioma].pie.foto}
                 </div>
                 
             </div>
@@ -360,6 +368,12 @@ export class pieComponente extends connect(store)(LitElement) {
     clickNotificaciones() {
         store.dispatch(modoPantalla("notificaciones", "principal"))
         this.opcion = "seis"
+        this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "none"
+    }
+    clickNotificacionesH() {
+        store.dispatch(modoPantalla("notificacionesHistorico", "principal"))
+        this.opcion = "siete"
         this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
         this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "none"
     }

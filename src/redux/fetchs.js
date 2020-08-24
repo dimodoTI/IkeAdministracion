@@ -12,6 +12,7 @@ const webApiMascotas = "https://apis.mascotas.dimodo.ga/api"
 const webApiMascotasOdata = "https://apis.mascotas.dimodo.ga"
 const webApiPublicacion = "https://apis.publicaciones.dimodo.ga/api"
 const webApiPublicacionOdata = "https://apis.publicaciones.dimodo.ga"
+const webApiChatOdata = "https://apis.chat.dimodo.ga"
 
 const mascotaOdata = ODataFetchFactory({
   fetch: fetch,
@@ -24,6 +25,10 @@ const usuarioOdata = ODataFetchFactory({
 const publicacionOdata = ODataFetchFactory({
   fetch: fetch,
   domain: webApiPublicacionOdata
+})
+const chatOdata = ODataFetchFactory({
+  fetch: fetch,
+  domain: webApiChatOdata
 })
 
 export const ikeUsuarioFetch = fetchFactory(webApiUsuarios, "Usuario")
@@ -56,3 +61,4 @@ export const ikeOdataConfiguracion = ODataEntity(mascotaOdata, "ConfiguracionQue
 export const ikeOdataTramo = ODataEntity(mascotaOdata, "TramosQuery")
 export const ikeMascotasVacunas = ODataEntity(mascotaOdata, "MascotasVacunasQuery")
 export const ikeMascotasQuery = ODataEntity(mascotaOdata, "MascotasQuery")
+export const ikeNotificacionCabeceraQuery = ODataEntity(chatOdata, "NotificacionCabeceraQuery")

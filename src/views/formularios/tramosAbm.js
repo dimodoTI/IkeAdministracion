@@ -1,14 +1,52 @@
-import { html, LitElement, css } from "lit-element";
-import { store } from "../../redux/store";
-import { connect } from "@brunomon/helpers";
-import { idiomas } from "../../redux/datos/idiomas"
-import { label } from "../css/label"
-import { button } from "../css/button"
-import { cabecera1 } from "../css/cabecera1"
-import { tramoAbm } from "../componentes/tramoAbm"
-import { modoPantalla } from "../../redux/actions/ui";
-import { REGALO, CARRITO, RELOJ, NOVEDADES1, NOVEDADES2, NOVEDADES3, HOME, MASCOTA, CONSULTA, VACUNA, FOTO, MAS } from "../../../assets/icons/icons"
-import { get as getCalendario } from "../../redux/actions/calendario";
+import {
+    html,
+    LitElement,
+    css
+} from "lit-element";
+import {
+    store
+} from "../../redux/store";
+import {
+    connect
+} from "@brunomon/helpers";
+import {
+    idiomas
+} from "../../redux/datos/idiomas"
+import {
+    label
+} from "../css/label"
+import {
+    button
+} from "../css/button"
+import {
+    cabecera1
+} from "../css/cabecera1"
+import {
+    tramoAbm
+} from "../componentes/tramoAbm"
+import {
+    modoPantalla
+} from "../../redux/actions/ui";
+import {
+    REGALO,
+    CARRITO,
+    RELOJ,
+    NOVEDADES1,
+    NOVEDADES2,
+    NOVEDADES3,
+    HOME,
+    MASCOTA,
+    CONSULTA,
+    VACUNA,
+    FOTO,
+    MAS
+} from "../../../assets/icons/icons"
+import {
+    get as getCalendario
+} from "../../redux/actions/calendario";
+import {
+    get as getPuestos
+} from "../../redux/actions/puestos";
 
 const MODO_PANTALLA = "ui.timeStampPantalla"
 export class pantallaTramosAbm extends connect(store, MODO_PANTALLA)(LitElement) {
@@ -19,7 +57,7 @@ export class pantallaTramosAbm extends connect(store, MODO_PANTALLA)(LitElement)
     }
 
     static get styles() {
-        return css`
+        return css `
         ${label}
         ${button}
         ${cabecera1}
@@ -81,7 +119,7 @@ export class pantallaTramosAbm extends connect(store, MODO_PANTALLA)(LitElement)
     `
     }
     render() {
-        return html`
+        return html `
             <div id="header">
                 <div style="display:grid;width:100%;grid-template-columns:90% 10%;">
                     <div id="bar">
@@ -112,14 +150,16 @@ export class pantallaTramosAbm extends connect(store, MODO_PANTALLA)(LitElement)
     }
 
     stateChanged(state, name) {
-        if (name == MODO_PANTALLA) {
-            store.dispatch(getCalendario({ expand: "MascotasTipo, Vacuna" }))
+        if (name == MODO_PANTALLA && state.ui.quePantalla == "tramosabm") {
+            store.dispatch(getPuestos({}))
+            store.dispatch(getCalendario({
+                expand: "MascotasTipo, Vacuna"
+            }))
             this.update();
         }
     }
 
-    firstUpdated() {
-    }
+    firstUpdated() {}
 
     static get properties() {
         return {

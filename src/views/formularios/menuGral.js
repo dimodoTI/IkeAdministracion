@@ -81,6 +81,9 @@ import {
 import {
     pantallaNotificaciones
 } from "./notificaciones"
+import {
+    pantallaNotificacionesHistorico
+} from "./notificacionesHistorico"
 
 const QUEPANTALLA = "ui.timeStampPantalla";
 const MODO_PANTALLA = "ui.timeStampPantalla"
@@ -145,6 +148,7 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
                 <pantalla-tramosabm id="tramosabm" media-size="${this.mediaSize}"></pantalla-tramosabm>      
                 <pantalla-chatsapp id="chatsapp" media-size="${this.mediaSize}"></pantalla-chatsapp>
                 <pantalla-notificaciones id="notificaciones" media-size="${this.mediaSize}"></pantalla-notificaciones>
+                <pantalla-notificaciones-historico id="notificacionesHistorico" media-size="${this.mediaSize}"></pantalla-notificaciones-historico>
 
                 <div id="divTapaPantalla"  @click=${this.clickTapaPantalla}></div>
             </div>
@@ -171,6 +175,7 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
                 this.shadowRoot.querySelector("#tramosabm").hidden = state.ui.quePantalla != "tramosabm";
                 this.shadowRoot.querySelector("#chatsapp").hidden = state.ui.quePantalla != "chatsapp";
                 this.shadowRoot.querySelector("#notificaciones").hidden = state.ui.quePantalla != "notificaciones";
+                this.shadowRoot.querySelector("#notificacionesHistorico").hidden = state.ui.quePantalla != "notificacionesHistorico";
 
             }
         }
@@ -181,9 +186,7 @@ export class pantallaMenuGral extends connect(store, MODO_PANTALLA, QUEPANTALLA,
     clickBotonUsuario() {
         store.dispatch(modoPantalla("usuariosabm", "principal"))
     }
-    clickBotonNotificacion() {
-        store.dispatch(modoPantalla("notificacion", "principal"))
-    }
+
     clickTapaPantalla() {
         this.shadowRoot.querySelector("#divTapaPantalla").style.display = "none"
         this.shadowRoot.children.gridPie.shadowRoot.querySelector("#divPopupTablas").style.display = "none"

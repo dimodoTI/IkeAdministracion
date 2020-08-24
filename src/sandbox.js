@@ -26,9 +26,16 @@ import {
 import {
     get as getVacuna
 } from "./redux/actions/vacuna";
+import {
+    get as getNotificaciones
+} from "./redux/actions/notificaciones";
+import {
+    get as getMascotaTipo
+} from "./redux/actions/mascotastipo";
 
 store.dispatch(captureMedia())
 store.dispatch(modoPantalla("splash"))
-store.dispatch(getPublicacion({}))
+store.dispatch(getMascotaTipo({}))
 store.dispatch(getRazas({}))
 store.dispatch(getVacuna({}))
+//store.dispatch(getPublicacion({}))

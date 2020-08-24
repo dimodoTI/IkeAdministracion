@@ -85,6 +85,7 @@ export const idiomas = {
             agendaMenu: "Agenda",
             foto: "Config",
             notificaciones: "Notificaciones",
+            notificacionesHistorico: "Historial de Notificaciones",
             vacuna: "vacuna"
         },
         principal: {
@@ -96,6 +97,10 @@ export const idiomas = {
         notificaciones: {
             tituloCabecera: "Notificaciones",
             leyendaCabecera: "Administracón de Notificaciones",
+        },
+        notificacionesHistorico: {
+            tituloCabecera: "Notificaciones",
+            leyendaCabecera: "Historial de Notificaciones",
         },
         usuarioabm: {
             tituloCabecera: "Hola",
