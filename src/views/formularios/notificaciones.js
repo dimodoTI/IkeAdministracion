@@ -47,6 +47,9 @@ import {
 import {
     add as addNotificaciones
 } from "../../redux/actions/notificaciones";
+import {
+    get as getUsuarios
+} from "../../redux/actions/usuario";
 
 
 const MODO_PANTALLA = "ui.timeStampPantalla"
@@ -55,7 +58,8 @@ const RAZAS = "razas.timeStamp"
 const VACUNA = "vacuna.timeStamp"
 const MASCOTAS = "mascotas.timeStamp"
 const ADD_NOTIFICACIONES = "notificaciones.addTimeStamp"
-export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOTAS_TIPO, RAZAS, VACUNA, MASCOTAS, ADD_NOTIFICACIONES)(LitElement) {
+const USUARIOS = "usuario.timeStamp"
+export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOTAS_TIPO, RAZAS, VACUNA, MASCOTAS, ADD_NOTIFICACIONES, USUARIOS)(LitElement) {
     constructor() {
         super();
         this.hidden = true
@@ -125,6 +129,12 @@ export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOT
              grid-auto-flow:column;
              grid-gap:1rem;
          }
+         #bar{
+             display:grid;
+             grid-auto-flow:row !important;
+             grid-template-columns:1fr !important
+
+         }
 
          h4{
              margin:0;
@@ -135,7 +145,7 @@ export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOT
          }
          #status{
              display:grid;
-             grid-auto-flow:column;
+             grid-template-columns:1fr 1fr;
              grid-gap:1rem
          }
         .notif{
@@ -152,12 +162,13 @@ export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOT
                  <div style="display:grid;grid-template-columns:2fr 3fr;">
                      <div id="bar">
                          <div id="lblTitulo">${idiomas[this.idioma].notificaciones.tituloCabecera}</div>
+                         <div id="lblLeyenda">${idiomas[this.idioma].notificaciones.leyendaCabecera}</div>
                      </div>
                      <div id="status">
                          ${this.status}
                      </div>
                  </div>    
-                 <div id="lblLeyenda">${idiomas[this.idioma].notificaciones.leyendaCabecera}</div>
+                 
              </div>
              <div id="cuerpo">
                
@@ -252,67 +263,74 @@ export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOT
 
 
     aplicar() {
-        this.entity = ""
-        this.filtro = ""
-        this.expand = ""
-        let destinatario = this.shadowRoot.querySelector("#destinatario").value
-        let tipo = this.shadowRoot.querySelector("#tipo").value
-        let raza = this.shadowRoot.querySelector("#raza").value
-        let cumple = this.shadowRoot.querySelector("#cumple").value
-        let castrado = this.shadowRoot.querySelector("#castrado").value
-        let vacunado = this.shadowRoot.querySelector("#vacunado").value
-        let vacuna = this.shadowRoot.querySelector("#vacuna").value
+        if (!this.disabled) {
+            this.entity = ""
+            this.filtro = ""
+            this.expand = ""
+            let destinatario = this.shadowRoot.querySelector("#destinatario").value
+            let tipo = this.shadowRoot.querySelector("#tipo").value
+            let raza = this.shadowRoot.querySelector("#raza").value
+            let cumple = this.shadowRoot.querySelector("#cumple").value
+            let castrado = this.shadowRoot.querySelector("#castrado").value
+            let vacunado = this.shadowRoot.querySelector("#vacunado").value
+            let vacuna = this.shadowRoot.querySelector("#vacuna").value
 
 
-        if (destinatario == "V") {
-            this.entity = "Usuarios"
-            this.filtro = "perfil eq 'veterinario'"
+            if (destinatario == "V") {
+                this.entity = "Usuarios"
+                this.filtro = "perfil eq 'veterinario'"
 
-            console.log("Entity:" + this.entity)
-            console.log("Expand:" + this.expand)
-            console.log("Filter:" + this.filtro)
+                console.log("Entity:" + this.entity)
+                console.log("Expand:" + this.expand)
+                console.log("Filter:" + this.filtro)
 
-            return
-        }
-
-        this.expand = "Raza($select=idMascotasTipo),MascotasVacuna($select=Id,VacunaId,Realizada,Activo)"
-        this.select = "Id,idUsuario,idRaza,FechaNacimiento,Castrada,Activo"
-
-
-        if (tipo != -1) {
-            this.filtro = "Raza/idMascotasTipo eq " + tipo;
-        }
-
-        if (raza != -1) {
-            this.filtro = this.filtro + " and idRaza eq " + raza;
-        }
-
-        if (cumple == "S") {
-            if (this.filtro) this.filtro = this.filtro + " and "
-            this.filtro = this.filtro + "day(FechaNacimiento) eq " + (new Date()).getDate() + " and month(FechaNacimiento) eq " + ((new Date()).getMonth() + 1)
-        }
-
-        if (castrado != "X") {
-            if (this.filtro) this.filtro = this.filtro + " and "
-            if (castrado == "S") {
-                this.filtro = this.filtro + "Castrada"
-            } else {
-                this.filtro = this.filtro + "not Castrada"
+                return
             }
+
+            this.expand = "Raza($select=idMascotasTipo),MascotasVacuna($select=Id,VacunaId,Realizada,Activo)"
+            this.select = "Id,idUsuario,idRaza,FechaNacimiento,Castrada,Activo"
+
+
+            if (tipo != -1) {
+                this.filtro = "Raza/idMascotasTipo eq " + tipo;
+            }
+
+            if (raza != -1) {
+                this.filtro = this.filtro + " and idRaza eq " + raza;
+            }
+
+            if (cumple == "S") {
+                if (this.filtro) this.filtro = this.filtro + " and "
+                this.filtro = this.filtro + "day(FechaNacimiento) eq " + (new Date()).getDate() + " and month(FechaNacimiento) eq " + ((new Date()).getMonth() + 1)
+            }
+
+            if (castrado != "X") {
+                if (this.filtro) this.filtro = this.filtro + " and "
+                if (castrado == "S") {
+                    this.filtro = this.filtro + "Castrada"
+                } else {
+                    this.filtro = this.filtro + "not Castrada"
+                }
+            }
+
+
+            store.dispatch(getMascotas({
+                expand: this.expand,
+                filter: this.filtro,
+                select: this.select,
+                token: store.getState().cliente.datos.token
+            }, vacunado, vacuna))
+
+
+
+        } else {
+            store.dispatch(getUsuarios({
+                filter: "contains(Perfil,'veterinario')",
+                select: "Id",
+                token: store.getState().cliente.datos.token
+            }))
+
         }
-
-
-
-
-
-        store.dispatch(getMascotas({
-            expand: this.expand,
-            filter: this.filtro,
-            select: this.select,
-            token: store.getState().cliente.datos.token
-        }, vacunado, vacuna))
-
-
         return
 
 
@@ -368,7 +386,33 @@ export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOT
             this.status = html `<div>Se enviarion notificaciones (${(new Date()).toLocaleTimeString()})</div>`
             this.update()
         }
+        if (name == USUARIOS) {
+            this.status = html `
+            <div class="notif"></div>
+            <div class="notif">Notificaciones por usuario <h4>${state.usuario.entities.length}</h4><button btn1 @click="${this.generarVeterinario}">Notificar</button></div>`
+            this.update()
+        }
     }
+
+    generarVeterinario() {
+        let titulo = this.shadowRoot.querySelector("#txtTit").value
+        let texto = this.shadowRoot.querySelector("#txtTexto").value
+        let link = this.shadowRoot.querySelector("#txtLink").value
+        const notificacion = {
+            Texto: texto,
+            Titulo: titulo,
+            Link: link,
+            Para: "Veterinario",
+            Detalle: store.getState().usuario.entities.map(u => {
+                return {
+                    ClienteId: u.Id
+                }
+            })
+        }
+
+        store.dispatch(addNotificaciones(notificacion, store.getState().cliente.datos.token))
+    }
+
 
     generarCliente() {
         let titulo = this.shadowRoot.querySelector("#txtTit").value
