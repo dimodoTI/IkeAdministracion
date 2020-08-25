@@ -44,6 +44,9 @@ import {
 import {
     get as getRazas
 } from "../../redux/actions/razas";
+import {
+    add as addNotificaciones
+} from "../../redux/actions/notificaciones";
 
 
 const MODO_PANTALLA = "ui.timeStampPantalla"
@@ -51,7 +54,8 @@ const MASCOTAS_TIPO = "mascotastipo.timeStamp"
 const RAZAS = "razas.timeStamp"
 const VACUNA = "vacuna.timeStamp"
 const MASCOTAS = "mascotas.timeStamp"
-export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOTAS_TIPO, RAZAS, VACUNA, MASCOTAS)(LitElement) {
+const ADD_NOTIFICACIONES = "notificaciones.addTimeStamp"
+export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOTAS_TIPO, RAZAS, VACUNA, MASCOTAS, ADD_NOTIFICACIONES)(LitElement) {
     constructor() {
         super();
         this.hidden = true
@@ -226,13 +230,13 @@ export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOT
 
                      <div id="divTextoForm" class="ikeInput">
                          <label id="lblTexto">Texto</label>
-                         <textarea name="txtTexto" cols="40" rows="5"></textarea>
+                         <textarea name="txtTexto" id="txtTexto" cols="40" rows="5"></textarea>
                          <label id="lblErrorTexto" error oculto>Texto Incorrecto</label>
                      </div>
 
                      <div id="divLinkForm" class="ikeInput">
                          <label id="lblLink">Link</label>
-                         <input id="txtLinko">
+                         <input id="txtLink">
                          <label id="lblErrorLink" error oculto>Link Incorrecto</label>
                      </div>
 
@@ -354,14 +358,59 @@ export class pantallaNotificaciones extends connect(store, MODO_PANTALLA, MASCOT
         if (name == MASCOTAS) {
 
             this.status = html `
-                          <div class="notif">Notificaciones por usuario <h4>${state.mascotas.porUsuario.length}</h4><button btn1 @click="${this.generar}">Notificar</button></div> 
-                          <div class="notif">Notificaciones por mascota <h4>${state.mascotas.entities.length}</h4><button btn1 @click="${this.generar}">Notificar</button></div>`
+                          <div class="notif">Notificaciones por usuario <h4>${state.mascotas.porUsuario.length}</h4><button btn1 @click="${this.generarCliente}">Notificar</button></div> 
+                          <div class="notif">Notificaciones por mascota <h4>${state.mascotas.entities.length}</h4><button btn1 @click="${this.generarMascota}">Notificar</button></div>`
 
+            this.update()
+        }
+
+        if (name == ADD_NOTIFICACIONES) {
+            this.status = html `<div>Se enviarion notificaciones (${(new Date()).toLocaleTimeString()})</div>`
             this.update()
         }
     }
 
+    generarCliente() {
+        let titulo = this.shadowRoot.querySelector("#txtTit").value
+        let texto = this.shadowRoot.querySelector("#txtTexto").value
+        let link = this.shadowRoot.querySelector("#txtLink").value
+        const notificacion = {
+            Texto: texto,
+            Titulo: titulo,
+            Link: link,
+            Para: "Mascota",
+            Detalle: store.getState().mascotas.porUsuario.map(u => {
+                return {
+                    ClienteId: u.Id
+                }
+            })
+        }
 
+        store.dispatch(addNotificaciones(notificacion, store.getState().cliente.datos.token))
+    }
+
+    generarMascota() {
+
+        let titulo = this.shadowRoot.querySelector("#txtTit").value
+        let texto = this.shadowRoot.querySelector("#txtTexto").value
+        let link = this.shadowRoot.querySelector("#txtLink").value
+
+        const notificacion = {
+            Texto: texto,
+            Titulo: titulo,
+            Link: link,
+            Para: "Mascota",
+            Detalle: store.getState().mascotas.entities.map(u => {
+                return {
+                    ClienteId: u.idUsuario,
+                    MascotaId: u.Id
+                }
+            })
+        }
+
+        store.dispatch(addNotificaciones(notificacion, store.getState().cliente.datos.token))
+
+    }
     filtrarRazas(id) {
         this.razas = store.getState().razas.entities.filter(r => r.idMascotasTipo == id)
         this.razas.push({
