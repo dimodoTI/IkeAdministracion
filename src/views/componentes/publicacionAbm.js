@@ -503,7 +503,7 @@ export class publicacionAbm extends connect(store, MODO_PANTALLA, PUBLICACION_TI
                     imagen != this.itemOriginal.Imagen ? datoUpdate.push({
                         "op": "replace",
                         "path": "/Imagen",
-                        "value": titulo
+                        "value": imagen
                     }) : null
                     leyenda != this.itemOriginal.Leyenda ? datoUpdate.push({
                         "op": "replace",
