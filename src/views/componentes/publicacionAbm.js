@@ -551,6 +551,7 @@ export class publicacionAbm extends connect(store, MODO_PANTALLA, PUBLICACION_TI
         this.update()
     }
     clickX() {
+        this.shadowRoot.querySelector("#filtro").value = this.itemOriginal.Tipo
         this.shadowRoot.querySelector("#verDatos").style.display = "none";
         this.shadowRoot.querySelector("#x").style.display = "none";
         this.shadowRoot.querySelector("#pantallaOscura").style.display = "none";

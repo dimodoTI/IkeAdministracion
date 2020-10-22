@@ -369,12 +369,14 @@ export class pieComponente extends connect(store)(LitElement) {
         store.dispatch(modoPantalla("notificaciones", "principal"))
         this.opcion = "seis"
         this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
         this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "none"
     }
     clickNotificacionesH() {
         store.dispatch(modoPantalla("notificacionesHistorico", "principal"))
         this.opcion = "siete"
         this.parentNode.children.gridContenedor.children.divTapaPantalla.style.display = "none"
+        this.shadowRoot.querySelector("#divPopupTablas").style.display = "none"
         this.shadowRoot.querySelector("#divPopupAgendaMenu").style.display = "none"
     }
 
