@@ -8,7 +8,7 @@ export const cardCalendario = css`
     height:16vh;
     width:100%;
     background-color:var(--color-blanco);
-    grid-template-columns: 30% 60% auto;
+    grid-template-columns: 30% 50% 20%;
     grid-template-rows: 25% auto 30%;
     grid-gap:0rem;
     border-radius:.4rem ;           
@@ -20,11 +20,7 @@ export const cardCalendario = css`
     border-radius:.1rem ;           
     box-shadow: var(--shadow-elevation-2-box);
 }
-.svgOpciones{
-    justify-self: center;
-}
 .SvgOpciones svg{
-    width:1rem;
     height:1rem;          
     cursor:pointer;
 }
@@ -44,6 +40,15 @@ export const cardCalendario = css`
     grid-column-end: 4;
 } 
 #ccDivCachorro{
+    font-size: var(--font-bajada-size);
+    font-weight: var(--font-bajada-weight);  
+    background-color: var(--color-celeste-claro);          
+    color: var(--color-azul-oscuro);
+    padding:0 .5rem 0 .5rem;
+    justify-self: center;
+    border-radius:1rem ;           
+} 
+#ccDivPeriodo{
     font-size: var(--font-bajada-size);
     font-weight: var(--font-bajada-weight);  
     background-color: var(--color-celeste-claro);          

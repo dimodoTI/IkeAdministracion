@@ -235,9 +235,12 @@ export class calendarioAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, VACUNA
                 ${!this.calendarios ? "" : this.calendarios.filter(dato => { return dato.MascotasTipoId == this.mascotaTipoSeleccionada }).map(dato => html`
                     <div id="ccDivEtiqueta">
                         <div id ="ccDivVacuna">${dato.Vacuna.Descripcion}</div>
-                        <div id="DivSvgUpdate" class="SvgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
+                        <div style="justify-self: self-end;">
+                            <div id="DivSvgUpdate" class="SvgOpciones" @click="${function () { this.clickAlta('update', dato) }}">${MODIFICAR}</div>
+                        </div>
                         <div id="ccDivPara">${idiomas[this.idioma].calendariosabm.lblTitulo} ${dato.Enfermedades}</div>
                         <div id="ccDivCachorro">${dato.Edad}</div>
+                        <div id="ccDivPeriodo">${dato.Periodicidad}</div>
                         <div id="ccDivObligatorio">${dato.Optativa ? idiomas[this.idioma].optativa.op : idiomas[this.idioma].optativa.ob}</div>
                     </div>
                 `)}
@@ -279,6 +282,11 @@ export class calendarioAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, VACUNA
                         <label id="lblEdad">${idiomas[this.idioma].calendariosabm.lblEdad}</label>
                         <input id="txtEdad" @input=${this.activar} placeholder=${idiomas[this.idioma].calendariosabm.lblEdad_ph}>
                         <label id="lblErrorEdad" error oculto>Edad Erronea</label>
+                    </div>
+                    <div id="divPeriodoForm" class="ikeInput">
+                        <label id="lblPeriodo">${idiomas[this.idioma].calendariosabm.lblPeriodo}</label>
+                        <input id="txtPeriodo" @input=${this.activar} placeholder=${idiomas[this.idioma].calendariosabm.lblPeriodo_ph}>
+                        <label id="lblErrorPeriodo" error oculto>Edad Erronea</label>
                     </div>
                     <div id="divObligatoriaForm" class="select">
                         <label id="lblObligatoria">${idiomas[this.idioma].calendariosabm.lblObligatoria}</label>
@@ -356,9 +364,10 @@ export class calendarioAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, VACUNA
                 this.combos.activo = this.shadowRoot.getElementById("selectActivo").value
                 const enfermedades = this.shadowRoot.getElementById("txtPara").value;
                 const edad = this.shadowRoot.getElementById("txtEdad").value;
+                const periodo = this.shadowRoot.getElementById("txtPeriodo").value;
                 var datoUpdate = [];
                 if (this.accion == "alta") {
-                    let regNuevo = { MascotasTipoId: this.combos.mascota, VacunaId: this.combos.vacuna, Enfermedades: enfermedades, Edad: edad, Optativa: this.combos.optativa, Activo: this.combos.activo }
+                    let regNuevo = { MascotasTipoId: this.combos.mascota, VacunaId: this.combos.vacuna, Enfermedades: enfermedades, Edad: edad,Periodicidad: periodo, Optativa: this.combos.optativa, Activo: this.combos.activo }
                     let miToken = store.getState().cliente.datos.token
                     store.dispatch(addCalendario(regNuevo, miToken))
                     this.update()
@@ -375,6 +384,11 @@ export class calendarioAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, VACUNA
                         "op": "replace",
                         "path": "/Edad",
                         "value": edad
+                    }) : null
+                    periodo != this.calendarioOriginal.Periodicidad ? datoUpdate.push({
+                        "op": "replace",
+                        "path": "/Periodicidad",
+                        "value": periodo
                     }) : null
                     this.combos.mascota != this.calendarioOriginal.MascotasTipoId ? datoUpdate.push({
                         "op": "replace",
@@ -430,6 +444,7 @@ export class calendarioAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, VACUNA
             this.calendarioOriginal = { idMascota: 0, vacuna: "", para: "", edad: "", obligatoria: true, activo: true }
             this.shadowRoot.querySelector("#txtPara").value = ""
             this.shadowRoot.querySelector("#txtEdad").value = ""
+            this.shadowRoot.querySelector("#txtPeriodo").value = ""
             this.combos = { mascota: this.mascotaTipoSeleccionada, vacuna: 0, optativa: true, activo: true }
         }
         if (accion == "update") {
@@ -438,6 +453,7 @@ export class calendarioAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, VACUNA
             this.combos = { mascota: dato.MascotasTipoId, vacuna: dato.VacunaId, optativa: dato.Optativa, activo: dato.Activo }
             this.shadowRoot.querySelector("#txtPara").value = dato.Enfermedades
             this.shadowRoot.querySelector("#txtEdad").value = dato.Edad
+            this.shadowRoot.querySelector("#txtPeriodo").value = dato.Periodicidad
         }
         this.shadowRoot.querySelector("#verDatos").style.display = "grid";
         this.shadowRoot.querySelector("#x").style.display = "grid";
@@ -475,6 +491,7 @@ export class calendarioAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, VACUNA
         let valido = true
         const para = this.shadowRoot.querySelector("#txtPara")
         const edad = this.shadowRoot.querySelector("#txtEdad")
+        const periodo = this.shadowRoot.querySelector("#txtPeriodo")
         if (para.value.length < 3 || para.value.length > 150) {
             valido = false
             this.shadowRoot.querySelector("#lblErrorPara").removeAttribute("oculto");
@@ -482,6 +499,10 @@ export class calendarioAbm extends connect(store, MASCOTASTIPO_TIMESTAMP, VACUNA
         if (edad.value.length < 3 || edad.value.length > 150) {
             valido = false
             this.shadowRoot.querySelector("#lblErrorEdad").removeAttribute("oculto");
+        }
+        if (periodo.value.length < 3 || periodo.value.length > 50) {
+            valido = false
+            this.shadowRoot.querySelector("#lblErrorPeriodo").removeAttribute("oculto");
         }
         this.update()
         return valido

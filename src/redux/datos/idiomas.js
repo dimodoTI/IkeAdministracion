@@ -196,6 +196,8 @@ export const idiomas = {
             lblVacuna_ph: "Quintuple",
             lblPara: "Enfermedades:  ",
             lblPara_ph: "Titulo: Tos de las perreras - Hepatitis",
+            lblPeriodo: "Periodo:  ",
+            lblPeriodo_ph: "A los 6 meses",
             lblEdad: "Edad:  ",
             lblEdad_ph: "Cachorro",
             lblObligatoria: "Obligatoria/Optativa: ",
