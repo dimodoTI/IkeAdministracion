@@ -32,10 +32,14 @@ import {
 import {
     get as getMascotaTipo
 } from "./redux/actions/mascotastipo";
+import {
+    get as getPuestos
+} from "./redux/actions/puestos";
 
 store.dispatch(captureMedia())
 store.dispatch(modoPantalla("splash"))
 store.dispatch(getMascotaTipo({}))
 store.dispatch(getRazas({}))
 store.dispatch(getVacuna({}))
+store.dispatch(getPuestos({}))
 //store.dispatch(getPublicacion({}))
