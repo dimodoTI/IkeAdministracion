@@ -246,6 +246,7 @@ export class publicacionAbm extends connect(store, MODO_PANTALLA, PUBLICACION_TI
                         <div id="cobDivSvgDelete" class="cobSvgOpciones" @click=${function () { this.clickDelete(dato) }}>${BASURA}</div>
                         <div id="cobDivTitulo">${idiomas[this.idioma].publicacionesabm.lblTitulo} ${dato.Titulo}</div>
                         <div id="cobDivLeyenda">${idiomas[this.idioma].publicacionesabm.lblLeyenda} ${dato.Leyenda}</div>
+                        <div id="cobDivImagen">${idiomas[this.idioma].publicacionesabm.lblImagen} ${dato.Imagen}</div>
                         <div id="cobDivOrden">${idiomas[this.idioma].publicacionesabm.lblOrden} ${dato.Orden}</div>
                     </div>
                 `)}
@@ -454,6 +455,7 @@ export class publicacionAbm extends connect(store, MODO_PANTALLA, PUBLICACION_TI
             case "D":
                 this.shadowRoot.querySelector("#divTituloForm").style.display = "grid";
                 this.shadowRoot.querySelector("#divLeyendaForm").style.display = "grid";
+                this.shadowRoot.querySelector("#divImagenForm").style.display = "grid";
                 break;
         }
         this.shadowRoot.querySelector("#verDatos").style.display = "grid";

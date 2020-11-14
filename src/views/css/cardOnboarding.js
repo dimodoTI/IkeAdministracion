@@ -38,6 +38,11 @@ export const cardOnboarding = css`
         grid-column-end:4;
         padding-left: .5rem;            
     }
+    #cobDivImagen{
+        grid-column-start:1;
+        grid-column-end:4;
+        padding-left: .5rem;            
+    }
     #cobDivOrden{
         grid-column-start:1;
         grid-column-end:4;
